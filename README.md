@@ -1,4 +1,4 @@
-SWAFTEE 
+SWAFTEE
 -------
 
 A Web Driver based Automation Framework using selenium. 
