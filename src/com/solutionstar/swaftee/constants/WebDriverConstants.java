@@ -10,15 +10,6 @@ public class WebDriverConstants {
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
 	public static String PATH_TO_TEST_DATA_FILE = "/resources/testdata/";
 	
-	public static final Map<String, String> DRIVER_METHOD;
-	static {
-	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("ie", "setIEDriver");
-	  tmp.put("firefox", "setFirefoxDriver");
-	  tmp.put("chrome", "setChromeDriver");
-	  tmp.put("phantomjs", "setPhomtomJsDriver");
-	  DRIVER_METHOD = Collections.unmodifiableMap(tmp);
-	}
 	public static String DEFAULT_BROWSER_NAME = "chrome";
 	public static int WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC = 10;
 	public static int MAX_TIMEOUT_PAGE_LOAD = 40;
@@ -37,4 +28,40 @@ public class WebDriverConstants {
 	public enum BrowserNames{
 		chrome, firefox,internet_explorer,phantomjs
     } 
+    
+	public static final Map<String, String> DRIVER_METHOD;
+	static {
+	  Map<String, String> tmp = new LinkedHashMap<String, String>();
+	  tmp.put("ie", "setIEDriver");
+	  tmp.put("firefox", "setFirefoxDriver");
+	  tmp.put("chrome", "setChromeDriver");
+	  tmp.put("phantomjs", "setPhomtomJsDriver");
+	  DRIVER_METHOD = Collections.unmodifiableMap(tmp);
+	}
+
+	public static final Map<String, String> WINDOWS_DRIVERS;
+	static {
+	  Map<String, String> tmp = new LinkedHashMap<String, String>();
+	  tmp.put("chrome", "https://github.com/sheltonpaul89/WebDrivers/raw/master/chromedriver_win32.zip");
+	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_win32.zip");
+	  tmp.put("ie", "https://github.com/sheltonpaul89/WebDrivers/raw/master/IEDriverServer.zip");
+	  WINDOWS_DRIVERS = Collections.unmodifiableMap(tmp);
+	}
+	
+	public static final Map<String, String> MAC_DRIVERS;
+	static {
+	  Map<String, String> tmp = new LinkedHashMap<String, String>();
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.14/chromedriver_mac32.zip");
+	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_mac.zip");
+		
+	  MAC_DRIVERS = Collections.unmodifiableMap(tmp);
+	}
+
+	public static Map<String, String> getDiverDownloadMapping(String osName) 
+	{
+		if(osName.contains("mac"))
+			return MAC_DRIVERS;
+		else
+			return WINDOWS_DRIVERS;
+	}
 }

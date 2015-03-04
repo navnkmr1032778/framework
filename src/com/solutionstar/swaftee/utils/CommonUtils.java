@@ -17,6 +17,8 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 public class CommonUtils {
 	
+	Boolean driverFilefound = false;
+	
 	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
 	
 	public String getCurrentWorkingDirectory()
@@ -30,8 +32,8 @@ public class CommonUtils {
 		return workingDir;
 	}
 	
-	 public File getBrowserExecutable(String path, String fileName)
-	 {
+	public File getBrowserExecutable(String path, String fileName)
+	{
 		 try{
 			 File fileDirectory = new File(path);
 			 File[] listOfFiles = fileDirectory.listFiles();
@@ -42,11 +44,18 @@ public class CommonUtils {
 					 if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac
 						 return listOfFiles[i];
 				 }
-			 }			
-		 }catch(Exception e){
+			 }
+			if(!driverFilefound)
+			{
+				 DriverUtils.getInstance().downloadFile(fileName, System.getProperty("webdriver.platform","windows"));
+				 driverFilefound = true;
+				 return getBrowserExecutable(path,fileName);
+			}	
+		 }catch(Exception e)
+		 {
 			 e.printStackTrace();
 		 }
-		 return new File("tempfile");
+		 return new File("temp file");
 	 }
 	 
 	 public void captureBrowserScreenShot(String imageName, WebDriver webDriver)
