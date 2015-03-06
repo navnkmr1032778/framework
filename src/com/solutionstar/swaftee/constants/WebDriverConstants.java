@@ -18,15 +18,15 @@ public class WebDriverConstants {
 	public static final String DEFAULT_BROWSER_OS = "windows";
 	
 	public enum OperatingSystem{
-		windows,mac
+		WINDOWS, MAC
 	}
 	
 	public enum DriverTypes{
-		primary, secondary
+		PRIMARY, SECONDARY
     } 
 	
 	public enum BrowserNames{
-		chrome, firefox,internet_explorer,phantomjs
+		CHROME, FIREFOX, INTERNET_EXPLORER, PHANTOMJS
     } 
     
 	public static final Map<String, String> DRIVER_METHOD;

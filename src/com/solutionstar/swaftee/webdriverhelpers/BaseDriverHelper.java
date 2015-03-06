@@ -107,13 +107,13 @@ public class BaseDriverHelper {
 	   {
 		   String browserName = WebDriverConstants.DEFAULT_BROWSER_NAME;
 		   try{
-			    switch(WebDriverConstants.DriverTypes.valueOf(driverTypeStr))
+			    switch(WebDriverConstants.DriverTypes.valueOf(driverTypeStr.toUpperCase()))
 			    {
-				    case primary   : 	browserName = System.getProperty("webdriver.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;  // Setting the default browser if no browser name is specified
+				    case PRIMARY   	: 	browserName = System.getProperty("webdriver.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;  // Setting the default browser if no browser name is specified
 				    				   	break;
-				    case secondary : 	browserName = System.getProperty("webdriver.secondary.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;
+				    case SECONDARY 	: 	browserName = System.getProperty("webdriver.secondary.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;
 					 				 	break;
-				    default			 : 	browserName = WebDriverConstants.DEFAULT_BROWSER_NAME;						
+				    default			: 	browserName = WebDriverConstants.DEFAULT_BROWSER_NAME;						
 			    }
 				browserName = browserName.toLowerCase() ;
 				browserName =  WebDriverConstants.DRIVER_METHOD.containsKey(browserName) ? browserName : WebDriverConstants.DEFAULT_BROWSER_NAME;					
@@ -141,18 +141,18 @@ public class BaseDriverHelper {
 	   {  
 		   WebDriver driver = null;
 		   try{
-				switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_"))) 
+				switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
 			    {
-				     case chrome:
+				     case CHROME:
 				    	driver = new ChromeDriver(cap);
 			   			break;
-					case internet_explorer:
+					case INTERNET_EXPLORER:
 						driver = new InternetExplorerDriver();
 			   			break;
-					case firefox:
+					case FIREFOX:
 						driver = new FirefoxDriver(cap);
 			   			break;
-					case phantomjs:
+					case PHANTOMJS:
 						driver = new PhantomJSDriver(cap);
 			   			break;
 					default:
@@ -180,12 +180,12 @@ public class BaseDriverHelper {
 	   private Platform getOperatingSystem() 
 	   {
 			String os = System.getProperty("webdriver.platform.os",WebDriverConstants.DEFAULT_BROWSER_OS);
-			switch(WebDriverConstants.OperatingSystem.valueOf(os.toLowerCase()))
+			switch(WebDriverConstants.OperatingSystem.valueOf(os.toUpperCase()))
 			{
-			case windows:
-				return Platform.WINDOWS;
-			case mac:
-				return Platform.MAC;
+				case WINDOWS:
+					return Platform.WINDOWS;
+				case MAC:
+					return Platform.MAC;
 			}
 			return null;
 	   }
@@ -325,7 +325,38 @@ public class BaseDriverHelper {
 		
 		public WebDriver getDriverfromResult(ITestResult testResult)
 		{
-			  Object currentClass = testResult.getInstance();
-		      return ((AppDriver) currentClass).getDriver();
+				Object currentClass = testResult.getInstance();
+			    return ((AppDriver) currentClass).getDriver();
+		}
+		public void ExtractChromeJSLogs(WebDriver driver) 
+		{
+			 	logger.info("JS Errors");
+		        LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
+		        for (LogEntry entry : logEntries) 
+		        	logger.info(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+		}
+
+		public void ExtractJSLogs(WebDriver driver, String driverType) throws MyCoreExceptions 
+		{
+				ExtractDriverJSErrors(driver,getBrowserName(driverType));
+		}
+
+		private void ExtractDriverJSErrors(WebDriver driver, String browserName) 
+		{
+			switch (WebDriverConstants.BrowserNames.valueOf(browserName))
+		    {
+			    case chrome:
+			        ExtractChromeJSLogs(driver);
+		   			break;
+				case firefox:
+					ExtractFFJSLogs(driver);
+		   			break;
+			}
+		}
+
+		private void ExtractFFJSLogs(WebDriver driver) 
+		{
+			final List<JavaScriptError> jsErrors = JavaScriptError.readErrors(driver);
+			logger.info(jsErrors.toString());
 		}
 }

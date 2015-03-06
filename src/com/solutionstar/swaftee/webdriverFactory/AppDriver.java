@@ -37,8 +37,11 @@ public class AppDriver extends TestListenerAdapter {
 		logger.info("Starting BaseDriver");	   
 	    try 
 	    {
-	    	baseDriverHelper.startServer();
-			baseDriverHelper.startDriver();
+	    	if(baseDriverHelper.getDriver() == null)
+	    	{
+		    	baseDriverHelper.startServer();
+				baseDriverHelper.startDriver();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,6 +62,15 @@ public class AppDriver extends TestListenerAdapter {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public boolean hasDriver()
+	{
+		return baseDriverHelper.getDriver() == null? false:true;
+	}
+	public boolean hasSecondaryDriver()
+	{
+		return baseDriverHelper.getSecondaryDriver() == null? false:true;
 	}
 
 	public String getPrimaryWinhandle() throws MyCoreExceptions
@@ -165,22 +177,57 @@ public class AppDriver extends TestListenerAdapter {
 	@Override
 	public void onTestFailure(ITestResult testResult) 
 	{
-	  
-		utils.captureBrowserScreenShot(testResult.getName(), getDriverfromResult(testResult));
-		logger.info("Test " + testResult.getName() + "' FAILED");
+	   try 
+	   {
+		   logger.info("Test " + testResult.getName() + "' FAILED");
+			processResults(testResult,true);
+	   } 
+	   catch (MyCoreExceptions e) 
+	   {
+			e.printStackTrace();
+	   }
 	}
 	
 	@Override
 	public void onTestSuccess(ITestResult testResult) 
 	{
-		logger.info("Test : " + testResult.getName() + "' PASSED");
+		 try 
+		   {
+				logger.info("Test : " + testResult.getName() + "' PASSED");
+				processResults(testResult,false);
+		   } 
+		   catch (MyCoreExceptions e) 
+		   {
+				e.printStackTrace();
+		   }
 	}
 	
-	public WebDriver getDriverfromResult(ITestResult testResult)
+	private void processResults(ITestResult testResult,boolean takeScreenShot) throws MyCoreExceptions
+	{
+		 Map<String,WebDriver> drivers = getDriverfromResult(testResult);
+		 for(String driverType : drivers.keySet())
+		 {
+			   baseDriverHelper.ExtractJSLogs(drivers.get(driverType),driverType);
+			   if(takeScreenShot)  utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
+		 }
+	}
+	
+	public Map<String, WebDriver> getDriverfromResult(ITestResult testResult)
+	{
+		Map<String, WebDriver> driverList = new HashMap<String,WebDriver>();
+		if(getAppDriver(testResult).hasDriver())
+			driverList.put("primary",getAppDriver(testResult).getDriver());
+		if(getAppDriver(testResult).hasSecondaryDriver())
+			driverList.put("secondary",getAppDriver(testResult).getSecondaryDriver());
+		return driverList;
+	}
+	
+	protected AppDriver getAppDriver(ITestResult testResult)
 	{
 		  Object currentClass = testResult.getInstance();
-	      return ((AppDriver) currentClass).getDriver();
+	      return ((AppDriver) currentClass);
 	}
+	
 	protected void stopDriver() 
 	{
 	    baseDriverHelper.stopDriver();

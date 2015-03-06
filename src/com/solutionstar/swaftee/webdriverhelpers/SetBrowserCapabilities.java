@@ -32,7 +32,10 @@ public class SetBrowserCapabilities {
    				return null;
    			}
    			System.setProperty("webdriver.chrome.driver", chromeDriver.getAbsolutePath());
-   		    cap = DesiredCapabilities.chrome();
+            cap = DesiredCapabilities.chrome();
+            LoggingPreferences loggingprefs = new LoggingPreferences();
+            loggingprefs.enable(LogType.BROWSER, Level.ALL);
+            cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
 	   
    		}catch(Exception e){
    			e.printStackTrace();
@@ -43,7 +46,10 @@ public class SetBrowserCapabilities {
    	public DesiredCapabilities setFirefoxDriver(DesiredCapabilities cap)
    	{
    		try{
-   			cap = DesiredCapabilities.firefox();   	     
+   			final FirefoxProfile profile = new FirefoxProfile();
+            JavaScriptError.addExtension(profile);
+            cap = DesiredCapabilities.firefox();
+            cap.setCapability(FirefoxDriver.PROFILE, profile);     
    		}catch(Exception e){
    			e.printStackTrace();
    		}
