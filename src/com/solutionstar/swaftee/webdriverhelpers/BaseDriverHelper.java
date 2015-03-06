@@ -348,7 +348,7 @@ public class BaseDriverHelper {
 
 		private void ExtractDriverJSErrors(WebDriver driver, String browserName) 
 		{
-			switch (WebDriverConstants.BrowserNames.valueOf(browserName))
+			switch (WebDriverConstants.BrowserNames.valueOf(browserName.toUpperCase()))
 		    {
 			    case CHROME:
 			        ExtractChromeJSLogs(driver);

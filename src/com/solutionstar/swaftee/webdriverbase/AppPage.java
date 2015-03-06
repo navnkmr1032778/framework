@@ -34,11 +34,6 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 PageFactory.initElements(driver, this);
 	 }
-	 protected static Object initializeInBase(WebDriver driver) 
-	 {
-		logger.info("inside initializeInBase");
-		return driver;
-	 }
 	
 	 public void get(String url) 
 	 {
