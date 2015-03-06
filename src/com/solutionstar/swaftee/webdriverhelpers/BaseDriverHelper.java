@@ -3,9 +3,12 @@ package com.solutionstar.swaftee.webdriverhelpers;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 import net.lightbody.bmp.proxy.ProxyServer;
 
 import org.openqa.selenium.Capabilities;
@@ -15,6 +18,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -58,7 +64,6 @@ public class BaseDriverHelper {
 	       } catch (Exception e) {
 	         String error = "Error while starting server.. " + e.getStackTrace();
 	         logger.error(error);
-//	         logger.error(error);
 	       }
 	   }
 	
@@ -345,10 +350,10 @@ public class BaseDriverHelper {
 		{
 			switch (WebDriverConstants.BrowserNames.valueOf(browserName))
 		    {
-			    case chrome:
+			    case CHROME:
 			        ExtractChromeJSLogs(driver);
 		   			break;
-				case firefox:
+				case FIREFOX:
 					ExtractFFJSLogs(driver);
 		   			break;
 			}

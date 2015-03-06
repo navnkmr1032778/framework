@@ -26,7 +26,7 @@ public class AppPage extends TestListenerAdapter
 	 WebDriver driver;
 	 
 	 enum ByTypes{
-		  index, value,text
+		  INDEX, VALUE, TEXT
 	 } 
 	 
 	 public AppPage(WebDriver driver)
@@ -143,13 +143,13 @@ public class AppPage extends TestListenerAdapter
 		  Select select = new Select(element);
 		  switch (ByTypes.valueOf(by.toLowerCase())) 
 		  {
-		      case index:
+		      case INDEX:
 		        select.selectByIndex(Integer.parseInt(value));
 		        break;
-		      case value:
+		      case VALUE:
 		        select.selectByValue(value);
 		        break;
-		      case text:
+		      case TEXT:
 		        select.selectByVisibleText(value);
 		        break;
 

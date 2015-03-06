@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -55,22 +56,21 @@ public class AppDriver extends TestListenerAdapter {
 		{
 			if(baseDriverHelper.getSecondaryDriver() == null)
 				baseDriverHelper.startSecondaryDriver();
-			return baseDriverHelper.getSecondaryDriver();
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
-			return null;
 		}
+		return baseDriverHelper.getSecondaryDriver();
 	}
 
 	public boolean hasDriver()
 	{
-		return baseDriverHelper.getDriver() == null? false:true;
+		return baseDriverHelper.getDriver() == null? false : true;
 	}
 	public boolean hasSecondaryDriver()
 	{
-		return baseDriverHelper.getSecondaryDriver() == null? false:true;
+		return baseDriverHelper.getSecondaryDriver() == null? false : true;
 	}
 
 	public String getPrimaryWinhandle() throws MyCoreExceptions
@@ -138,14 +138,6 @@ public class AppDriver extends TestListenerAdapter {
 	public String getCSVData(String[] rowArray, String index)
 	{
 		return csvParser.getCSVData(rowArray, index);
-	}
-
-	@AfterClass
-	public void afterMethod()
-	{
-		logger.info("Stopping BaseDrivers");
-		baseDriverHelper.stopDriver();
-		baseDriverHelper.stopServer();		
 	}
 	
 	public String getBrowserName() 
@@ -226,6 +218,14 @@ public class AppDriver extends TestListenerAdapter {
 	{
 		  Object currentClass = testResult.getInstance();
 	      return ((AppDriver) currentClass);
+	}
+	
+	@AfterClass
+	public void afterMethod()
+	{
+		logger.info("Stopping BaseDrivers");
+		baseDriverHelper.stopDriver();
+		baseDriverHelper.stopServer();		
 	}
 	
 	protected void stopDriver() 

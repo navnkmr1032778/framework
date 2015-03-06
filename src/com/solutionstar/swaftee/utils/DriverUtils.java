@@ -43,8 +43,7 @@ public class DriverUtils
 			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName));
 			unZipIt(dirName + "\\"+ DriverName +".zip",dirName);
 			File file = new File(dirName + "\\"+ DriverName +".zip");
-			file.delete();
-		 
+			file.delete(); 
 		} 
 		catch (Exception e) 
 		{
@@ -82,11 +81,10 @@ public class DriverUtils
 		FileUtils.copyURLToFile(new URL(fileUrl), new File(fileName));
 	}
 	
-	 public void unZipIt(String zipFile, String outputFolder)
-	 {	 
-	     byte[] buffer = new byte[1024];	 
-	     try{
-	 
+	public void unZipIt(String zipFile, String outputFolder)
+	{	 
+		byte[] buffer = new byte[1024];	 
+	    try{
 	    	//create output directory is not exists
 	    	File folder = new File(outputFolder);
 	    	if(!folder.exists()){
@@ -105,8 +103,8 @@ public class DriverUtils
 	 
 	           logger.info("file unzip : "+ newFile.getAbsoluteFile());
 	 
-	            //create all non exists folders
-	            //else you will hit FileNotFoundException for compressed folder
+	           //create all non exists folders
+	           //else you will hit FileNotFoundException for compressed folder
 	            new File(newFile.getParent()).mkdirs();
 	 
 	            FileOutputStream fos = new FileOutputStream(newFile);             

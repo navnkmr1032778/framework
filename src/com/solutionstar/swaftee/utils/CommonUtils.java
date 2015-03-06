@@ -47,6 +47,7 @@ public class CommonUtils {
 			 }
 			if(!driverFilefound)
 			{
+				 logger.info("No driver file found under drivers folder. Trying to download driver executable file");
 				 DriverUtils.getInstance().downloadFile(fileName, System.getProperty("webdriver.platform","windows"));
 				 driverFilefound = true;
 				 return getBrowserExecutable(path,fileName);
@@ -75,8 +76,8 @@ public class CommonUtils {
 	      } 
 	      catch (IOException e) 
 	      {
-	    	  e.printStackTrace();
 	    	  logger.info("Error While taking Screen Shot");
+	    	  e.printStackTrace();
 	      }
 	 }
 }

@@ -1,7 +1,15 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
 import java.io.File;
+import java.util.logging.Level;
 
+import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
+
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +28,7 @@ public class SetBrowserCapabilities {
    			String workingDir = utils.getCurrentWorkingDirectory();
    			if(workingDir == null)
    			{
-   				logger.info("Working directory in null ");
+   				logger.info("Working directory is Null");
    				return null;
    			}
    			
@@ -62,7 +70,7 @@ public class SetBrowserCapabilities {
    			String workingDir = utils.getCurrentWorkingDirectory();
    			if(workingDir == null)
    			{
-   				logger.warn("Working directory in null ");
+   				logger.warn("Working directory is Null ");
    				return null;
    			}
    			
@@ -87,7 +95,7 @@ public class SetBrowserCapabilities {
    			String workingDir = utils.getCurrentWorkingDirectory();
    			if(workingDir == null)
    			{
-   				logger.warn("Working directory in null ");
+   				logger.warn("Working directory is Null ");
    				return null;
    			}
    			File phantomDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "phantomjs");
