@@ -80,4 +80,16 @@ public class CommonUtils {
 	    	  e.printStackTrace();
 	      }
 	 }
+	 
+	 public String getCurrentTimeString()
+	 {
+		 try{
+			 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			 Date date = new Date();
+			 return sdf.format(date); 		 
+		 }catch(Exception e){
+			 e.printStackTrace();
+			return null;
+		}
+	 }
 }

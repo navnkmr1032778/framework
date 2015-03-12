@@ -20,7 +20,9 @@ public class LaunchDriverTest extends AppDriver {
 	public void beforeMethod()
 	{
 		//Set the browser name for test
-		System.setProperty("webdriver.browser", "firefox");
+//		System.setProperty("webdriver.browser", "firefox");
+		
+		System.setProperty("proxyserver.enabled", "true");
 	}
 	
 	@Test ( description = "webdriver start test")
@@ -28,22 +30,20 @@ public class LaunchDriverTest extends AppDriver {
 	{
 		 try {
 			 WebDriver driver = getDriver();
-			 driver.get("https://homesearch.com");
+			 setHar("homesearch");
+			 driver.get("http://homesearch.com");
 			 Thread.sleep(2000);
 			 logger.info("Current url - "+driver.getCurrentUrl());
-			 Assert.assertEquals(driver.getCurrentUrl(), "https://homesearch.com/");
-//			 driver.findElements(By.cssSelector(".list-inline li")).get(0).click();
-//			 Thread.sleep(2000);
-//			 logger.info("Current url - "+driver.getCurrentUrl());
+			 logger.info(getHar().getLog().getEntries().toArray().toString());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			logger.error("Exception occured");
 			Assert.fail("Exception occured");
+			 logger.info(getHar().getLog().getEntries().toArray().toString());
 		}  
 	}
 	
-	@Test ( description = "csv parser test")
+//	@Test ( description = "csv parser test")
 	public void csvParserTest() throws MyCoreExceptions
 	{
 		HashMap <String , String[]> csvData = getCSVDataHash("testcsv");
@@ -73,7 +73,7 @@ public class LaunchDriverTest extends AppDriver {
 		}
 	}
 	
-	@Test (description = "Driver switch test")
+//	@Test (description = "Driver switch test")
 	public void checkMethod() throws InterruptedException, MyCoreExceptions
 	{
 		 System.setProperty("webdriver.secondary.browser", "chrome");

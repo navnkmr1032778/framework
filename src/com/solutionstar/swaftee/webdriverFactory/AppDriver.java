@@ -9,7 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import net.lightbody.bmp.core.har.Har;
+
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +104,16 @@ public class AppDriver extends TestListenerAdapter {
 			logger.warn("Logger initialization with class name provided failed. Returning default logger");
 			return logger;
 		}
+	}
+	
+	public void setHar(String harName)
+	{
+		baseDriverHelper.startHar(harName);
+	}
+	
+	protected Har getHar()
+	{
+		return baseDriverHelper.getHar();
 	}
 	
 	public HashMap<String, String[]> getCSVDataHash(String fileName)
@@ -228,6 +244,21 @@ public class AppDriver extends TestListenerAdapter {
 		baseDriverHelper.stopServer();		
 	}
 	
+	/*** TODO : needed when using log capturing
+	public void printLogs()
+	{
+		try{
+			Logs logs = getDriver().manage().logs();
+			LogEntries logEntries = logs.get(LogType.DRIVER);
+
+			for (LogEntry logEntry : logEntries) {
+			    System.out.println(logEntry.getMessage());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	***/
 	protected void stopDriver() 
 	{
 	    baseDriverHelper.stopDriver();
