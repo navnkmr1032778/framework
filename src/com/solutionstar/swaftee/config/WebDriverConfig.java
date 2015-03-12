@@ -8,7 +8,7 @@ public class WebDriverConfig
 {
 	  public static boolean usingProxyServer() 
 	  {
-		    return (Boolean.valueOf(System.getProperty(WebDriverConstants.PROXY_SERVER, "true")));
+		    return (Boolean.valueOf(System.getProperty(WebDriverConstants.PROXY_SERVER, "false")));
 	  }
 
 	  public static boolean usingGrid() {
