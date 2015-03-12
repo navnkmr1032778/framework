@@ -1,6 +1,8 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
+import java.lang.reflect.InvocationTargetException;
 import java.io.File;
+import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
@@ -27,6 +29,7 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.browserlaunchers.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
