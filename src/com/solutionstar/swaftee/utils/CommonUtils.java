@@ -45,13 +45,13 @@ public class CommonUtils {
 						 return listOfFiles[i];
 				 }
 			 }
-			if(!driverFilefound)
-			{
-				 logger.info("No driver file found under drivers folder. Trying to download driver executable file");
-				 DriverUtils.getInstance().downloadFile(fileName, System.getProperty("webdriver.platform","windows"));
+			 if(!driverFilefound)
+			 {
+				 logger.info("No driver file found under drivers folder. Trying to download driver executable file");				 
+				 DriverUtils.getInstance().downloadFile(fileName, System.getProperty("os.name"));
 				 driverFilefound = true;
 				 return getBrowserExecutable(path,fileName);
-			}	
+			 }	
 		 }catch(Exception e)
 		 {
 			 e.printStackTrace();
