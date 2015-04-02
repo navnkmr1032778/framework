@@ -36,10 +36,14 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 public class AppPage extends TestListenerAdapter 
 {
 	 protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
-	 WebDriver driver;
+	 protected WebDriver driver;
 	 
 	 enum ByTypes{
 		  INDEX, VALUE, TEXT
+	 } 
+	 
+	 enum JavaScriptSelector{
+		  ID, CLASS, NAME, TAGNAME
 	 } 
 	 
 	 public AppPage(WebDriver driver)
@@ -218,22 +222,50 @@ public class AppPage extends TestListenerAdapter
 		  
 	public boolean switchToWindowUsingTitle(String title) throws InterruptedException 
 	{
-		    String curWindow = this.driver.getWindowHandle();
-		    Set<String> windows = this.driver.getWindowHandles();
-		    if (!windows.isEmpty()) 
-		    {
-		      for (String windowId : windows) 
-		      {
-		        if (this.driver.switchTo().window(windowId).getTitle().equals(title)) 
-		        {
-		          return true;
-		        } 
-		        else 
-		        {
-		          this.driver.switchTo().window(curWindow);
-		        }
-		      }
-		    }
-		    return false;
+	    String curWindow = this.driver.getWindowHandle();
+	    Set<String> windows = this.driver.getWindowHandles();
+	    if (!windows.isEmpty()) 
+	    {
+	      for (String windowId : windows) 
+	      {
+	        if (this.driver.switchTo().window(windowId).getTitle().equals(title)) 
+	        {
+	          return true;
+	        } 
+	        else 
+	        {
+	          this.driver.switchTo().window(curWindow);
+	        }
+	      }
+	    }
+	    return false;
   	}
+	
+	public String getvalueUsingJavaScript(String by, String ele)
+	{
+		String val = null;
+		try{
+			JavascriptExecutor js = (JavascriptExecutor) this.driver;
+			switch (JavaScriptSelector.valueOf(by.toLowerCase())) 
+			{
+			      case ID:
+						val = (String) js.executeScript("document.getElementById('"+ele+"').value");
+						break;
+			      case CLASS:
+						val = (String) js.executeScript("document.getElementsByClassName('"+ele+"').value");
+						break;
+			      case TAGNAME:
+						val = (String) js.executeScript("document.getElementsByTagName('"+ele+"').value");
+						break;
+			      case NAME:
+						val = (String) js.executeScript("document.getElementsByName('"+ele+"').value");
+						break;					
+			}
+			return val;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return val;
+
+	}
 }
