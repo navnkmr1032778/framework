@@ -246,7 +246,7 @@ public class AppPage extends TestListenerAdapter
 		String val = null;
 		try{
 			JavascriptExecutor js = (JavascriptExecutor) this.driver;
-			switch (JavaScriptSelector.valueOf(by.toLowerCase())) 
+			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
 			{
 			      case ID:
 						val = (String) js.executeScript("document.getElementById('"+ele+"').value");
@@ -267,5 +267,29 @@ public class AppPage extends TestListenerAdapter
 		}
 		return val;
 
+	}
+	
+	public void setvalueUsingJavaScript(String by, String ele, String val)
+	{
+		try{
+			JavascriptExecutor js = (JavascriptExecutor) this.driver;
+			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
+			{
+			      case ID:
+						js.executeScript("document.getElementById('"+ele+"').value = \""+ val + "\"" );
+						break;
+			      case CLASS:
+						js.executeScript("document.getElementsByClassName('"+ele+"').value = \""+ val + "\"" );
+						break;
+			      case TAGNAME:
+						js.executeScript("document.getElementsByTagName('"+ele+"').value = \""+ val + "\"" );
+						break;
+			      case NAME:
+						js.executeScript("document.getElementsByName('"+ele+"').value = \""+ val + "\"" );
+						break;					
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
