@@ -51,6 +51,11 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 PageFactory.initElements(driver, this);
 	 }
+	 
+	 public WebDriver getDriver()
+	 {
+		 return this.driver;
+	 }
 	
 	 public void get(String url) 
 	 {
