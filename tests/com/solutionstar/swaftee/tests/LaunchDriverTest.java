@@ -10,7 +10,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
-import com.solutionstar.swaftee.tests.PageFactoryClass;
+import com.solutionstar.swaftee.dbconnections.PostgresDB;
 import com.solutionstar.swaftee.webdriverFactory.AppDriver;
 
 public class LaunchDriverTest extends AppDriver {
@@ -51,7 +51,7 @@ public class LaunchDriverTest extends AppDriver {
 		}  
 	}
 	
-//	@Test ( description = "csv parser test")
+	@Test ( description = "csv parser test")
 	public void csvParserTest() throws MyCoreExceptions
 	{
 		HashMap <String , String[]> csvData = getCSVDataHash("testcsv");
@@ -81,7 +81,7 @@ public class LaunchDriverTest extends AppDriver {
 		}
 	}
 	
-//	@Test (description = "Driver switch test")
+	@Test (description = "Driver switch test")
 	public void checkMethod() throws InterruptedException, MyCoreExceptions
 	{
 		 System.setProperty("webdriver.secondary.browser", "chrome");
@@ -118,5 +118,47 @@ public class LaunchDriverTest extends AppDriver {
 		 
 		 Thread.sleep(10000);
 
+	}
+	
+	@Test
+	public void testDBConnection()
+	{
+		PostgresDB postgresDB = new PostgresDB() ;
+	    try {
+	    	postgresDB.establishConnection("localhost", "5432", "sstestdb", "postgres", "");
+	    	logger.info("Opened database successfully");
+	    	
+	    	//Test result as Array
+		    HashMap<Integer, String[]> resultHash = postgresDB.executeQueryForArray("SELECT * FROM setting;");
+		    for(Integer key : resultHash.keySet())
+		    {
+		    	 String[] array = resultHash.get(key);
+		    	 logger.info("row - "+ key );
+		    	 for(int i=0 ; i < array.length; i++)
+		    	 {
+		    		 logger.info("column-"+i+" value - "+ array[i]);
+		    	 }
+		    }
+		    
+		    
+		    //Test Result as HashMap
+		    HashMap<Integer, HashMap<String, String>> resultHash2 = postgresDB.executeQueryForHash("SELECT * FROM program;");
+		    for(Integer key : resultHash2.keySet())
+		    {
+		    	HashMap<String, String> rowHash = resultHash2.get(key);
+		    	logger.info("row - "+ key );
+		    	for(String rowKey : rowHash.keySet())
+		    	{
+		    		 logger.info(rowKey +" - "+ rowHash.get(rowKey));
+		    	}
+		    }
+		    
+		    postgresDB.closeDBConnectionIfExits();
+
+	     } catch (Exception e) {
+	        e.printStackTrace();
+	        logger.error(e.getClass().getName()+": "+e.getMessage());
+	        System.exit(0);
+	     }
 	}
 }
