@@ -274,13 +274,14 @@ public class BaseDriverHelper {
 	    }
 	    
 	    public void stopServer()
-	    {
-	    	try{
-	    		proxyServer.stop();
-	    	}catch(Exception e){
-	    		e.printStackTrace();
-	    	}
-	    }
+        {
+            try{
+                if(proxyServer  != null)
+                    proxyServer.stop();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
 	    
 	    public void stopDriver() 
 	    {
