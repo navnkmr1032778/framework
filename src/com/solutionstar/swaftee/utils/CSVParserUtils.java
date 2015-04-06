@@ -18,6 +18,7 @@ public class CSVParserUtils {
 	
 	public HashMap<String, String[]> csvDataHash;
 	public HashMap<String, String> csvColumnIndexHash;
+	public Object[][] csvDataArray;
 	public boolean headerRow = true;
 	
 	CommonUtils utils ;
@@ -26,7 +27,7 @@ public class CSVParserUtils {
 	{
 		utils = new CommonUtils();
 		csvDataHash = new HashMap<String, String[]>();
-		csvColumnIndexHash = new HashMap<String,String>(); 
+		csvColumnIndexHash = new HashMap<String,String>();
 		headerRow = true;
 	}
 
@@ -242,4 +243,24 @@ public class CSVParserUtils {
 			logger.info("Key : " + key.toString() + "- Value : "+ hashmap.get(key));
 		}
 	}
+	
+	public Object[][] getCSVArray(String fileName)
+	{
+		try{
+			initializeConstans();
+			 if(utils == null)
+				 logger.warn("Utils obj is null");
+			 
+			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			 List<String[]> rowEntries = reader.readAll();
+			 csvDataArray = new String[rowEntries.size()][];
+			 csvDataArray = rowEntries.toArray(csvDataArray);
+			 reader.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return csvDataArray;	
+	}
+	
+	
 }
