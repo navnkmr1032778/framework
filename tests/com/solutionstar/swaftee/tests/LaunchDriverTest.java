@@ -10,11 +10,13 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
+import com.solutionstar.swaftee.tests.PageFactoryClass;
 import com.solutionstar.swaftee.webdriverFactory.AppDriver;
 
 public class LaunchDriverTest extends AppDriver {
 	
 	Logger logger = getLogger(this.getClass());
+	PageFactoryClass pageFactoryClass;
 
 	@BeforeSuite
 	public void beforeMethod()
@@ -29,7 +31,13 @@ public class LaunchDriverTest extends AppDriver {
 	public void launchHomeSearch()
 	{
 		 try {
+			 
 			 WebDriver driver = getDriver();
+			 
+			 //Test Webdriver initialization inside page factory classes
+			 pageFactoryClass = new PageFactoryClass(driver);
+			 Assert.assertTrue(pageFactoryClass.isDriverNotNull(), "Driver returned as Null");
+			 
 			 setHar("homesearch");
 			 driver.get("http://homesearch.com");
 			 Thread.sleep(2000);
