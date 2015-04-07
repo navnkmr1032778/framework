@@ -135,12 +135,11 @@
   			<version>0.5-atlassian-2</version>
 		</dependency>
 		<dependency>
-<<<<<<< HEAD
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.4-1200-jdbc41</version>
         </dependency>  
-=======
+        <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
@@ -160,7 +159,6 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.7</version>
 		</dependency>		
->>>>>>> swaftee framework additions
 	</dependencies>
 	<repositories>
 	   <repository>
