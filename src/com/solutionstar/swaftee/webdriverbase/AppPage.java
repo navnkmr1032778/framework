@@ -47,6 +47,7 @@ public class AppPage extends TestListenerAdapter
 {
 	 protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	 protected WebDriver driver;
+	 JavascriptExecutor javaScriptExecutor; 
 	 
 	 enum ByTypes{
 		  INDEX, VALUE, TEXT
@@ -87,7 +88,14 @@ public class AppPage extends TestListenerAdapter
 	 {
 	    return this.driver.getPageSource();
 	 }
-	
+	 
+	 public JavascriptExecutor getJavaScriptExecutor()
+	 {
+		 if( javaScriptExecutor == null)
+			javaScriptExecutor = (JavascriptExecutor) driver;
+		 return javaScriptExecutor;
+	 }
+	 
 	 public boolean isElementPresent(By locator) 
 	 {
 	    return this.driver.findElements(locator).size() == 0? false : true;
@@ -124,10 +132,18 @@ public class AppPage extends TestListenerAdapter
 		      isElementPresent = true;
 		    return isElementPresent;
 	 }
+	
 	 public void waitForVisible(WebElement element) 
 	 {
 		    WebDriverWait wait =
-		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		        new WebDriverWait(driver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		    wait.until(ExpectedConditions.visibilityOf(element));
+     }
+	 
+	 public void waitForVisible(WebElement element, Integer timeout) 
+	 {
+		    WebDriverWait wait =
+		        new WebDriverWait(driver, timeout);
 		    wait.until(ExpectedConditions.visibilityOf(element));
      }
 	 
@@ -143,13 +159,20 @@ public class AppPage extends TestListenerAdapter
 		  waitForPageLoad(WebDriverConstants.MAX_TIMEOUT_PAGE_LOAD);
 		  return;
 	 }
+	 
+	 public void waitForPageLoadComplete(Integer timeout) 
+	 {
+		  waitForPageLoad(timeout);
+		  return;
+	 }
+	 
 	 public void clearAndType(WebElement element, String text) 
 	 {
 		  element.clear();
 		  element.sendKeys(text);
 	 }
 	  
-	 public void screenShot(String fileName) 
+	 public void takeScreenShot(String fileName) 
 	 {
 	      File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	      try 
@@ -200,7 +223,7 @@ public class AppPage extends TestListenerAdapter
 		    {
 		      public Boolean apply(WebDriver driver) 
 		      {
-		        return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals(
+		        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
 		            "complete");
 		      }
 		    });
@@ -215,8 +238,7 @@ public class AppPage extends TestListenerAdapter
 		  
 	public void selectDateDatePicker(WebElement element, String date) 
 	{
-		    JavascriptExecutor js = (JavascriptExecutor) driver;
-		    js.executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
+		    getJavaScriptExecutor().executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
 		    element.clear();
 		    element.sendKeys(date);
 		    element.sendKeys(Keys.TAB);
@@ -224,8 +246,12 @@ public class AppPage extends TestListenerAdapter
 
 	public void scrollDown(String xVal, String yVal) 
 	{
-		    JavascriptExecutor js = (JavascriptExecutor) driver;
-		    js.executeScript("scroll("+ xVal +", "+  yVal+");");
+			getJavaScriptExecutor().executeScript("scroll("+ xVal +", "+  yVal+");");
+	}
+	
+	public void maximizeWindow()
+	{
+		driver.manage().window().maximize();
 	}
 
 	public void dragAndDropElements(WebElement dragElem, WebElement dropElem) throws InterruptedException 
@@ -406,20 +432,19 @@ public class AppPage extends TestListenerAdapter
 	{
 		String val = null;
 		try{
-			JavascriptExecutor js = (JavascriptExecutor) this.driver;
 			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
 			{
 			      case ID:
-						val = (String) js.executeScript("document.getElementById('"+ele+"').value");
+						val = (String) getJavaScriptExecutor().executeScript("document.getElementById('"+ele+"').value");
 						break;
 			      case CLASS:
-						val = (String) js.executeScript("document.getElementsByClassName('"+ele+"').value");
+						val = (String) getJavaScriptExecutor().executeScript("document.getElementsByClassName('"+ele+"').value");
 						break;
 			      case TAGNAME:
-						val = (String) js.executeScript("document.getElementsByTagName('"+ele+"').value");
+						val = (String) getJavaScriptExecutor().executeScript("document.getElementsByTagName('"+ele+"').value");
 						break;
 			      case NAME:
-						val = (String) js.executeScript("document.getElementsByName('"+ele+"').value");
+						val = (String) getJavaScriptExecutor().executeScript("document.getElementsByName('"+ele+"').value");
 						break;					
 			}
 			return val;
@@ -433,20 +458,19 @@ public class AppPage extends TestListenerAdapter
 	public void setvalueUsingJavaScript(String by, String ele, String val)
 	{
 		try{
-			JavascriptExecutor js = (JavascriptExecutor) this.driver;
 			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
 			{
 			      case ID:
-						js.executeScript("document.getElementById('"+ele+"').value = \""+ val + "\"" );
+			    	   	getJavaScriptExecutor().executeScript("document.getElementById('"+ele+"').value = \""+ val + "\"" );
 						break;
 			      case CLASS:
-						js.executeScript("document.getElementsByClassName('"+ele+"').value = \""+ val + "\"" );
+			    	  	getJavaScriptExecutor().executeScript("document.getElementsByClassName('"+ele+"').value = \""+ val + "\"" );
 						break;
 			      case TAGNAME:
-						js.executeScript("document.getElementsByTagName('"+ele+"').value = \""+ val + "\"" );
+			    	  	getJavaScriptExecutor().executeScript("document.getElementsByTagName('"+ele+"').value = \""+ val + "\"" );
 						break;
 			      case NAME:
-						js.executeScript("document.getElementsByName('"+ele+"').value = \""+ val + "\"" );
+			    	  	getJavaScriptExecutor().executeScript("document.getElementsByName('"+ele+"').value = \""+ val + "\"" );
 						break;					
 			}
 		}catch(Exception e){
@@ -811,4 +835,15 @@ public class AppPage extends TestListenerAdapter
 		    wait.until(ExpectedConditions.textToBePresentInElementValue(e, value));
    }
    
+	public String getAbsolutePath(String filePath)
+	{
+		String absolutePath = null;
+		try{
+			File file = new File(filePath);
+			absolutePath = file.getAbsolutePath();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return absolutePath;
+	}
 }
