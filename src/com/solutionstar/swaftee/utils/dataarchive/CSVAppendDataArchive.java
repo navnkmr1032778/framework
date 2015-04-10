@@ -30,18 +30,10 @@ public class CSVAppendDataArchive extends CSVDataArchive {
      * @throws Exception 
      */
     @Override
-    public void saveData(String filename) throws Exception 
+    public void saveData(String filename) throws Exception
     {
-        
-        try 
-        { 
         	saveDataAppendToFile(filename, DELIMITER); 
-        }
-        catch(Exception e) 
-        { 
-        	throw e; 
-        }
-        
+
     }
     
 }

@@ -10,38 +10,31 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
  * @author Allen Godfrey
  */
 public class XLSDataArchive extends XLSDataArchiveBase implements DataArchive {
-    
-    /**
-     *  logging object
-     */
-    private static Logger log = Logger.getLogger(XLSDataArchive.class);
-    
-    /**
-     * Default constructor.
-     */
-    public XLSDataArchive() { }
-    
 
-    /**
-     * Save the data to a file.
-     * 
-     * @param filename
-     * 
-     * @throws Exception 
-     */
-    public void saveData(String filename) throws Exception {
-        
-        try {
-            
-            log.debug("Attempting save data to filename: " + filename);
-            
-            saveData(new HSSFWorkbook(), filename);
-            
-        
-        }
-        catch(Exception e) { throw e; }
-        
-    }
-    
+	/**
+	 *  logging object
+	 */
+	private static Logger log = Logger.getLogger(XLSDataArchive.class);
+
+	/**
+	 * Default constructor.
+	 */
+	public XLSDataArchive() { }
+
+
+	/**
+	 * Save the data to a file.
+	 * 
+	 * @param filename
+	 * 
+	 * @throws Exception 
+	 */
+	public void saveData(String filename) throws Exception {
+		log.debug("Attempting save data to filename: " + filename);
+
+		saveData(new HSSFWorkbook(), filename);
+
+	}
+
 }
 

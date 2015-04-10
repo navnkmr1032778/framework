@@ -11,39 +11,32 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * @author Allen Godfrey
  */
 public class XLSXDataArchive extends XLSDataArchiveBase implements DataArchive {
-    
-    /**
-     *  logging object
-     */
-    private static Logger log = Logger.getLogger(XLSXDataArchive.class);
-    
-    /**
-     * Default constructor.
-     */
-    public XLSXDataArchive() { }
-    
 
-    /**
-     * Save the data to a file.
-     * 
-     * @param filename
-     * 
-     * @throws Exception 
-     */
-    public void saveData(String filename) throws Exception {
-        
-        try {
-            
-            log.debug("Attempting save data to filename: " + filename);
-            
-            saveData(new XSSFWorkbook(), filename);
-            
-        
-        }
-        catch(Exception e) { throw e; }
-        
-    }
-    
+	/**
+	 *  logging object
+	 */
+	private static Logger log = Logger.getLogger(XLSXDataArchive.class);
+
+	/**
+	 * Default constructor.
+	 */
+	public XLSXDataArchive() { }
+
+
+	/**
+	 * Save the data to a file.
+	 * 
+	 * @param filename
+	 * 
+	 * @throws Exception 
+	 */
+	public void saveData(String filename) throws Exception {
+		log.debug("Attempting save data to filename: " + filename);
+
+		saveData(new XSSFWorkbook(), filename);
+
+	}
+
 }
 
 
