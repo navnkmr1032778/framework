@@ -796,4 +796,11 @@ public class AppPage extends TestListenerAdapter
 	return index;
    }
    
+   public void waitUntilValueAttributeForElement(WebElement e, String value)
+   {
+	   WebDriverWait wait =
+		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		    wait.until(ExpectedConditions.textToBePresentInElementValue(e, value));
+   }
+   
 }
