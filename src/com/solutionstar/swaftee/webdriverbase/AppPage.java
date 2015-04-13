@@ -210,6 +210,7 @@ public class AppPage extends TestListenerAdapter
 	{
 		    JavascriptExecutor js = (JavascriptExecutor) driver;
 		    js.executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
+		    element.clear();
 		    element.sendKeys(date);
 		    element.sendKeys(Keys.TAB);
 	}
