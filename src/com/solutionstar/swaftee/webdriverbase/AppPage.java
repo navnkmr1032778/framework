@@ -131,6 +131,13 @@ public class AppPage extends TestListenerAdapter
 		    wait.until(ExpectedConditions.visibilityOf(element));
      }
 	 
+	 public void waitForVisible(By locator) 
+	 {
+		    WebDriverWait wait =
+		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		    wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+     }
+	 
 	 public void waitForPageLoadComplete() 
 	 {
 		  waitForPageLoad(WebDriverConstants.MAX_TIMEOUT_PAGE_LOAD);

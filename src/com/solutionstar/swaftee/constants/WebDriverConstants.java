@@ -13,7 +13,9 @@ public class WebDriverConstants {
 	
 	public static String DEFAULT_BROWSER_NAME = "chrome";
 	public static int WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC = 10;
+	public static int MILD_SLEEP = 500;
 	public static int WAIT_ONE_MIN = 60;
+	public static int WAIT_TWO_MIN = 120;
 	public static int MAX_TIMEOUT_PAGE_LOAD = 40;
 	final public static String PROXY_SERVER  = "proxyserver.enabled";
 	final public static String GRID_SERVER  = "grid.enabled";
