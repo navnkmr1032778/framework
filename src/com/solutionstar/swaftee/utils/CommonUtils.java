@@ -3,10 +3,14 @@ package com.solutionstar.swaftee.utils;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -20,7 +24,7 @@ public class CommonUtils {
 	Boolean driverFilefound = false;
 	
 	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
-	
+
 	public String getCurrentWorkingDirectory()
 	{		
 		String workingDir = null;
@@ -30,6 +34,11 @@ public class CommonUtils {
 			e.printStackTrace();
 		}
 		return workingDir;
+	}
+	
+	public String getTestDataFullDirPath(String fileName)
+	{
+		return (getCurrentWorkingDirectory() + WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR + fileName);
 	}
 	
 	public File getBrowserExecutable(String path, String fileName)
@@ -91,5 +100,45 @@ public class CommonUtils {
 			 e.printStackTrace();
 			return null;
 		}
+	 }
+	 
+	 public boolean isNumeric(String s) 
+	 {
+		    return s.matches("[-+]?\\d*\\.?\\d+");
+	 }
+	 
+	 public Date getDateFromString(String dateString, SimpleDateFormat formatter)
+	 {
+		Date date = null;
+		try {	 
+			date = formatter.parse(dateString);
+
+		} catch (ParseException e) {
+			logger.error(e.getMessage());
+		}
+		return date;
+	 }
+	 
+	 public String getStringFromDate(Date d, SimpleDateFormat formatter)
+	 { 
+		 return formatter.format(d);
+	 }
+	 
+	 public String getDateToday()
+	 {
+		 return new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+	 }
+	 
+	 public String getDateTomorrow()
+	 {
+		 return getFutureDate(1);
+	 }
+	 
+	 public String getFutureDate(int daysToAdd)
+	 {
+		 DateTime now = new DateTime();
+		 DateTime futureDate = now.plusDays(daysToAdd);
+		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+		 return formatter.print(futureDate);
 	 }
 }
