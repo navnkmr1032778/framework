@@ -1,15 +1,12 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
-import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -140,7 +137,7 @@ public class AppPage extends TestListenerAdapter
 		        new WebDriverWait(driver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		    wait.until(ExpectedConditions.visibilityOf(element));
      }
-	 
+	 	 
 	 public void waitForVisible(WebElement element, Integer timeout) 
 	 {
 		    WebDriverWait wait =
