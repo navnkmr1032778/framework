@@ -252,8 +252,7 @@ public class AppPage extends TestListenerAdapter
 	public void waitForWindowToClose(String windowId)
 	{
 		final String window = windowId;
-		int timeout = 10;
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_TWO_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 	    wait.until(new ExpectedCondition<Boolean>() 
 	    {
 	      public Boolean apply(WebDriver driver) 
