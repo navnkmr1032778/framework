@@ -62,6 +62,7 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
+		 maximizeWindow();
 	 }
 	 
 	 public WebDriver getDriver()
