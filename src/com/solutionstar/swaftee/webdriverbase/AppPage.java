@@ -359,12 +359,18 @@ public class AppPage extends TestListenerAdapter
 		}
 		return switchSuccess;
 	}
+	
 	public boolean switchToLastWindowClosingOthers()
 	{
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		return switchToNthWindowClosingOthers(windows.size(), true);
 	}
 	
+	public void switchToWindowClosingCurrent(String windowHandle)
+	{
+		this.driver.close();
+		switchToWindow(windowHandle);
+	}
 	/**
 	 * Switch to corresponding nth window and close other open windows if needed
 	 * @param n - index of window to switch to(assuming 0 as start index)
@@ -729,6 +735,7 @@ public class AppPage extends TestListenerAdapter
       
    public void waitForAJaxCompletion()
    {    
+	   sleep(500);
 	   try {
 
 		   ExpectedCondition<Boolean> isLoadingFalse = new
