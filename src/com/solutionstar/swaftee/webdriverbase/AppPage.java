@@ -19,6 +19,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
@@ -236,10 +237,13 @@ public class AppPage extends TestListenerAdapter
 		  
 	public void selectDateDatePicker(WebElement element, String date) 
 	{
+
 		    getJavaScriptExecutor().executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
+		    sleep(500);
 		    element.clear();
 		    element.sendKeys(date);
 		    element.sendKeys(Keys.TAB);
+		    sleep(500);
 	}
 
 	public void scrollDown(String xVal, String yVal) 
@@ -489,6 +493,11 @@ public class AppPage extends TestListenerAdapter
         this.driver.navigate().refresh();   
     }
     
+    public void closeWindow()
+    {
+    	this.driver.close();
+    	sleep(500);
+    }
     
     public List<String> getAllSelectOptions(WebElement drpdown)
     {
@@ -587,6 +596,30 @@ public class AppPage extends TestListenerAdapter
     {	
     	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
     	wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+    
+    public void waitForElementToDisappear(WebElement e)
+    {
+    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
+    	wait.until(invisibilityOfElementLocated(e));
+    }
+    
+    public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
+    	return new ExpectedCondition<Boolean>() {
+    		public Boolean apply(WebDriver driver) {
+    			try {
+    				return !(element.isDisplayed());
+    			} catch (NoSuchElementException e) {
+    				// Returns true because the element is not present in DOM. The
+    				// try block checks if the element is present but is invisible.
+    				return true;
+    			} catch (StaleElementReferenceException e) {
+    				// Returns true because stale element reference implies that element
+    				// is no longer visible.
+    				return true;
+    			}
+    		}
+    	};
     }
     
     /**
