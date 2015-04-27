@@ -264,6 +264,16 @@ public class AppDriver extends TestListenerAdapter {
 	    baseDriverHelper.stopDriver();
     }
 	
+	protected void stopSecondaryDriver()
+	{
+		baseDriverHelper.stopSecondaryDriver();
+	}
+	
+	protected void stopPrimaryDriver()
+	{
+		baseDriverHelper.stopPrimaryDriver();
+	}
+	
 	public void setDriver(WebDriver driver) 
 	{
 		baseDriverHelper.setDriver(driver);

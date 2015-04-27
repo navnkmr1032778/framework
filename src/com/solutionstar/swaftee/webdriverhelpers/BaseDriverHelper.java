@@ -297,6 +297,24 @@ public class BaseDriverHelper {
 	 	    }
 	    }
 	    
+	    public void stopSecondaryDriver() 
+	    {
+	 	    if(getSecondaryDriver() != null)
+	 	    {
+	 	      getSecondaryDriver().quit();
+	 	      setSecondaryDriver(null);	    	
+	 	    }
+	    }
+	    
+	    public void stopPrimaryDriver()
+	    {
+	    	 if(getDriver() != null) 
+		 	    {
+		 	      getDriver().quit();
+		 	      setDriver(null);
+		 	    }
+	    }
+	    
 	    public WebDriver getDriver()
 	    {
 	    	return this.driver;

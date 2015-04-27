@@ -20,6 +20,7 @@ public class WebDriverConstants {
 	final public static String PROXY_SERVER  = "proxyserver.enabled";
 	final public static String GRID_SERVER  = "grid.enabled";
 	public static final String DEFAULT_BROWSER_OS = "windows";
+	public static String IE_BROWSER = "ie";
 	
 	public enum OperatingSystem{
 		WINDOWS, MAC
