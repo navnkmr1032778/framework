@@ -578,7 +578,8 @@ public class AppPage extends TestListenerAdapter
     public void waitForElementToDisappear(WebElement e)
     {
     	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
-    	wait.until(invisibilityOfElementLocated(e));
+    	if(isElementPresent(e))
+    		wait.until(invisibilityOfElementLocated(e));
     }
     
     public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
@@ -738,8 +739,7 @@ public class AppPage extends TestListenerAdapter
            element.sendKeys("");
        }
        else{
-           new Actions(this.driver).moveToElement(element).perform();
-           
+    		   new Actions(this.driver).moveToElement(element).perform();
        }
    }
       
