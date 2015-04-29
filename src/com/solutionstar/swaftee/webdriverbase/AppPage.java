@@ -856,7 +856,7 @@ public class AppPage extends TestListenerAdapter
 	   int index = -1;
 	   for(int i=0;i<list.size();i++)
 	   {
-		   if(list.get(i).getText().equals(match))
+		   if(list.get(i).getText().trim().equals(match))
 		   {
 			   index = i;
 			   break;
