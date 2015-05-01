@@ -237,13 +237,7 @@ public class AppPage extends TestListenerAdapter
 		  
 	public void selectDateDatePicker(WebElement element, String date) 
 	{
-<<<<<<< HEAD
-
 		    getJavaScriptExecutor().executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
-=======
-		    JavascriptExecutor js = (JavascriptExecutor) driver;
-		    js.executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
->>>>>>> c1b22ee5ecea56c247615b91468cf3c156d3d644
 		    sleep(500);
 		    element.clear();
 		    element.sendKeys(date);
