@@ -410,6 +410,7 @@ public class AppPage extends TestListenerAdapter
 	
 	public void switchToWindow(String windowHandle)
 	{
+		sleep(500);
     	this.driver.switchTo().window(windowHandle);
     }
 	
