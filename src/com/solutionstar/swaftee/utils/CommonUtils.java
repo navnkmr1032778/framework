@@ -17,6 +17,10 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 public class CommonUtils {
@@ -133,7 +137,7 @@ public class CommonUtils {
 	 {
 		 return getFutureDate(1);
 	 }
-	 
+
 	 public String getFutureDate(int daysToAdd)
 	 {
 		 DateTime now = new DateTime();
@@ -141,4 +145,49 @@ public class CommonUtils {
 		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		 return formatter.print(futureDate);
 	 }
+	 
+	 
+	/**
+	 * Copies file from SFTP
+	 * 
+	 * Provided a username, password, source location, destination, hostname and
+	 * port copies a file using sftp
+	 * 
+	 * @param hostname
+	 *            hostname of sftp server
+	 * @param port
+	 *            port number of sftp server
+	 * @param username
+	 *            username to login to the server
+	 * @param password
+	 *            password to login
+	 * @param sourceLocation
+	 *            source location in the remote server
+	 * @param destination
+	 *            the location in the local machine
+	 */
+	public void copyViaSFTP(String hostname, int port, String username,
+			String password, String sourceLocation, String destination) {
+		Session session = null;
+		Channel channel = null;
+		ChannelSftp channelSftp = null;
+
+		try {
+			JSch jsch = new JSch();
+			session = jsch.getSession(username, hostname, port);
+			session.setPassword(password);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			session.connect();
+			channel = session.openChannel("sftp");
+			channel.connect();
+			channelSftp = (ChannelSftp) channel;
+			channelSftp.get(sourceLocation, destination);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
 }
