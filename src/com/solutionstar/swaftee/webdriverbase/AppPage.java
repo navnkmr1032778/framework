@@ -826,7 +826,7 @@ public class AppPage extends TestListenerAdapter
     */
    public void goBack() 
    {
-       ((Navigation) this.driver).back();    
+       this.driver.navigate().back();
    }
    
 	/**
