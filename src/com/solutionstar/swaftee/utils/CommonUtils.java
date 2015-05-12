@@ -202,6 +202,9 @@ public class CommonUtils {
 			channel.connect();
 			channelSftp = (ChannelSftp) channel;
 			channelSftp.get(sourceLocation, destination);
+			channelSftp.disconnect();
+			session.disconnect();
+			
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

@@ -1,7 +1,9 @@
 package com.solutionstar.swaftee.utils;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 
@@ -323,4 +326,14 @@ public class CSVParserUtils {
 		return list;
 	}
 
+	public void writeToCSVFile(String fileName, List<String[]> data) {
+		try {
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
+			csvWriter.writeAll(data);
+			csvWriter.close();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+		}
+	}
 }
