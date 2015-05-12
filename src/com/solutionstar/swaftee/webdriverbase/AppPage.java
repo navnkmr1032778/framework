@@ -313,14 +313,17 @@ public class AppPage extends TestListenerAdapter
 		boolean switchSuccess = false;
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		String currentWindow = getWindowHandle();
+		String handle;
 		for(int index=0; index<windows.size();index++)
 		{
-			if(currentWindow.equals(windows.get(index)))
+			handle = windows.get(index);
+			this.driver.switchTo().window(handle);
+			if(!currentWindow.equals(handle))
 			{
-				switchSuccess = switchToNthWindowClosingOthers(index, true);
-				break;
+				this.driver.close();
 			}
 		}
+		this.driver.switchTo().window(currentWindow);
 		return switchSuccess;
 	}
 	
