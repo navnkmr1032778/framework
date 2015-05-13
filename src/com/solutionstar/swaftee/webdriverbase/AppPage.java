@@ -19,6 +19,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriver.Navigation;
@@ -237,9 +238,11 @@ public class AppPage extends TestListenerAdapter
 	public void selectDateDatePicker(WebElement element, String date) 
 	{
 		    getJavaScriptExecutor().executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
+		    sleep(500);
 		    element.clear();
 		    element.sendKeys(date);
 		    element.sendKeys(Keys.TAB);
+		    sleep(500);
 	}
 
 	public void scrollDown(String xVal, String yVal) 
@@ -276,8 +279,7 @@ public class AppPage extends TestListenerAdapter
 	public void waitForWindowToClose(String windowId)
 	{
 		final String window = windowId;
-		int timeout = 10;
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_TWO_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 	    wait.until(new ExpectedCondition<Boolean>() 
 	    {
 	      public Boolean apply(WebDriver driver) 
@@ -311,14 +313,17 @@ public class AppPage extends TestListenerAdapter
 		boolean switchSuccess = false;
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		String currentWindow = getWindowHandle();
+		String handle;
 		for(int index=0; index<windows.size();index++)
 		{
-			if(currentWindow.equals(windows.get(index)))
+			handle = windows.get(index);
+			this.driver.switchTo().window(handle);
+			if(!currentWindow.equals(handle))
 			{
-				switchSuccess = switchToNthWindowClosingOthers(index, true);
-				break;
+				this.driver.close();
 			}
 		}
+		this.driver.switchTo().window(currentWindow);
 		return switchSuccess;
 	}
 	
@@ -360,12 +365,18 @@ public class AppPage extends TestListenerAdapter
 		}
 		return switchSuccess;
 	}
+	
 	public boolean switchToLastWindowClosingOthers()
 	{
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		return switchToNthWindowClosingOthers(windows.size(), true);
 	}
 	
+	public void switchToWindowClosingCurrent(String windowHandle)
+	{
+		this.driver.close();
+		switchToWindow(windowHandle);
+	}
 	/**
 	 * Switch to corresponding nth window and close other open windows if needed
 	 * @param n - index of window to switch to(assuming 0 as start index)
@@ -402,6 +413,7 @@ public class AppPage extends TestListenerAdapter
 	
 	public void switchToWindow(String windowHandle)
 	{
+		sleep(500);
     	this.driver.switchTo().window(windowHandle);
     }
 	
@@ -484,6 +496,11 @@ public class AppPage extends TestListenerAdapter
         this.driver.navigate().refresh();   
     }
     
+    public void closeWindow()
+    {
+    	this.driver.close();
+    	sleep(500);
+    }
     
     public List<String> getAllSelectOptions(WebElement drpdown)
     {
@@ -582,6 +599,31 @@ public class AppPage extends TestListenerAdapter
     {	
     	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
     	wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+    
+    public void waitForElementToDisappear(WebElement e)
+    {
+    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
+    	if(isElementPresent(e))
+    		wait.until(invisibilityOfElementLocated(e));
+    }
+    
+    public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
+    	return new ExpectedCondition<Boolean>() {
+    		public Boolean apply(WebDriver driver) {
+    			try {
+    				return !(element.isDisplayed());
+    			} catch (NoSuchElementException e) {
+    				// Returns true because the element is not present in DOM. The
+    				// try block checks if the element is present but is invisible.
+    				return true;
+    			} catch (StaleElementReferenceException e) {
+    				// Returns true because stale element reference implies that element
+    				// is no longer visible.
+    				return true;
+    			}
+    		}
+    	};
     }
     
     /**
@@ -723,13 +765,13 @@ public class AppPage extends TestListenerAdapter
            element.sendKeys("");
        }
        else{
-           new Actions(this.driver).moveToElement(element).perform();
-           
+    		   new Actions(this.driver).moveToElement(element).perform();
        }
    }
       
    public void waitForAJaxCompletion()
    {    
+	   sleep(500);
 	   try {
 
 		   ExpectedCondition<Boolean> isLoadingFalse = new
@@ -787,7 +829,7 @@ public class AppPage extends TestListenerAdapter
     */
    public void goBack() 
    {
-       ((Navigation) this.driver).back();    
+       this.driver.navigate().back();
    }
    
 	/**
@@ -817,7 +859,7 @@ public class AppPage extends TestListenerAdapter
 	   int index = -1;
 	   for(int i=0;i<list.size();i++)
 	   {
-		   if(list.get(i).getText().equals(match))
+		   if(list.get(i).getText().trim().equals(match))
 		   {
 			   index = i;
 			   break;

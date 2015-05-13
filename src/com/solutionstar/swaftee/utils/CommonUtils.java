@@ -134,6 +134,11 @@ public class CommonUtils {
 		 return getFutureDate(1);
 	 }
 	 
+	 public String getDateYesterday()
+	 {
+		 return getPastDate(1);
+	 }
+	 
 	 public String getFutureDate(int daysToAdd)
 	 {
 		 DateTime now = new DateTime();
@@ -141,4 +146,15 @@ public class CommonUtils {
 		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		 return formatter.print(futureDate);
 	 }
+	 
+	 public String getPastDate(int daysToAdd)
+	 {
+		 DateTime now = new DateTime();
+		 DateTime pastDate = now.minusDays(daysToAdd);
+		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+		 return formatter.print(pastDate);
+	 }
+	 
+	 
+	 
 }

@@ -1,6 +1,7 @@
 package com.solutionstar.swaftee.utils;
 
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -262,5 +263,19 @@ public class CSVParserUtils {
 		return csvDataArray;	
 	}
 	
-	
+	public List<String[]> getCSVStringArray(String fileName)
+	{
+		List<String[]> rowEntries = new ArrayList<String[]>();
+		try{
+			initializeConstans();
+			 if(utils == null)
+				 logger.warn("Utils obj is null");
+			 
+			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			 rowEntries = reader.readAll();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return rowEntries;	
+	}
 }
