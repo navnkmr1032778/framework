@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -22,9 +23,11 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 public class CommonUtils {
 	
 	Boolean driverFilefound = false;
-	
-	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
 
+		  
+	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
+	
+	
 	public String getCurrentWorkingDirectory()
 	{		
 		String workingDir = null;
@@ -38,7 +41,10 @@ public class CommonUtils {
 	
 	public String getTestDataFullDirPath(String fileName)
 	{
-		return (getCurrentWorkingDirectory() + WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR + fileName);
+		String path = WebDriverConstants.PATH_TO_TEST_DATA_FILE;
+		if(OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows)
+			path = WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR;
+		return (getCurrentWorkingDirectory()+ path+ fileName);
 	}
 	
 	public File getBrowserExecutable(String path, String fileName)
@@ -155,6 +161,6 @@ public class CommonUtils {
 		 return formatter.print(pastDate);
 	 }
 	 
-	 
+	
 	 
 }
