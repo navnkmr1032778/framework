@@ -22,7 +22,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriver.Navigation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -274,6 +273,7 @@ public class AppPage extends TestListenerAdapter
 	public String getWindowHandle()
 	{
 		return this.driver.getWindowHandle();
+		
 	}
  
 	public void waitForWindowToClose(String windowId)
@@ -771,7 +771,6 @@ public class AppPage extends TestListenerAdapter
       
    public void waitForAJaxCompletion()
    {    
-	   sleep(500);
 	   try {
 
 		   ExpectedCondition<Boolean> isLoadingFalse = new
