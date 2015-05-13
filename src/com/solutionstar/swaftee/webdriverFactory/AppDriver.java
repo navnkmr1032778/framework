@@ -40,15 +40,18 @@ public class AppDriver extends TestListenerAdapter {
 	CommonUtils utils = new CommonUtils();
 	  
 	public WebDriver getDriver()
-	{
-		logger.info("Starting BaseDriver");	   
+	{ 
 	    try 
 	    {
+	    	logger.info("Checking driver..");	
 	    	if(baseDriverHelper.getDriver() == null)
+	    	{ 
+	    		baseDriverHelper.startServer();
+	    		baseDriverHelper.startDriver();
+	    	}else
 	    	{
-		    	baseDriverHelper.startServer();
-				baseDriverHelper.startDriver();
-			}
+	    		logger.info("Driver already running..");
+	    	}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

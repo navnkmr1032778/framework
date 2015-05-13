@@ -29,6 +29,7 @@ import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.browserlaunchers.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import org.testng.ITestResult;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.webdriverFactory.AppDriver;
 
@@ -47,40 +49,66 @@ public class BaseDriverHelper {
 	WebDriver driver = null;
 	WebDriver secondaryDriver = null;	
 	ProxyServer proxyServer = null;
+	CommonProperties props = CommonProperties.getInstance();
 	
 	Logger logger = getLogger(this.getClass());
 	
 		public void startServer() throws InterruptedException
 		{
+			if(!isGridRun())
+			{
 				if(proxyServer !=  null)
 					return;
 				proxyServer = new ProxyServer(0); //port number equals to zero starts the server in dynamic port
-			  	try {
-		       	proxyServer.start();
-	//	       	proxyServer.
-		       
-		      // Start the server in specified host and port - TODO
-	//	      Map<String, String> options = new HashMap<String, String>();
-	//	      options.put("httpProxy", "127.0.0.1" + ":" + "3000");
-	//	      proxyServer.setOptions(options);
-		       	
-		       } catch (Exception e) {
-		         String error = "Error while starting server.. " + e.getStackTrace();
-		         logger.error(error);
-		       }
+				try {
+					proxyServer.start();
+					//	       	proxyServer.
+
+					// Start the server in specified host and port - TODO
+					//	      Map<String, String> options = new HashMap<String, String>();
+					//	      options.put("httpProxy", "127.0.0.1" + ":" + "3000");
+					//	      proxyServer.setOptions(options);
+
+				} catch (Exception e) {
+					String error = "Error while starting server.. " + e.getStackTrace();
+					logger.error(error);
+				}
+			}
 		}
 	
 	   public void startDriver() throws Exception
 	   {
 		 	    if(driver != null)
 			    	return;
-			    String browserName = getBrowserName("primary");
-			    logger.info("browserName -- "+ browserName);
-			    DesiredCapabilities cap = createDriverCapabilities(browserName);		
-				if (cap == null)
-					throw new MyCoreExceptions("Capabilities return as Null");
-				
-				driver = setWebDriver(cap);
+		 	    if(isGridRun())
+		 	    {
+					props.load(WebDriverConstants.PROPERTIES_FILE_PATH);      
+					String browserName = props.getProperty("browser");
+					DesiredCapabilities dr = null;
+					if(browserName.equals("chrome"))
+					{
+						dr= DesiredCapabilities.chrome();
+						dr.setBrowserName("chrome");
+					}
+					else if(browserName.equals("ie"))
+					{
+						dr = DesiredCapabilities.internetExplorer();
+						dr.setBrowserName("InternetExplorer");
+					}				
+					dr.setPlatform(Platform.WINDOWS);
+					RemoteWebDriver rd=new RemoteWebDriver(new URL("http://"+props.getProperty("server")+":"+props.getProperty("port")+"/wd/hub"), dr);
+					rd.setFileDetector(new LocalFileDetector());
+					driver = rd;
+		 	    }else
+		 	    {
+		 	    	String browserName = getBrowserName("primary");
+		 	    	logger.info("browserName -- "+ browserName);
+		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
+		 	    	if (cap == null)
+		 	    		throw new MyCoreExceptions("Capabilities return as Null");
+
+		 	    	driver = setWebDriver(cap);
+		 	    }
 		 
 		}
 
@@ -430,5 +458,10 @@ public class BaseDriverHelper {
 				e.printStackTrace();
 				return null;
 			}
+		}
+		
+		public boolean isGridRun()
+		{
+			return Boolean.valueOf(System.getProperty("grid"));
 		}
 }
