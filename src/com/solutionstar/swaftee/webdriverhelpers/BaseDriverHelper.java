@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -80,11 +81,12 @@ public class BaseDriverHelper {
 	   {
 		 	    if(driver != null)
 			    	return;
+		 	    
 		 	    if(isGridRun())
-		 	    {
-					props.load(WebDriverConstants.PROPERTIES_FILE_PATH);      
-					String browserName = props.getProperty("browser");
+		 	    {   
+					String browserName = getBrowserToRun();
 					DesiredCapabilities dr = null;
+					
 					if(browserName.equals("chrome"))
 					{
 						dr= DesiredCapabilities.chrome();
@@ -94,19 +96,33 @@ public class BaseDriverHelper {
 					{
 						dr = DesiredCapabilities.internetExplorer();
 						dr.setBrowserName("InternetExplorer");
-					}				
-					dr.setPlatform(Platform.WINDOWS);
-					RemoteWebDriver rd=new RemoteWebDriver(new URL("http://"+props.getProperty("server")+":"+props.getProperty("port")+"/wd/hub"), dr);
-					rd.setFileDetector(new LocalFileDetector());
-					driver = rd;
-		 	    }else
+					}
+					else if(browserName.equals("firefox"))
+					{
+						dr = DesiredCapabilities.firefox();
+						dr.setBrowserName("firefox");
+					}
+					else
+					{
+						
+					}
+					
+					String platform = getGridPlatform();
+					
+					if(platform.equals("windows"))
+						dr.setPlatform(Platform.WINDOWS);
+					else if(platform.equals("mac"))
+						dr.setPlatform(Platform.MAC);
+					
+					driver = setRemoteWebDriver(dr);
+		 	    }
+		 	    else
 		 	    {
 		 	    	String browserName = getBrowserName("primary");
 		 	    	logger.info("browserName -- "+ browserName);
 		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
 		 	    	if (cap == null)
 		 	    		throw new MyCoreExceptions("Capabilities return as Null");
-
 		 	    	driver = setWebDriver(cap);
 		 	    }
 		 
@@ -265,7 +281,9 @@ public class BaseDriverHelper {
 	   
 	   private WebDriver setRemoteWebDriver(DesiredCapabilities cap) throws Exception
 	   {
-			return new RemoteWebDriver(new URL("http://"+ WebDriverConfig.getWebDriverProperty("gridserver") +":"+ WebDriverConfig.getWebDriverProperty("gridserverport") +"/wd/hub"),cap);
+		   RemoteWebDriver rd=new RemoteWebDriver(new URL("http://"+getGridServerWithPort()+"/wd/hub"), cap);
+		   rd.setFileDetector(new LocalFileDetector());
+		   return rd;
 	   }   
 	   
 	   
@@ -462,6 +480,21 @@ public class BaseDriverHelper {
 		
 		public boolean isGridRun()
 		{
-			return Boolean.valueOf(System.getProperty("grid"));
+			return Boolean.valueOf(System.getProperty("grid").toLowerCase(Locale.ENGLISH));
+		}
+		
+		public String getBrowserToRun()
+		{
+			return System.getProperty("gridbrowser").toLowerCase(Locale.ENGLISH);
+		}
+		
+		public String getGridServerWithPort()
+		{
+			return System.getProperty("gridserver")+":"+System.getProperty("gridport");
+		}
+		
+		public String getGridPlatform()
+		{
+			return System.getProperty("gridplatform").toLowerCase(Locale.ENGLISH);
 		}
 }
