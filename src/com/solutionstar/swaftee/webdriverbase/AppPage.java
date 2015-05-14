@@ -771,6 +771,8 @@ public class AppPage extends TestListenerAdapter
       
    public void waitForAJaxCompletion()
    {    
+	   //Attempt to save us from Stale Element reference exceptions.
+	   sleep(500);
 	   try {
 
 		   ExpectedCondition<Boolean> isLoadingFalse = new
