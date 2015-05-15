@@ -290,6 +290,20 @@ public class AppPage extends TestListenerAdapter
 		return;
 	}
 	
+	public void waitForNewWindow(int winCount)
+	{
+		final int count = winCount;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+	    wait.until(new ExpectedCondition<Boolean>() 
+	    {
+	      public Boolean apply(WebDriver driver) 
+	      {
+	        return getWindowHandles().size()>count;
+	      }
+	    });
+		return;
+	}
+	
 	public boolean switchToNextWindowClosingCurrent()
 	{
 		boolean switchSuccess = false;
@@ -330,12 +344,23 @@ public class AppPage extends TestListenerAdapter
 	public boolean switchToNextWindow()
 	{
 		boolean switchSuccess = false;
+		if(getWindowHandles().size()==1)
+		{
+			logger.info("One window present..Waiting for new window to open");
+			waitForNewWindow(1);
+		}
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		String currentWindow = getWindowHandle();
-		for(int index=0; index<windows.size();index++)
+		int count = windows.size();
+		for(int index=0; index<count;index++)
 		{
 			if(currentWindow.equals(windows.get(index)))
 			{
+				if(index==count-1)
+				{
+					logger.info("switchToNextWindow() - Current window is last window..Switch not possible");
+					break;
+				}
 				switchSuccess = switchToNthWindow(index+1);  
 				break;
 			}
