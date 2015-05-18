@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -208,5 +211,36 @@ public class CommonUtils {
 			ex.printStackTrace();
 		}
 
+	}
+	
+	public List<String> listFiles(String hostname, int port, String username,
+			String password, String sourceLocation) {
+		Session session = null;
+		Channel channel = null;
+		ChannelSftp channelSftp = null;
+		List<String> list = new ArrayList<String>();
+		try {
+			JSch jsch = new JSch();
+			session = jsch.getSession(username, hostname, port);
+			session.setPassword(password);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			session.connect();
+			channel = session.openChannel("sftp");
+			channel.connect();
+			channelSftp = (ChannelSftp) channel;	
+			Vector<ChannelSftp.LsEntry> v  = channelSftp.ls(sourceLocation);
+			for(ChannelSftp.LsEntry o: v){
+				list.add(o.getFilename());
+			}
+			channelSftp.disconnect();
+			session.disconnect();
+			
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return list;
 	}
 }
