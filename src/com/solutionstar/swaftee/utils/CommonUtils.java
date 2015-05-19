@@ -161,16 +161,12 @@ public class CommonUtils {
 		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		 return formatter.print(pastDate);
 	 }
-	 
-	 
-	 
-	 
-	 
+ 
 	/**
 	 * Copies file from SFTP
 	 * 
-	 * Provided a username, password, source location, destination, hostname and
-	 * port copies a file using sftp
+	 * Provided a username, password, source location, destination, hostname, list of files and
+	 * port copies them using sftp
 	 * 
 	 * @param hostname
 	 *            hostname of sftp server
@@ -182,11 +178,13 @@ public class CommonUtils {
 	 *            password to login
 	 * @param sourceLocation
 	 *            source location in the remote server
+	 * @param files
+	 *            List of files to be coiped from remote server
 	 * @param destination
 	 *            the location in the local machine
 	 */
 	public void copyViaSFTP(String hostname, int port, String username,
-			String password, String sourceLocation, String destination) {
+			String password, String sourceLocation, String destination, List<String> files) {
 		Session session = null;
 		Channel channel = null;
 		ChannelSftp channelSftp = null;
@@ -202,7 +200,9 @@ public class CommonUtils {
 			channel = session.openChannel("sftp");
 			channel.connect();
 			channelSftp = (ChannelSftp) channel;
-			channelSftp.get(sourceLocation, destination);
+			for(String file:files){
+				channelSftp.get(sourceLocation + file, destination);
+			}
 			channelSftp.disconnect();
 			session.disconnect();
 			
@@ -242,5 +242,9 @@ public class CommonUtils {
 			ex.printStackTrace();
 		}
 		return list;
+	}
+	
+	public boolean isFileExists(String fileName) {
+		return new File(fileName).exists();
 	}
 }
