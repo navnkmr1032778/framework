@@ -145,7 +145,7 @@ public class CommonUtils {
 	 {
 		 return getFutureDate(1);
 	 }
-	 
+
 	 public String getDateYesterday()
 	 {
 		 return getPastDate(1);
