@@ -699,8 +699,7 @@ public class AppPage extends TestListenerAdapter
    public void scrolltoElement(WebElement element) 
    {
 	   Point scroll = element.getLocation();
-	   JavascriptExecutor js = (JavascriptExecutor) this.driver;
-	   js.executeScript("javascript:window.scrollBy("+scroll.getX()+","+scroll.getY()+")");
+	   getJavaScriptExecutor().executeScript("javascript:window.scrollBy("+scroll.getX()+","+scroll.getY()+")");
    }
    
    public void rightClick(By locator)

@@ -29,7 +29,9 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 public class CommonUtils {
 	
 	Boolean driverFilefound = false;
-
+	Session session = null;
+	Channel channel = null;
+	ChannelSftp channelSftp = null;
 		  
 	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
 	
@@ -189,11 +191,52 @@ public class CommonUtils {
 	 *            the location in the local machine
 	 */
 	public void copyViaSFTP(String hostname, int port, String username,
-			String password, String sourceLocation, String destination, List<String> files) {
-		Session session = null;
-		Channel channel = null;
-		ChannelSftp channelSftp = null;
+			String password, String sourceLocation, String destination,
+			List<String> files) {
 
+		try {
+
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			for (String file : files) {
+				channelSftp.get(sourceLocation + file, destination);
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
+	
+	public List<String> listFilesInSFTPLocation(String hostname, int port,
+			String username, String password, String sourceLocation) {
+
+		List<String> list = new ArrayList<String>();
+		try {
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls(sourceLocation);
+			for (ChannelSftp.LsEntry o : v) {
+				list.add(o.getFilename());
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return list;
+	}
+	
+	public boolean isFileExists(String fileName) {
+		return new File(fileName).exists();
+	}
+	
+	public ChannelSftp getChannelSftp(String hostname, int port, String username,
+			String password){
 		try {
 			JSch jsch = new JSch();
 			session = jsch.getSession(username, hostname, port);
@@ -205,51 +248,9 @@ public class CommonUtils {
 			channel = session.openChannel("sftp");
 			channel.connect();
 			channelSftp = (ChannelSftp) channel;
-			for(String file:files){
-				channelSftp.get(sourceLocation + file, destination);
-			}
-			channelSftp.disconnect();
-			session.disconnect();
-			
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
-	}
-	
-	public List<String> listFiles(String hostname, int port, String username,
-			String password, String sourceLocation) {
-		Session session = null;
-		Channel channel = null;
-		ChannelSftp channelSftp = null;
-		List<String> list = new ArrayList<String>();
-		try {
-			JSch jsch = new JSch();
-			session = jsch.getSession(username, hostname, port);
-			session.setPassword(password);
-			java.util.Properties config = new java.util.Properties();
-			config.put("StrictHostKeyChecking", "no");
-			session.setConfig(config);
-			session.connect();
-			channel = session.openChannel("sftp");
-			channel.connect();
-			channelSftp = (ChannelSftp) channel;	
-			Vector<ChannelSftp.LsEntry> v  = channelSftp.ls(sourceLocation);
-			for(ChannelSftp.LsEntry o: v){
-				list.add(o.getFilename());
-			}
-			channelSftp.disconnect();
-			session.disconnect();
-			
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return list;
-	}
-	
-	public boolean isFileExists(String fileName) {
-		return new File(fileName).exists();
+		return channelSftp;
 	}
 }

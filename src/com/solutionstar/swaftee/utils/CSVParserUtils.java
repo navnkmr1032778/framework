@@ -332,7 +332,6 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
 		}
 	}

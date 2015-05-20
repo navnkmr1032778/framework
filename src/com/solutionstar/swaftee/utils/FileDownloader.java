@@ -72,7 +72,7 @@ public class FileDownloader {
      * @return
      * @throws Exception
      */
-    public String downloadFile(WebElement element) throws Exception {
+    public String downloadUsingHref(WebElement element) throws Exception {
         return downloader(element, "href");
     }
  
@@ -83,7 +83,7 @@ public class FileDownloader {
      * @return
      * @throws Exception
      */
-    public String downloadImage(WebElement element) throws Exception {
+    public String downloadUsingSrc(WebElement element) throws Exception {
         return downloader(element, "src");
     }
  
