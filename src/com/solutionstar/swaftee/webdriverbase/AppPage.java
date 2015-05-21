@@ -59,7 +59,7 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
-		 maximizeWindow();
+		 maximizeWindow(); 
 	 }
 	 
 	 public WebDriver getDriver()
@@ -152,9 +152,24 @@ public class AppPage extends TestListenerAdapter
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
      }
 	 
+	 public void waitForElementToBeEnabled(WebElement e)
+	 {
+		 final WebElement web = e;
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		    wait.until(new ExpectedCondition<Boolean>() 
+		    {
+		      public Boolean apply(WebDriver driver) 
+		      {
+		        return web.isEnabled();
+		      }
+		    });
+			return;
+	 }
+	 
 	 public void waitForPageLoadComplete() 
 	 {
 		  waitForPageLoad(WebDriverConstants.MAX_TIMEOUT_PAGE_LOAD);
+		  waitForAJaxCompletion();
 		  return;
 	 }
 	 
