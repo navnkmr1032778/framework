@@ -553,6 +553,9 @@ public class AppPage extends TestListenerAdapter
 		    return listNames;
     }
     
+    public boolean hasSelectOption(WebElement drpDown, String value) {
+    	return getAllSelectOptions(drpDown).contains(value);
+    }
     
     public void waitUntilDropdownIsLoaded(WebElement drpdown, final List<String> defaultOptions)
     {
