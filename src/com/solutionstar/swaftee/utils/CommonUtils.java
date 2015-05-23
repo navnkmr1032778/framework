@@ -20,6 +20,7 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -252,5 +253,17 @@ public class CommonUtils {
 			ex.printStackTrace();
 		}
 		return channelSftp;
+	}
+	
+	public String toJson(Object obj) {
+		Gson gson = new Gson();
+		String json = gson.toJson(obj);
+		return json;
+	}
+	
+	public Object fromJson(String json, Class<?> classObj) {
+		Gson gson = new Gson();
+		Object obj = gson.fromJson(json, classObj);
+		return obj;
 	}
 }
