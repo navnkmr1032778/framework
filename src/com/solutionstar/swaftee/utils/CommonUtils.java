@@ -2,12 +2,14 @@ package com.solutionstar.swaftee.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
@@ -264,6 +266,35 @@ public class CommonUtils {
 	public Object fromJson(String json, Class<?> classObj) {
 		Gson gson = new Gson();
 		Object obj = gson.fromJson(json, classObj);
+		return obj;
+	}
+	
+	public void saveOjectToFile(Object object, String fileName) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new File(fileName));
+			String json = toJson(object);
+			pw.write(json);
+			pw.close();
+		} catch (IOException ex) {
+			logger.error("Exception occured when saving object to file. Messgae: " + ex.getMessage());
+		}
+	}
+	
+	public Object retriveOjectFromFile(Class<?> classObj, String fileName){
+		Scanner scan = null;
+		Object obj = null;
+		try {
+			scan = new Scanner(new File(fileName));
+			StringBuilder json = new StringBuilder();
+	        while(scan.hasNext()){
+	            json.append(scan.next());
+	        }
+			scan.close();
+			obj = fromJson(json.toString(), classObj);
+		} catch (Exception ex) {
+			logger.error("Exception occured when retriving object to file. Messgae: " + ex.getMessage());
+		}
 		return obj;
 	}
 }
