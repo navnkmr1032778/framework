@@ -1,6 +1,8 @@
 package com.solutionstar.swaftee.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -9,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
@@ -277,23 +278,29 @@ public class CommonUtils {
 			pw.write(json);
 			pw.close();
 		} catch (IOException ex) {
-			logger.error("Exception occured when saving object to file. Messgae: " + ex.getMessage());
+			logger.error("Exception occured when saving object to file. Message: " + ex.getMessage());
 		}
 	}
 	
-	public Object retriveOjectFromFile(Class<?> classObj, String fileName){
-		Scanner scan = null;
+	public Object retriveOjectFromFile(Class<?> classObj, String fileName) {
+		BufferedReader br = null;
 		Object obj = null;
 		try {
-			scan = new Scanner(new File(fileName));
+			br = new BufferedReader(new FileReader(fileName));
 			StringBuilder json = new StringBuilder();
-	        while(scan.hasNext()){
-	            json.append(scan.next());
-	        }
-			scan.close();
+			String line = br.readLine();
+
+			while (line != null) {
+				json.append(line);
+				json.append("\n");
+				line = br.readLine();
+			}
+			
+			br.close();
 			obj = fromJson(json.toString(), classObj);
 		} catch (Exception ex) {
-			logger.error("Exception occured when retriving object to file. Messgae: " + ex.getMessage());
+			logger.error("Exception occured when retriving object from file. Message: "
+					+ ex.getMessage());
 		}
 		return obj;
 	}
