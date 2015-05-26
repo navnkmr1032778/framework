@@ -32,8 +32,6 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 
 		PrintWriter writer = new PrintWriter(new FileWriter(new File(filename), append));
 		
-		writer.print(System.lineSeparator());
-		
 		for(int i = 0; i < list.size(); i++) {
 
 			String[] data = list.get(i); 

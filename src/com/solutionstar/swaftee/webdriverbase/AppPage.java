@@ -736,7 +736,7 @@ public class AppPage extends TestListenerAdapter
            driver.switchTo().alert(); 
            return true; 
        } 
-       catch (NoAlertPresentException Ex) 
+       catch (Exception Ex) 
        { 
            return false; 
        } 
@@ -757,7 +757,7 @@ public class AppPage extends TestListenerAdapter
 	   else
 	   {
 		   //Arbitrary wait for alert to appear
-		   sleep(500);
+		   sleep(100);
 		   if(isAlertPresent())
 		   {
 			   driver.switchTo().alert().accept();
