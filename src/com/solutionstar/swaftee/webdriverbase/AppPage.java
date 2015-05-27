@@ -17,6 +17,7 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -724,12 +725,12 @@ public class AppPage extends TestListenerAdapter
 	   clicker.contextClick(elementToRightClick).perform();
    }
    
-   public boolean isAlertPresent()
+   public boolean waitForAlert()
    {
 	   try 
 	   {
 		   WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
-		   wait.until(ExpectedConditions.alertIsPresent());
+		   wait.until(ExpectedConditions.alertIsPresent() );
 		   return true;
 	   } 
 	   catch (Exception e) 
@@ -738,18 +739,47 @@ public class AppPage extends TestListenerAdapter
 	   }
    }
    
-   public void dismissAlertIfPresent()
+   public boolean isAlertPresent() 
+   { 
+       try 
+       { 
+           driver.switchTo().alert(); 
+           return true; 
+       } 
+       catch (Exception Ex) 
+       { 
+           return false; 
+       } 
+   } 
+   
+   public void dismissAlertIfPresent(boolean shouldWait)
    {
-	   if(isAlertPresent())
+	   boolean dismissed = false;
+	   if(shouldWait)
 	   {
-		   Alert alert  = this.driver.switchTo().alert();
-		   alert.accept();
+		   if(waitForAlert())
+		   {
+			   Alert alert  = this.driver.switchTo().alert();
+			   alert.accept();
+			   dismissed = true;
+		   }
 	   }
 	   else
+	   {
+		   //Arbitrary wait for alert to appear
+		   sleep(100);
+		   if(isAlertPresent())
+		   {
+			   driver.switchTo().alert().accept();
+			   dismissed = true;
+		   }
+	   }
+	   if(!dismissed)
 	   {
 		   logger.error("FAIL: dismissAlertIfPresent() - No alert to dismiss");
 	   }
    }
+   
    public String getSelectedLabel(WebElement element)
    {
 	   WebElement option = new Select(element).getFirstSelectedOption();
