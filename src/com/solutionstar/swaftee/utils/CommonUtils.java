@@ -157,6 +157,13 @@ public class CommonUtils {
 		 return getPastDate(1);
 	 }
 
+	 public String getFutureDate(int daysToAdd, SimpleDateFormat sdf)
+	 {
+		 DateTime now = new DateTime();
+		 DateTime futureDate = now.plusDays(daysToAdd);
+		 return sdf.format(futureDate.toDate());
+	 }
+	 
 	 public String getFutureDate(int daysToAdd)
 	 {
 		 DateTime now = new DateTime();
@@ -303,5 +310,12 @@ public class CommonUtils {
 					+ ex.getMessage());
 		}
 		return obj;
+	}
+	
+	public String changeDateFormat(String date, String sourceFormat, String destinationFormat) {
+
+		Date d = getDateFromString(date, new SimpleDateFormat(sourceFormat));
+
+		return getStringFromDate(d,new SimpleDateFormat(destinationFormat));
 	}
 }

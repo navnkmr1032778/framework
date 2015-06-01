@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -298,6 +299,14 @@ public class CSVParserUtils {
 	 * @return List of hashmap
 	 */
 	public List<HashMap<String, String>> getDataFromCSV(String fileName) {
+		return getDataFromCSV(fileName, true);
+	}
+
+	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks) {
+		if(!fileName.endsWith(".csv")) {
+			fileName += ".csv";
+		}
+		
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		if (utils == null)
 			utils = new CommonUtils();
@@ -305,14 +314,14 @@ public class CSVParserUtils {
 			CSVReader reader = new CSVReader(new FileReader(
 					utils.getCurrentWorkingDirectory()
 							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+							+ fileName));
 			List<String[]> data = reader.readAll();
 			String[] header = data.remove(0);
 			for (String[] row : data) {
 				HashMap<String, String> rowEntries = new HashMap<String, String>();
 				for (int i = 0; i < header.length; i++) {
 					rowEntries
-							.put(header[i], row[i].equals("") ? null : row[i]);
+							.put(header[i], ((row[i].equals("") && sendNullForBlanks) ? null : row[i]));
 				}
 				list.add(rowEntries);
 			}
@@ -325,7 +334,7 @@ public class CSVParserUtils {
 		}
 		return list;
 	}
-
+	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
@@ -335,4 +344,41 @@ public class CSVParserUtils {
 			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
 		}
 	}
+	
+	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data) {
+		try {
+			Set<String> header = data.get(0).keySet();
+			writeListHashMapToCSV(fileName, data, header.toArray(new String[header.size()]));
+		} catch (Exception e) {
+			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
+		}
+	}
+	
+	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
+		try {
+			List<String[]> dataToCSV = new ArrayList<String[]>();
+			int count = header.length;
+			String[] cells = new String[count];
+			int index = 0;
+			for(String heading : header) {
+				cells[index] = heading;
+				index++;
+			}
+			dataToCSV.add(cells);
+			for(HashMap<String,String> map : data) {
+				cells = new String[count];
+				index = 0;
+				for(String heading : header) {
+					cells[index] = map.get(heading);
+					index++;
+				}
+				dataToCSV.add(cells);
+			}
+			writeToCSVFile(fileName, dataToCSV);
+		} catch (Exception e) {
+			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
+		}
+	}
+	
+	
 }
