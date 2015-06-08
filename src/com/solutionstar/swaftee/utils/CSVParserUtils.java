@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -257,6 +258,58 @@ public class CSVParserUtils {
 			 csvDataArray = new String[rowEntries.size()][];
 			 csvDataArray = rowEntries.toArray(csvDataArray);
 			 reader.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return csvDataArray;	
+	}
+	
+	public Object[][] getCSVArray(String fileName,int rowNum)
+	{
+		try{
+			initializeConstans();
+			 if(utils == null)
+				 logger.warn("Utils obj is null");
+			 
+			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			 List<String[]> rowEntries = new ArrayList<String[]>();
+			 for(int i=0;i<rowNum;i++)
+			 {
+				 rowEntries.add(reader.readNext());
+			 }
+			 csvDataArray = new String[rowEntries.size()][];
+			 csvDataArray = rowEntries.toArray(csvDataArray);
+			 reader.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return csvDataArray;	
+	}
+	
+	public Object[][] getCSVArray(String fileName,int rangeMin, int rangeMax)
+	{
+		try{
+			initializeConstans();
+			 if(utils == null)
+				 logger.warn("Utils obj is null");
+			 
+			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			 List<String[]> allRows = reader.readAll();
+			 reader.close();
+			 List<String[]> rowEntries = new ArrayList<String[]>();
+			 if(allRows.size()<rangeMin || allRows.size()<rangeMax) {
+				 logger.error("FATAL : getCSVArray - CSV has fewer elements.. Change range specified "+ rangeMin + " "+ rangeMax+ "for file "+fileName);
+			 }
+			 else
+			 {
+				 for(int i=rangeMin;i<=rangeMax;i++)
+				 {
+					 rowEntries.add(allRows.get(i));
+				 }
+				 csvDataArray = new String[rowEntries.size()][];
+				 csvDataArray = rowEntries.toArray(csvDataArray);
+			 }
+			 
 		}catch(Exception e){
 			e.printStackTrace();
 		}
