@@ -636,6 +636,15 @@ public class AppPage extends TestListenerAdapter
 		return isElementPresent(By.xpath(locator));
 	}
     
+    public void clickOnLinkWithText(String linkText)
+    {
+    	By locator = By.xpath("//a[text()='" + linkText+"']");
+    	if(isElementPresent(locator))
+    	{
+    		driver.findElement(locator).click();
+    	}
+    }
+    
     public void waitForElementToDisappear(By locator) 
     {	
     	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
