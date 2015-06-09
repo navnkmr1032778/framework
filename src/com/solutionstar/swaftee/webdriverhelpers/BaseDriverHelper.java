@@ -480,7 +480,14 @@ public class BaseDriverHelper {
 		
 		public boolean isGridRun()
 		{
-			return Boolean.valueOf(System.getProperty("grid").toLowerCase(Locale.ENGLISH));
+			try
+			{
+				return Boolean.valueOf(System.getProperty("grid").toLowerCase(Locale.ENGLISH));
+			}
+			catch(NullPointerException exp)
+			{
+				return false;
+			}
 		}
 		
 		public String getBrowserToRun()
