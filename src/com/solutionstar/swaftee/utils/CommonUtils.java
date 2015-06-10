@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
+import java.util.List;
+import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
@@ -18,12 +20,18 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 public class CommonUtils {
 	
 	Boolean driverFilefound = false;
-
+	Session session = null;
+	Channel channel = null;
+	ChannelSftp channelSftp = null;
 		  
 	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
 	
@@ -139,12 +147,12 @@ public class CommonUtils {
 	 {
 		 return getFutureDate(1);
 	 }
-	 
+
 	 public String getDateYesterday()
 	 {
 		 return getPastDate(1);
 	 }
-	 
+
 	 public String getFutureDate(int daysToAdd)
 	 {
 		 DateTime now = new DateTime();
@@ -160,7 +168,89 @@ public class CommonUtils {
 		 DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		 return formatter.print(pastDate);
 	 }
-	 
+
+	/**
+	 * Copies file from SFTP
+	 * 
+	 * Provided a username, password, source location, destination, hostname, list of files and
+	 * port copies them using sftp
+	 * 
+	 * @param hostname
+	 *            hostname of sftp server
+	 * @param port
+	 *            port number of sftp server
+	 * @param username
+	 *            username to login to the server
+	 * @param password
+	 *            password to login
+	 * @param sourceLocation
+	 *            source location in the remote server
+	 * @param files
+	 *            List of files to be coiped from remote server
+	 * @param destination
+	 *            the location in the local machine
+	 */
+	public void copyViaSFTP(String hostname, int port, String username,
+			String password, String sourceLocation, String destination,
+			List<String> files) {
+
+		try {
+
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			for (String file : files) {
+				channelSftp.get(sourceLocation + file, destination);
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+	}
 	
-	 
+	public List<String> listFilesInSFTPLocation(String hostname, int port,
+			String username, String password, String sourceLocation) {
+
+		List<String> list = new ArrayList<String>();
+		try {
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls(sourceLocation);
+			for (ChannelSftp.LsEntry o : v) {
+				list.add(o.getFilename());
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return list;
+	}
+	
+	public boolean isFileExists(String fileName) {
+		return new File(fileName).exists();
+	}
+	
+	public ChannelSftp getChannelSftp(String hostname, int port, String username,
+			String password){
+		try {
+			JSch jsch = new JSch();
+			session = jsch.getSession(username, hostname, port);
+			session.setPassword(password);
+			java.util.Properties config = new java.util.Properties();
+			config.put("StrictHostKeyChecking", "no");
+			session.setConfig(config);
+			session.connect();
+			channel = session.openChannel("sftp");
+			channel.connect();
+			channelSftp = (ChannelSftp) channel;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return channelSftp;
+	}
 }
