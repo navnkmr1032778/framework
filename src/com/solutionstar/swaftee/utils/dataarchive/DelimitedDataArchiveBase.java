@@ -31,14 +31,14 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	public void saveData(String filename, boolean append, String delimiter) throws Exception {
 
 		PrintWriter writer = new PrintWriter(new FileWriter(new File(filename), append));
-
+		
 		for(int i = 0; i < list.size(); i++) {
 
 			String[] data = list.get(i); 
 
 			for(int j = 0; j < data.length; j++) writer.print(data[j] + delimiter);
 
-			writer.print("\n");
+			writer.print(System.lineSeparator());
 
 		}
 
