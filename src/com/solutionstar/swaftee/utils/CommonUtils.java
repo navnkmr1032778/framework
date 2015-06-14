@@ -265,23 +265,23 @@ public class CommonUtils {
 		return channelSftp;
 	}
 	
-	public String toJson(Object obj) {
+	public String objToJson(Object obj) {
 		Gson gson = new Gson();
 		String json = gson.toJson(obj);
 		return json;
 	}
 	
-	public Object fromJson(String json, Class<?> classObj) {
+	public Object constructObjfromJson(String json, Class<?> classObj) {
 		Gson gson = new Gson();
 		Object obj = gson.fromJson(json, classObj);
 		return obj;
 	}
 	
-	public void saveOjectToFile(Object object, String fileName) {
+	public synchronized void saveOjectToFile(Object object, String fileName) {
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(new File(fileName));
-			String json = toJson(object);
+			String json = objToJson(object);
 			pw.write(json);
 			pw.close();
 		} catch (IOException ex) {
@@ -304,7 +304,7 @@ public class CommonUtils {
 			}
 			
 			br.close();
-			obj = fromJson(json.toString(), classObj);
+			obj = constructObjfromJson(json.toString(), classObj);
 		} catch (Exception ex) {
 			logger.error("Exception occured when retriving object from file. Message: "
 					+ ex.getMessage());
