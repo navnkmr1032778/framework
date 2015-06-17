@@ -1,8 +1,6 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
-import java.lang.reflect.InvocationTargetException;
 import java.io.File;
-import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
@@ -10,7 +8,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 import net.lightbody.bmp.core.har.Har;
@@ -21,17 +18,16 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.browserlaunchers.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -212,6 +208,9 @@ public class BaseDriverHelper {
 				switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
 			    {
 				     case CHROME:
+				    	ChromeOptions options = new ChromeOptions();
+				    	options.addArguments("--disable-extensions");
+				    	cap.setCapability(ChromeOptions.CAPABILITY, options);
 				    	driver = new ChromeDriver(cap);
 			   			break;
 					case INTERNET_EXPLORER:
