@@ -1,5 +1,7 @@
 package com.solutionstar.swaftee.webdriverbase;
 
+import io.appium.java_client.AppiumDriver;
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
@@ -46,6 +48,7 @@ public class AppPage extends TestListenerAdapter
 {
 	 protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	 protected WebDriver driver;
+	 protected AppiumDriver mobiledriver;
 	 JavascriptExecutor javaScriptExecutor; 
 	 
 	 enum ByTypes{
@@ -59,6 +62,14 @@ public class AppPage extends TestListenerAdapter
 	 public AppPage(WebDriver driver)
 	 {
 		 this.driver = driver;
+		 waitForPageLoadComplete();
+		 PageFactory.initElements(driver, this);
+		 maximizeWindow(); 
+	 }
+	 
+	 public AppPage(AppiumDriver driver)
+	 {
+		 this.mobiledriver = driver;
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
 		 maximizeWindow(); 

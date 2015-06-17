@@ -1,6 +1,5 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import io.appium.java_client.AppiumDriver;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -46,7 +45,7 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 public class MobilePage extends TestListenerAdapter 
 {
 	 protected static Logger logger = LoggerFactory.getLogger(MobilePage.class.getName());
-	 protected AppiumDriver mobiledriver;
+	 protected WebDriver driver;
 	 JavascriptExecutor javaScriptExecutor; 
 	 
 	 enum ByTypes{
@@ -58,46 +57,46 @@ public class MobilePage extends TestListenerAdapter
 	 } 
 	 
 	 
-	 public MobilePage(AppiumDriver mobiledriver)
+	 public MobilePage(WebDriver driver)
 	 {
-		 this.mobiledriver = mobiledriver;
+		 this.driver = driver;
 	 }
 	 
-	 public AppiumDriver getmobileDriver()
+	 public WebDriver getmobileDriver()
 	 {
-		 return this.mobiledriver;
+		 return this.driver;
 	 }
 	
 	 public void get(String url) 
 	 {
-		this.mobiledriver.get(url);
+		this.driver.get(url);
 	 }
 	
 	 public String getCurrentUrl() 
 	 {
-		return this.mobiledriver.getCurrentUrl();
+		return this.driver.getCurrentUrl();
 	 }
 	 
 	 public void deleteCookies() 
 	 {
-	    this.mobiledriver.manage().deleteAllCookies();
+	    this.driver.manage().deleteAllCookies();
 	 }
 
 	 public String pageSource() 
 	 {
-	    return this.mobiledriver.getPageSource();
+	    return this.driver.getPageSource();
 	 }
 	 
 	 public JavascriptExecutor getJavaScriptExecutor()
 	 {
 		 if( javaScriptExecutor == null)
-			javaScriptExecutor = (JavascriptExecutor) mobiledriver;
+			javaScriptExecutor = (JavascriptExecutor) driver;
 		 return javaScriptExecutor;
 	 }
 	 
 	 public boolean isElementPresent(By locator) 
 	 {
-	    return this.mobiledriver.findElements(locator).size() == 0? false : true;
+	    return this.driver.findElements(locator).size() == 0? false : true;
 	 }
 	 public boolean isElementPresent(WebElement element) 
 	 {
@@ -134,41 +133,37 @@ public class MobilePage extends TestListenerAdapter
 	
 	 public void waitForVisible(WebElement element) 
 	 {
-		 System.out.println("waitforvisible");
+		 System.out.println("waitforvisible ");
 		    WebDriverWait wait =
-		        new WebDriverWait(mobiledriver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		        new WebDriverWait(driver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		    wait.until(ExpectedConditions.visibilityOf(element));
      }
 	 	 
 	 public void waitForVisible(WebElement element, Integer timeout) 
 	 {
 		    WebDriverWait wait =
-		        new WebDriverWait(mobiledriver, timeout);
+		        new WebDriverWait(driver, timeout);
 		    wait.until(ExpectedConditions.visibilityOf(element));
      }
 	 
 	 public void waitForVisible(By locator) 
 	 {
 		    WebDriverWait wait =
-		        new WebDriverWait(mobiledriver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
      }
 	 
 	 public void waitForElementToBeEnabled(WebElement e)
 	 {
 		 final WebElement web = e;
-			Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		    wait.until(new ExpectedCondition<Boolean>() 
 		    {
-		      public Boolean apply(AppiumDriver mobiledriver) 
+		      public Boolean apply(WebDriver driver) 
 		      {
 		        return web.isEnabled();
 		      }
 
-			public Boolean apply(WebDriver arg0) {
-				// TODO Auto-generated method stub
-				return null;
-			}
 
 		    });
 			return;
@@ -195,7 +190,7 @@ public class MobilePage extends TestListenerAdapter
 	  
 	 public void takeScreenShot(String fileName) 
 	 {
-	      File scrFile = ((TakesScreenshot) mobiledriver).getScreenshotAs(OutputType.FILE);
+	      File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	      try 
 	      {
 	        FileUtils.copyFile(scrFile, new File(fileName));
@@ -226,12 +221,12 @@ public class MobilePage extends TestListenerAdapter
 	  
 	 public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	 {
-			Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-			WebElement element = wait.until(new Function<AppiumDriver, WebElement>() 
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			WebElement element = wait.until(new Function<WebDriver, WebElement>() 
 		    {
-		      public WebElement apply(AppiumDriver mobiledriver) 
+		      public WebElement apply(WebDriver driver) 
 		      {
-		        return mobiledriver.findElement(locator);
+		        return driver.findElement(locator);
 		      }
 		    }); 
 			return element;
@@ -239,7 +234,7 @@ public class MobilePage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-			Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		    wait.until(new ExpectedCondition<Boolean>() 
 		    {
 
@@ -276,12 +271,12 @@ public class MobilePage extends TestListenerAdapter
 	
 	public void maximizeWindow()
 	{
-		mobiledriver.manage().window().maximize();
+		driver.manage().window().maximize();
 	}
 
 	public void dragAndDropElements(WebElement dragElem, WebElement dropElem) throws InterruptedException 
 	{
-		    Actions builder = new Actions(mobiledriver);
+		    Actions builder = new Actions(driver);
 		    Point p = dropElem.getLocation();
 		    scrollDown(String.valueOf(p.x), String.valueOf(p.y));
 		    Action dragAndDrop2 = builder.dragAndDropBy(dragElem, p.x, 0).build();
@@ -292,50 +287,42 @@ public class MobilePage extends TestListenerAdapter
 		  
 	public Set<String> getWindowHandles()
 	{
-		return this.mobiledriver.getWindowHandles();	
+		return this.driver.getWindowHandles();	
 	}
 	
 	public String getWindowHandle()
 	{
-		return this.mobiledriver.getWindowHandle();
+		return this.driver.getWindowHandle();
 		
 	}
  
 	public void waitForWindowToClose(String windowId)
 	{
 		final String window = windowId;
-		Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(WebDriverConstants.WAIT_TWO_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_TWO_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 	    wait.until(new ExpectedCondition<Boolean>() 
 	    {
-	      public Boolean apply(AppiumDriver mobiledriver) 
+	      public Boolean apply(WebDriver driver) 
 	      {
 	        return !getWindowHandles().contains(window);
 	      }
-
-		public Boolean apply(WebDriver arg0) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	    });
+
 		return;
 	}
 	
 	public void waitForNewWindow(int winCount)
 	{
 		final int count = winCount;
-		Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 	    wait.until(new ExpectedCondition<Boolean>() 
 	    {
-	      public Boolean apply(AppiumDriver mobiledriver) 
+	      public Boolean apply(WebDriver driver) 
 	      {
 	        return getWindowHandles().size()>count;
 	      }
-
-		public Boolean apply(WebDriver arg0) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	    });
+		
 		return;
 	}
 	
@@ -348,7 +335,7 @@ public class MobilePage extends TestListenerAdapter
 		{
 			if(currentWindow.equals(windows.get(index)))
 			{
-				this.mobiledriver.close(); 
+				this.driver.close(); 
 				//Pass index, since the next window's index would've reduced by 1 
 				switchSuccess = switchToNthWindow(index);  
 				break;
@@ -366,13 +353,13 @@ public class MobilePage extends TestListenerAdapter
 		for(int index=0; index<windows.size();index++)
 		{
 			handle = windows.get(index);
-			this.mobiledriver.switchTo().window(handle);
+			this.driver.switchTo().window(handle);
 			if(!currentWindow.equals(handle))
 			{
-				this.mobiledriver.close();
+				this.driver.close();
 			}
 		}
-		this.mobiledriver.switchTo().window(currentWindow);
+		this.driver.switchTo().window(currentWindow);
 		return switchSuccess;
 	}
 	
@@ -418,7 +405,7 @@ public class MobilePage extends TestListenerAdapter
 			if(currentWindow.equals(windows.get(index)))
 			{
 				if(close)
-					this.mobiledriver.close();
+					this.driver.close();
 				switchSuccess = switchToNthWindow(index-1);  
 				break;
 			}
@@ -434,7 +421,7 @@ public class MobilePage extends TestListenerAdapter
 	
 	public void switchToWindowClosingCurrent(String windowHandle)
 	{
-		this.mobiledriver.close();
+		this.driver.close();
 		switchToWindow(windowHandle);
 	}
 	/**
@@ -456,7 +443,7 @@ public class MobilePage extends TestListenerAdapter
 					switchToWindow(windows.get(index));
 					if(index!=n)
 					{
-						this.mobiledriver.close();
+						this.driver.close();
 					}
 				}
 			}
@@ -474,24 +461,24 @@ public class MobilePage extends TestListenerAdapter
 	public void switchToWindow(String windowHandle)
 	{
 		sleep(500);
-    	this.mobiledriver.switchTo().window(windowHandle);
+    	this.driver.switchTo().window(windowHandle);
     }
 	
 	public boolean switchToWindowUsingTitle(String title) throws InterruptedException 
 	{
-	    String curWindow = this.mobiledriver.getWindowHandle();
-	    Set<String> windows = this.mobiledriver.getWindowHandles();
+	    String curWindow = this.driver.getWindowHandle();
+	    Set<String> windows = this.driver.getWindowHandles();
 	    if (!windows.isEmpty()) 
 	    {
 	      for (String windowId : windows) 
 	      {
-	        if (this.mobiledriver.switchTo().window(windowId).getTitle().equals(title)) 
+	        if (this.driver.switchTo().window(windowId).getTitle().equals(title)) 
 	        {
 	          return true;
 	        } 
 	        else 
 	        {
-	          this.mobiledriver.switchTo().window(curWindow);
+	          this.driver.switchTo().window(curWindow);
 	        }
 	      }
 	    }
@@ -502,7 +489,7 @@ public class MobilePage extends TestListenerAdapter
 	{
 		try
 		{
-			this.mobiledriver.switchTo().frame(frame);
+			this.driver.switchTo().frame(frame);
 			return true;
 		}
 		catch(Exception ex)
@@ -567,12 +554,12 @@ public class MobilePage extends TestListenerAdapter
      */
     public void refresh() 
     {    
-        this.mobiledriver.navigate().refresh();   
+        this.driver.navigate().refresh();   
     }
     
     public void closeWindow()
     {
-    	this.mobiledriver.close();
+    	this.driver.close();
     	sleep(500);
     }
     
@@ -596,17 +583,14 @@ public class MobilePage extends TestListenerAdapter
     		final WebElement dropdown = drpdown;
  		    ExpectedCondition<Boolean> isLoadingFalse = new
  				   ExpectedCondition<Boolean>() {
- 			   public Boolean apply(AppiumDriver mobiledriver) 
+ 			   public Boolean apply(WebDriver driver) 
  			   {
  				   return (!getAllSelectOptions(dropdown).isEmpty() && getAllSelectOptions(dropdown).size()!=defaultOptions.size() && !defaultOptions.containsAll(getAllSelectOptions(dropdown)));
  			   }
 
-			public Boolean apply(WebDriver arg0) {
-				// TODO Auto-generated method stub
-				return null;
-			}
+			
  		   };
- 		   Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(2, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+ 		   Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(2, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		   wait.until(isLoadingFalse);
 	   } 
 	   catch (Exception e) 
@@ -630,17 +614,17 @@ public class MobilePage extends TestListenerAdapter
     
     public void switchToDefaultContent() 
     {
-    	this.mobiledriver.switchTo().defaultContent();
+    	this.driver.switchTo().defaultContent();
     }
     
     public void switchToFrame(String frameId) 
     {
-		this.mobiledriver.switchTo().frame(frameId);
+		this.driver.switchTo().frame(frameId);
 	}
     
     public void switchToFrame(int index) 
     {
-		this.mobiledriver.switchTo().frame(index);
+		this.driver.switchTo().frame(index);
 	}
     
     /**
@@ -676,20 +660,20 @@ public class MobilePage extends TestListenerAdapter
     
     public void waitForElementToDisappear(By locator) 
     {	
-    	WebDriverWait wait = new WebDriverWait(this.mobiledriver,WebDriverConstants.WAIT_ONE_MIN);
+    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
     	wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
     
     public void waitForElementToDisappear(WebElement e)
     {
-    	WebDriverWait wait = new WebDriverWait(this.mobiledriver,WebDriverConstants.WAIT_ONE_MIN);
+    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
     	if(isElementPresent(e))
     		wait.until(invisibilityOfElementLocated(e));
     }
     
     public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
     	return new ExpectedCondition<Boolean>() {
-    		public Boolean apply(AppiumDriver mobiledriver) {
+    		public Boolean apply(WebDriver driver) {
     			try {
     				return !(element.isDisplayed());
     			} catch (NoSuchElementException e) {
@@ -703,10 +687,6 @@ public class MobilePage extends TestListenerAdapter
     			}
     		}
 
-			public Boolean apply(WebDriver arg0) {
-				// TODO Auto-generated method stub
-				return null;
-			}
     	};
     }
     
@@ -746,8 +726,8 @@ public class MobilePage extends TestListenerAdapter
     */
    public void scrolltoElement(String locator) 
    {
-	   Point scroll = this.mobiledriver.findElement(By.xpath(locator)).getLocation();
-	   JavascriptExecutor js = (JavascriptExecutor) this.mobiledriver;
+	   Point scroll = this.driver.findElement(By.xpath(locator)).getLocation();
+	   JavascriptExecutor js = (JavascriptExecutor) this.driver;
 	   js.executeScript("javascript:window.scrollBy("+scroll.getX()+","+scroll.getY()+")");
    }
    
@@ -763,8 +743,8 @@ public class MobilePage extends TestListenerAdapter
    
    public void rightClick(By locator)
    {
-	   WebElement elementToRightClick = this.mobiledriver.findElement(locator);
-	   Actions clicker = new Actions(this.mobiledriver);
+	   WebElement elementToRightClick = this.driver.findElement(locator);
+	   Actions clicker = new Actions(this.driver);
 	   clicker.contextClick(elementToRightClick).perform();
    }
    
@@ -772,7 +752,7 @@ public class MobilePage extends TestListenerAdapter
    {
 	   try 
 	   {
-		   WebDriverWait wait = new WebDriverWait(this.mobiledriver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		   WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		   wait.until(ExpectedConditions.alertIsPresent() );
 		   return true;
 	   } 
@@ -786,7 +766,7 @@ public class MobilePage extends TestListenerAdapter
    { 
        try 
        { 
-           mobiledriver.switchTo().alert(); 
+           driver.switchTo().alert(); 
            return true; 
        } 
        catch (Exception Ex) 
@@ -802,7 +782,7 @@ public class MobilePage extends TestListenerAdapter
 	   {
 		   if(waitForAlert())
 		   {
-			   Alert alert  = this.mobiledriver.switchTo().alert();
+			   Alert alert  = this.driver.switchTo().alert();
 			   alert.accept();
 			   dismissed = true;
 		   }
@@ -813,7 +793,7 @@ public class MobilePage extends TestListenerAdapter
 		   sleep(100);
 		   if(isAlertPresent())
 		   {
-			   mobiledriver.switchTo().alert().accept();
+			   driver.switchTo().alert().accept();
 			   dismissed = true;
 		   }
 	   }
@@ -859,7 +839,7 @@ public class MobilePage extends TestListenerAdapter
     */
    public String getTitle() 
    { 
-	   return this.mobiledriver.getTitle(); 
+	   return this.driver.getTitle(); 
    }
    
    public String getTextForElementIfPresent(By locator)
@@ -867,14 +847,14 @@ public class MobilePage extends TestListenerAdapter
 	   String text = null;
 	   if(isElementPresent(locator))
 	   {
-		   text = this.mobiledriver.findElement(locator).getText();
+		   text = this.driver.findElement(locator).getText();
 	   }
 	   return text;
    }
    
    public void executeScript(String script)
    {
-	   ((JavascriptExecutor) this.mobiledriver).executeScript(script);
+	   ((JavascriptExecutor) this.driver).executeScript(script);
    }
    
    /**
@@ -888,7 +868,7 @@ public class MobilePage extends TestListenerAdapter
            element.sendKeys("");
        }
        else{
-    		   new Actions(this.mobiledriver).moveToElement(element).perform();
+    		   new Actions(this.driver).moveToElement(element).perform();
        }
    }
       
@@ -901,16 +881,16 @@ public class MobilePage extends TestListenerAdapter
 		   ExpectedCondition<Boolean> isLoadingFalse = new
 				   ExpectedCondition<Boolean>() {
 
-			   public Boolean apply(AppiumDriver mobiledriver) {
-				   System.out.println("inside ajax");
+			public Boolean apply(WebDriver arg0) {
+				 System.out.println("inside ajax");
 				   
 				   boolean ajaxCallBack = Boolean.parseBoolean(((JavascriptExecutor)
-						   mobiledriver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
+						   driver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
 				   Object obj = ((JavascriptExecutor)
-						   mobiledriver).executeScript("return !window.ajaxActive");
+						   driver).executeScript("return !window.ajaxActive");
 
 				   Object jQueryActive = ((JavascriptExecutor)
-						   mobiledriver).executeScript("return jQuery.active;");
+						   driver).executeScript("return jQuery.active;");
 
 				   if (obj != null && obj.toString().equals("true") && !ajaxCallBack &&
 						   jQueryActive.toString().equals("0"))
@@ -921,16 +901,13 @@ public class MobilePage extends TestListenerAdapter
 				   {
 					   return false;
 				   }
-			   }
-
-			public Boolean apply(WebDriver arg0) {
-				// TODO Auto-generated method stub
-				return null;
 			}
+
+			
 
 		   };
 
-		   Wait<AppiumDriver> wait = new FluentWait<AppiumDriver>(mobiledriver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		   Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		   wait.until(isLoadingFalse);
 	   } 
 	   catch (Exception e) 
@@ -959,7 +936,7 @@ public class MobilePage extends TestListenerAdapter
     */
    public void goBack() 
    {
-       this.mobiledriver.navigate().back();
+       this.driver.navigate().back();
    }
    
 	/**
@@ -979,9 +956,9 @@ public class MobilePage extends TestListenerAdapter
     */
    public void assertTitle(String s) 
    {
-        //WebDriverWait wait = new WebDriverWait(this.mobiledriver, Long.parseLong(timeout));
+        //WebDriverWait wait = new WebDriverWait(this.driver, Long.parseLong(timeout));
        // wait.until(ExpectedConditions.titleIs(s));
-       Assert.assertEquals(s, this.mobiledriver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.mobiledriver.getTitle() + "'.");
+       Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
    }
 
    public long getIndexofWebElementMatchingString(List<WebElement> list, String match)
@@ -1001,7 +978,7 @@ public class MobilePage extends TestListenerAdapter
    public void waitUntilValueAttributeForElement(WebElement e, String value)
    {
 	   WebDriverWait wait =
-		        new WebDriverWait(mobiledriver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		    wait.until(ExpectedConditions.textToBePresentInElementValue(e, value));
    }
    

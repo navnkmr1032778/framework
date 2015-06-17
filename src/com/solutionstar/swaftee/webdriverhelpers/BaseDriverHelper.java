@@ -1,7 +1,13 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
+import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.remote.MobileBrowserType;
+
+import java.lang.reflect.InvocationTargetException;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +50,7 @@ public class BaseDriverHelper {
 	
 	CommonUtils commonUtils = new CommonUtils();
 	WebDriver driver = null;
+	AppiumDriver mobiledriver=null;
 	WebDriver secondaryDriver = null;	
 	ProxyServer proxyServer = null;
 	CommonProperties props = CommonProperties.getInstance();
@@ -52,7 +59,7 @@ public class BaseDriverHelper {
 	
 		public void startServer() throws InterruptedException
 		{
-			if(!isGridRun())
+			if(ismobile() || !isGridRun())
 			{
 				if(proxyServer !=  null)
 					return;
@@ -110,7 +117,12 @@ public class BaseDriverHelper {
 					else if(platform.equals("mac"))
 						dr.setPlatform(Platform.MAC);
 					
+					
 					driver = setRemoteWebDriver(dr);
+		 	    }
+		 	    else if(ismobile())
+		 	    {
+		 	    	
 		 	    }
 		 	    else
 		 	    {
@@ -124,6 +136,20 @@ public class BaseDriverHelper {
 		 
 		}
 
+	   public void startmobileDriver() throws MalformedURLException
+	   {
+		   if(ismobile()==true)
+		   {
+			   DesiredCapabilities capabilities = new DesiredCapabilities();
+		        capabilities.setCapability("platformName", "Android");
+		        capabilities.setCapability("platformVersion", "5.0.1");
+		        capabilities.setCapability("deviceName", "new4");
+		        capabilities.setCapability("browserName", MobileBrowserType.BROWSER);
+		        mobiledriver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+		        System.out.println("started");
+		   }
+	   }
+	   
 	   public WebDriver setWebDriver(DesiredCapabilities cap) throws Exception
 	   {
 		   if(WebDriverConfig.usingProxyServer())
@@ -370,6 +396,11 @@ public class BaseDriverHelper {
 	    	return this.driver;
 	    }
 	    
+	    public AppiumDriver getmobileDriver()
+	    {
+	    	return this.mobiledriver;
+	    }
+	    
 	    public WebDriver getSecondaryDriver()
 	    {
 	    	return this.secondaryDriver;
@@ -495,6 +526,11 @@ public class BaseDriverHelper {
 			{
 				return false;
 			}
+		}
+		
+		public boolean ismobile()
+		{
+			return true;
 		}
 		
 		public String getBrowserToRun()

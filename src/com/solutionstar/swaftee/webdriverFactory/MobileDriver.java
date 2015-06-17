@@ -1,6 +1,5 @@
 package com.solutionstar.swaftee.webdriverFactory;
 
-import io.appium.java_client.AppiumDriver;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -12,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.lightbody.bmp.core.har.Har;
+
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -40,7 +41,7 @@ public class MobileDriver extends TestListenerAdapter {
 	CommonUtils utils = new CommonUtils();
 	 
 	
-	public AppiumDriver getmobileDriver()
+	public WebDriver getmobileDriver()
 	{
 		try
 		{
@@ -64,7 +65,7 @@ public class MobileDriver extends TestListenerAdapter {
 	}
 	
 	
-	public AppiumDriver getSecondaryDriver() 
+	public WebDriver getSecondaryDriver() 
 	{
 		logger.info("Starting Secondary Driver");	 
 		try 
@@ -221,7 +222,7 @@ public class MobileDriver extends TestListenerAdapter {
 	
 	private void processResults(ITestResult testResult,boolean takeScreenShot) throws MyCoreExceptions
 	{
-		 Map<String,AppiumDriver> drivers = getDriverfromResult(testResult);
+		 Map<String,WebDriver> drivers = getDriverfromResult(testResult);
 		 for(String driverType : drivers.keySet())
 		 {
 			   mobileDriverHelper.ExtractJSLogs(drivers.get(driverType),driverType);
@@ -229,13 +230,13 @@ public class MobileDriver extends TestListenerAdapter {
 		 }
 	}
 	
-	public Map<String, AppiumDriver> getDriverfromResult(ITestResult testResult)
+	public Map<String, WebDriver> getDriverfromResult(ITestResult testResult)
 	{
-		Map<String, AppiumDriver> driverList = new HashMap<String,AppiumDriver>();
+		Map<String, WebDriver> driverList = new HashMap<String,WebDriver>();
 		if(getMobileDriver(testResult).hasDriver())
-			driverList.put("primary",(AppiumDriver) getMobileDriver(testResult).getmobileDriver());
+			driverList.put("primary",(WebDriver) getMobileDriver(testResult).getmobileDriver());
 		if(getMobileDriver(testResult).hasSecondaryDriver())
-			driverList.put("secondary",(AppiumDriver) getMobileDriver(testResult).getSecondaryDriver());
+			driverList.put("secondary",(WebDriver) getMobileDriver(testResult).getSecondaryDriver());
 		return driverList;
 	}
 	
@@ -283,12 +284,12 @@ public class MobileDriver extends TestListenerAdapter {
 		mobileDriverHelper.stopPrimaryDriver();
 	}
 	
-	public void setDriver(AppiumDriver driver) 
+	public void setDriver(WebDriver driver) 
 	{
 		mobileDriverHelper.setDriver(driver);
 	}
 	  
-	public void setSecondaryDriver(AppiumDriver driver) 
+	public void setSecondaryDriver(WebDriver driver) 
 	{
 		mobileDriverHelper.setSecondaryDriver(driver);
 	 }

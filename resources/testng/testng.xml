@@ -1,11 +1,13 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
   
-<suite name="Swaftee Base" verbose="2" >
-
-  <test name="Swaftee Base Build" >
-    <classes>
-       <class name="com.solutionstar.swaftee.tests.LaunchDriverTest" />
-    </classes>
-  </test>
-  
+<suite name="mobile driver">
+     <parameter name="devicename" value="new4"/> 
+      <parameter name="browsername" value="browser"/>
+   <test name="xomeurl">
+   
+      <classes>
+         <class name="com.solutionstar.xome.tests.hometest.HomePageTest" />
+      </classes>
+      
+   </test>
 </suite>

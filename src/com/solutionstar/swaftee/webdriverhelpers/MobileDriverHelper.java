@@ -1,6 +1,5 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileBrowserType;
 
@@ -24,6 +23,7 @@ import net.lightbody.bmp.proxy.ProxyServer;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -52,8 +52,8 @@ import com.solutionstar.swaftee.webdriverFactory.AppDriver;
 public class MobileDriverHelper {
 	
 	CommonUtils commonUtils = new CommonUtils();
-	AppiumDriver mobiledriver = null;
-	AppiumDriver secondaryDriver = null;	
+	WebDriver driver = null;
+	WebDriver secondaryDriver = null;	
 	ProxyServer proxyServer = null;
 	CommonProperties props = CommonProperties.getInstance();
 	
@@ -84,7 +84,7 @@ public class MobileDriverHelper {
 	
 	   public void startDriver() throws Exception
 	   {
-		 	    if(mobiledriver != null)
+		 	    if(driver != null)
 			    	return;
 		 	    
 		 	    if(isGridRun())
@@ -120,7 +120,7 @@ public class MobileDriverHelper {
 						dr.setPlatform(Platform.MAC);
 					
 					
-					mobiledriver = setRemoteWebDriver(dr);
+					driver = setRemoteWebDriver(dr);
 		 	    }
 		 	    else if(ismobile())
 		 	    {
@@ -133,25 +133,30 @@ public class MobileDriverHelper {
 		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
 		 	    	if (cap == null)
 		 	    		throw new MyCoreExceptions("Capabilities return as Null");
-		 	    	mobiledriver = setWebDriver(cap);
+		 	    	driver = setWebDriver(cap);
 		 	    }
 		 
 		}
 
 	   public void startmobileDriver() throws MalformedURLException
 	   {
-		   if(ismobile()==true)
+		   if(ismobile()==false)
 		   {
 			   DesiredCapabilities capabilities = new DesiredCapabilities();
 		        capabilities.setCapability("platformName", "Android");
 		        capabilities.setCapability("platformVersion", "5.0.1");
 		        capabilities.setCapability("deviceName", "Nexus 6");
 		        capabilities.setCapability("browserName", MobileBrowserType.CHROME);
-		        mobiledriver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+		        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+		   }
+		   else
+		   {
+			   System.setProperty("webdriver.chrome.driver", "E:/chromedriver_win32/chromedriver.exe");
+				driver = (WebDriver) new ChromeDriver();
 		   }
 	   }
 	   
-	   public AppiumDriver setWebDriver(DesiredCapabilities cap) throws Exception
+	   public WebDriver setWebDriver(DesiredCapabilities cap) throws Exception
 	   {
 		   if(WebDriverConfig.usingProxyServer())
 			   createProxy(cap);
@@ -159,12 +164,12 @@ public class MobileDriverHelper {
 		   if(WebDriverConfig.usingGrid())
 			{
 			   cap = setRemoteDriverCapabilities(cap.getBrowserName());
-				mobiledriver = setRemoteWebDriver(cap);
+				driver = setRemoteWebDriver(cap);
 			}
 			else
-				mobiledriver = startBrowser(cap);
+				driver = startBrowser(cap);
 		    
-			return mobiledriver;
+			return driver;
 	   }
 
 	   /*** TODO: customize the method
@@ -173,7 +178,7 @@ public class MobileDriverHelper {
 		   LoggingPreferences logs = new LoggingPreferences();
 		   logs.enable(LogType.BROWSER, Level.ALL);
 		   logs.enable(LogType.CLIENT, Level.ALL);
-		   logs.enable(LogType.mobiledriver, Level.ALL);
+		   logs.enable(LogType.driver, Level.ALL);
 		   logs.enable(LogType.PERFORMANCE, Level.ALL);
 		   logs.enable(LogType.PROFILER, Level.ALL);
 		   logs.enable(LogType.SERVER, Level.ALL);
@@ -200,9 +205,9 @@ public class MobileDriverHelper {
 		   try{
 			    switch(WebDriverConstants.DriverTypes.valueOf(driverTypeStr.toUpperCase()))
 			    {
-				    case PRIMARY   	: 	browserName = System.getProperty("AppiumDriver.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;  // Setting the default browser if no browser name is specified
+				    case PRIMARY   	: 	browserName = System.getProperty("WebDriver.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;  // Setting the default browser if no browser name is specified
 				    				   	break;
-				    case SECONDARY 	: 	browserName = System.getProperty("AppiumDriver.secondary.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;
+				    case SECONDARY 	: 	browserName = System.getProperty("WebDriver.secondary.browser", WebDriverConstants.DEFAULT_BROWSER_NAME) ;
 					 				 	break;
 				    default			: 	browserName = WebDriverConstants.DEFAULT_BROWSER_NAME;						
 			    }
@@ -228,23 +233,23 @@ public class MobileDriverHelper {
 		   return cap;
 	   }
 	   
-	   private AppiumDriver startBrowser(DesiredCapabilities cap)
+	   private WebDriver startBrowser(DesiredCapabilities cap)
 	   {  
-		   AppiumDriver mobiledriver = null;
+		   WebDriver driver = null;
 		   try{
 				switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
 			    {
 				     case CHROME:
-				    //	mobiledriver = new ChromeDriver(cap);
+				    //	driver = new ChromeDriver(cap);
 			   			break;
 					case INTERNET_EXPLORER:
-						//mobiledriver = new InternetExplorerDriver();
+						//driver = new InternetExplorerDriver();
 			   			break;
 					case FIREFOX:
-						//mobiledriver = new FirefoxDriver(cap);
+						//driver = new FirefoxDriver(cap);
 			   			break;
 					case PHANTOMJS:
-						//mobiledriver = new PhantomJSDriver(cap);
+						//driver = new PhantomJSDriver(cap);
 			   			break;
 					default:
 			            throw new IllegalArgumentException("Invalid Argument for browser name : " + cap.getBrowserName());
@@ -253,7 +258,7 @@ public class MobileDriverHelper {
 		   }catch(Exception e){
 			   e.printStackTrace();
 		   }
-		   return mobiledriver;
+		   return driver;
 	   }
 	   
 	 
@@ -261,8 +266,8 @@ public class MobileDriverHelper {
 	   {
 		 	DesiredCapabilities capab = new DesiredCapabilities();
 			capab.setBrowserName(browserName);
-			if(System.getProperty("AppiumDriver.browser.version") != null)
-				capab.setVersion(System.getProperty("AppiumDriver.browser.version"));
+			if(System.getProperty("WebDriver.browser.version") != null)
+				capab.setVersion(System.getProperty("WebDriver.browser.version"));
 			capab.setPlatform(getOperatingSystem());
 			
 			return capab;
@@ -270,7 +275,7 @@ public class MobileDriverHelper {
 	
 	   private Platform getOperatingSystem() 
 	   {
-			String os = System.getProperty("AppiumDriver.platform.os",WebDriverConstants.DEFAULT_BROWSER_OS);
+			String os = System.getProperty("WebDriver.platform.os",WebDriverConstants.DEFAULT_BROWSER_OS);
 			switch(WebDriverConstants.OperatingSystem.valueOf(os.toUpperCase()))
 			{
 				case WINDOWS:
@@ -302,11 +307,11 @@ public class MobileDriverHelper {
 		   return (DesiredCapabilities) setCapabilities.invoke(setBrowserCapabilities, cap);
 	   }
 	   
-	   private AppiumDriver setRemoteWebDriver(DesiredCapabilities cap) throws Exception
+	   private WebDriver setRemoteWebDriver(DesiredCapabilities cap) throws Exception
 	   {
 		   RemoteWebDriver rd=new RemoteWebDriver(new URL("http://"+getGridServerWithPort()+"/wd/hub"), cap);
 		   rd.setFileDetector(new LocalFileDetector());
-		   return (AppiumDriver) rd;
+		   return (WebDriver) rd;
 	   }   
 	   
 	   
@@ -385,24 +390,24 @@ public class MobileDriverHelper {
 	    }
 	    
 	    
-	    public AppiumDriver getmobileDriver()
+	    public WebDriver getmobileDriver()
 	    {
-	    	return this.mobiledriver;
+	    	return this.driver;
 	    }
 	    
-	    public AppiumDriver getSecondaryDriver()
+	    public WebDriver getSecondaryDriver()
 	    {
 	    	return this.secondaryDriver;
 	    }
 	    
 	    public void setDriver(Object obj)
 	    {
-	    	this.mobiledriver = (AppiumDriver) obj;
+	    	this.driver = (WebDriver) obj;
 	    }
 	    
 	    public void setSecondaryDriver(Object obj)
 	    {
-	    	this.secondaryDriver = (AppiumDriver) obj;
+	    	this.secondaryDriver = (WebDriver) obj;
 	    }
 	    
 	    private void printCapabilities(Capabilities capabilities)
@@ -429,9 +434,9 @@ public class MobileDriverHelper {
 		public String getPrimaryWinhandle() throws MyCoreExceptions
 		{
 			try{
-				if(this.mobiledriver == null)
-					throw new MyCoreExceptions("Unable to get the winhandle as the mobiledriver is set as null");
-				return this.mobiledriver.getWindowHandle();
+				if(this.driver == null)
+					throw new MyCoreExceptions("Unable to get the winhandle as the driver is set as null");
+				return this.driver.getWindowHandle();
 			}catch(Exception e){
 				e.printStackTrace();
 				throw new MyCoreExceptions("Exception occured... "+ e.getStackTrace());
@@ -443,47 +448,47 @@ public class MobileDriverHelper {
 		{
 			try{
 				if(this.secondaryDriver == null)
-					throw new MyCoreExceptions("Unable to get the winhandle as the mobiledriver is set as null");
+					throw new MyCoreExceptions("Unable to get the winhandle as the driver is set as null");
 				return this.secondaryDriver.getWindowHandle();
 			}catch(Exception e){
 				throw new MyCoreExceptions("Exception occured... "+ e.getStackTrace());
 			}
 		}
 		
-		public AppiumDriver getDriverfromResult(ITestResult testResult)
+		public WebDriver getDriverfromResult(ITestResult testResult)
 		{
 				Object currentClass = testResult.getInstance();
-			    return (AppiumDriver) ((AppDriver) currentClass).getDriver();
+			    return (WebDriver) ((AppDriver) currentClass).getDriver();
 		}
-		public void ExtractChromeJSLogs(AppiumDriver mobiledriver) 
+		public void ExtractChromeJSLogs(WebDriver driver) 
 		{
 			 	logger.info("JS Errors");
-		        LogEntries logEntries = mobiledriver.manage().logs().get(LogType.BROWSER);
+		        LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
 		        for (LogEntry entry : logEntries) 
 		        	logger.info(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
 		}
 
-		public void ExtractJSLogs(AppiumDriver mobiledriver, String driverType) throws MyCoreExceptions 
+		public void ExtractJSLogs(WebDriver driver, String driverType) throws MyCoreExceptions 
 		{
-				ExtractDriverJSErrors(mobiledriver,getBrowserName(driverType));
+				ExtractDriverJSErrors(driver,getBrowserName(driverType));
 		}
 
-		private void ExtractDriverJSErrors(AppiumDriver mobiledriver, String browserName) 
+		private void ExtractDriverJSErrors(WebDriver driver, String browserName) 
 		{
 			switch (WebDriverConstants.BrowserNames.valueOf(browserName.toUpperCase()))
 		    {
 			    case CHROME:
-			        ExtractChromeJSLogs(mobiledriver);
+			        ExtractChromeJSLogs(driver);
 		   			break;
 				case FIREFOX:
-					ExtractFFJSLogs(mobiledriver);
+					ExtractFFJSLogs(driver);
 		   			break;
 			}
 		}
 
-		private void ExtractFFJSLogs(AppiumDriver mobiledriver) 
+		private void ExtractFFJSLogs(WebDriver driver) 
 		{
-			final List<JavaScriptError> jsErrors = JavaScriptError.readErrors(mobiledriver);
+			final List<JavaScriptError> jsErrors = JavaScriptError.readErrors(driver);
 			logger.info(jsErrors.toString());
 		}
 		
