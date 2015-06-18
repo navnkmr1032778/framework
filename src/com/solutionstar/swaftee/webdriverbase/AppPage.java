@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
@@ -268,6 +269,12 @@ public class AppPage extends TestListenerAdapter
 	public void maximizeWindow()
 	{
 		driver.manage().window().maximize();
+	}
+	
+	public void windowResize(int hight, int width)
+	{
+		Dimension di = new Dimension(width, hight);
+		driver.manage().window().setSize(di);
 	}
 
 	public void dragAndDropElements(WebElement dragElem, WebElement dropElem) throws InterruptedException 
@@ -975,5 +982,58 @@ public class AppPage extends TestListenerAdapter
 			e.printStackTrace();
 		}
 		return absolutePath;
+	}
+	
+	public boolean hoverOnElement(WebElement element)
+	{
+		try{
+			Actions builder = new Actions(this.driver); 
+			Actions hoverOverRegistrar = builder.moveToElement(element);
+			hoverOverRegistrar.perform();
+			Thread.sleep(500);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/***
+	 * Verify that the given attribute is present inside the webelement
+	 * @param element - WebElement
+	 * @param attribute - attribute text
+	 * @return boolean
+	 */
+	
+	public boolean isAttribtuePresent(WebElement element, String attribute)
+	{
+	    Boolean result = false;
+	    try {
+	        String value = element.getAttribute(attribute);
+	        if (value != null){
+	            result = true;
+	        }
+	    } catch (Exception e) {}
+
+	    return result;
+	}
+	
+	public String getAttributeValue(WebElement element, String attribute)
+	{
+		try{
+			if(isAttribtuePresent(element, attribute))
+			{
+				return element.getAttribute(attribute);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public void gotoURL(String url)
+	{
+		this.driver.get(url);
+		waitForAJaxCompletion();
 	}
 }
