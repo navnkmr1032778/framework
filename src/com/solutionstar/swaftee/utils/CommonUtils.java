@@ -1,7 +1,10 @@
 package com.solutionstar.swaftee.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +23,7 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -153,6 +157,13 @@ public class CommonUtils {
 		 return getPastDate(1);
 	 }
 
+	 public String getFutureDate(int daysToAdd, SimpleDateFormat sdf)
+	 {
+		 DateTime now = new DateTime();
+		 DateTime futureDate = now.plusDays(daysToAdd);
+		 return sdf.format(futureDate.toDate());
+	 }
+	 
 	 public String getFutureDate(int daysToAdd)
 	 {
 		 DateTime now = new DateTime();
@@ -252,5 +263,59 @@ public class CommonUtils {
 			ex.printStackTrace();
 		}
 		return channelSftp;
+	}
+	
+	public String objToJson(Object obj) {
+		Gson gson = new Gson();
+		String json = gson.toJson(obj);
+		return json;
+	}
+	
+	public Object constructObjfromJson(String json, Class<?> classObj) {
+		Gson gson = new Gson();
+		Object obj = gson.fromJson(json, classObj);
+		return obj;
+	}
+	
+	public synchronized void saveObjectToFile(Object object, String fileName) {
+		PrintWriter pw = null;
+		try {
+			pw = new PrintWriter(new File(fileName));
+			String json = objToJson(object);
+			pw.write(json);
+			pw.close();
+		} catch (IOException ex) {
+			logger.error("Exception occured when saving object to file. Message: " + ex.getMessage());
+		}
+	}
+	
+	public Object retriveObjectFromFile(Class<?> classObj, String fileName) {
+		BufferedReader br = null;
+		Object obj = null;
+		try {
+			br = new BufferedReader(new FileReader(fileName));
+			StringBuilder json = new StringBuilder();
+			String line = br.readLine();
+
+			while (line != null) {
+				json.append(line);
+				json.append(System.lineSeparator());
+				line = br.readLine();
+			}
+			
+			br.close();
+			obj = constructObjfromJson(json.toString(), classObj);
+		} catch (Exception ex) {
+			logger.error("Exception occured when retriving object from file. Message: "
+					+ ex.getMessage());
+		}
+		return obj;
+	}
+	
+	public String changeDateFormat(String date, String sourceFormat, String destinationFormat) {
+
+		Date d = getDateFromString(date, new SimpleDateFormat(sourceFormat));
+
+		return getStringFromDate(d,new SimpleDateFormat(destinationFormat));
 	}
 }
