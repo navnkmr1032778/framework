@@ -277,7 +277,7 @@ public class CommonUtils {
 		return obj;
 	}
 	
-	public synchronized void saveOjectToFile(Object object, String fileName) {
+	public synchronized void saveObjectToFile(Object object, String fileName) {
 		PrintWriter pw = null;
 		try {
 			pw = new PrintWriter(new File(fileName));
@@ -289,7 +289,7 @@ public class CommonUtils {
 		}
 	}
 	
-	public Object retriveOjectFromFile(Class<?> classObj, String fileName) {
+	public Object retriveObjectFromFile(Class<?> classObj, String fileName) {
 		BufferedReader br = null;
 		Object obj = null;
 		try {
@@ -299,7 +299,7 @@ public class CommonUtils {
 
 			while (line != null) {
 				json.append(line);
-				json.append("\n");
+				json.append(System.lineSeparator());
 				line = br.readLine();
 			}
 			
