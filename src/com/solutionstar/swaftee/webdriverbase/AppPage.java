@@ -762,8 +762,10 @@ public class AppPage extends TestListenerAdapter
            driver.switchTo().alert(); 
            return true; 
        } 
-       catch (Exception Ex) 
+       catch (Exception e) 
        { 
+    	   e.printStackTrace();
+    	   logger.info("Error while checking if alert is present"+ e.getMessage());
            return false; 
        } 
    } 
@@ -786,7 +788,15 @@ public class AppPage extends TestListenerAdapter
 		   sleep(100);
 		   if(isAlertPresent())
 		   {
-			   driver.switchTo().alert().accept();
+			   try
+			   {
+				   driver.switchTo().alert().accept();
+			   }
+			   catch(Exception e)
+			   {
+				   e.printStackTrace();
+				   logger.info("Error in dismissing alert.."+e.getMessage());
+			   }
 			   dismissed = true;
 		   }
 	   }
