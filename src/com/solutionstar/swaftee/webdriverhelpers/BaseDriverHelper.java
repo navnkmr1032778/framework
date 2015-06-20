@@ -114,7 +114,7 @@ public class BaseDriverHelper {
 		 	    }
 		 	    else
 		 	    {
-		 	    	String browserName = getBrowserName("primary");
+		 	    	String browserName = getBrowserToRun(); //getBrowserName("primary");
 		 	    	logger.info("browserName -- "+ browserName);
 		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
 		 	    	if (cap == null)
@@ -491,6 +491,8 @@ public class BaseDriverHelper {
 		
 		public String getBrowserToRun()
 		{
+			if(System.getProperty("gridbrowser")== null)
+				System.setProperty("gridbrowser", "chrome");
 			return System.getProperty("gridbrowser").toLowerCase(Locale.ENGLISH);
 		}
 		
