@@ -218,6 +218,19 @@ public class AppPage extends TestListenerAdapter
 		  }
 	 }
 	  
+	 public void selectDropDownContainingText(WebElement element, String value)
+	 {
+		 Select select = new Select(element);
+		 List<String> allOptions = getAllSelectOptions(element);
+		 List<String> matchingOptions = new ArrayList<String>();
+		 for(String s: allOptions)
+		 {
+			 if(s.contains(value))
+				 matchingOptions.add(s);
+		 } 
+		 select.selectByVisibleText(matchingOptions.get(0));
+	 }
+	 
 	 public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	 {
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
