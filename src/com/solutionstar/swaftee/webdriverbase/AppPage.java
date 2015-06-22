@@ -218,6 +218,20 @@ public class AppPage extends TestListenerAdapter
 		  }
 	 }
 	  
+	 public void selectDropDownContainingText(WebElement element, String value)
+	 {
+		 Select select = new Select(element);
+		 List<String> allOptions = getAllSelectOptions(element);
+		 for(String s: allOptions)
+		 {
+			 if(s.contains(value))
+			 {
+				 select.selectByVisibleText(s);
+				 break;
+			 }
+		 } 
+	 }
+	 
 	 public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	 {
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
@@ -772,6 +786,12 @@ public class AppPage extends TestListenerAdapter
            return false; 
        } 
    } 
+   
+   public Alert switchToAlert() throws Exception
+   {
+	   Alert alert = driver.switchTo().alert();
+	   return alert;
+   }
    
    public void dismissAlertIfPresent(boolean shouldWait)
    {
