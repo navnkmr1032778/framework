@@ -491,9 +491,7 @@ public class BaseDriverHelper {
 		
 		public String getBrowserToRun()
 		{
-			if(System.getProperty("gridbrowser")== null)
-				System.setProperty("gridbrowser", "chrome");
-			return System.getProperty("gridbrowser").toLowerCase(Locale.ENGLISH);
+			return System.getProperty("gridbrowser","chrome").toLowerCase(Locale.ENGLISH);
 		}
 		
 		public String getGridServerWithPort()
