@@ -222,13 +222,14 @@ public class AppPage extends TestListenerAdapter
 	 {
 		 Select select = new Select(element);
 		 List<String> allOptions = getAllSelectOptions(element);
-		 List<String> matchingOptions = new ArrayList<String>();
 		 for(String s: allOptions)
 		 {
 			 if(s.contains(value))
-				 matchingOptions.add(s);
+			 {
+				 select.selectByVisibleText(s);
+				 break;
+			 }
 		 } 
-		 select.selectByVisibleText(matchingOptions.get(0));
 	 }
 	 
 	 public WebElement fluentWaitByLocator(final By locator, int timeout) 
