@@ -214,7 +214,12 @@ public class BaseDriverHelper {
 				    	driver = new ChromeDriver(cap);
 			   			break;
 					case INTERNET_EXPLORER:
-						driver = new InternetExplorerDriver();
+
+						
+						cap.setCapability(InternetExplorerDriver.
+						                 INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true); 
+
+						driver = new InternetExplorerDriver(cap);
 			   			break;
 					case FIREFOX:
 						driver = new FirefoxDriver(cap);
@@ -445,6 +450,9 @@ public class BaseDriverHelper {
 
 		private void ExtractDriverJSErrors(WebDriver driver, String browserName) 
 		{
+			if(browserName.equalsIgnoreCase("ie")) {
+				browserName = "INTERNET_EXPLORER";
+			}
 			switch (WebDriverConstants.BrowserNames.valueOf(browserName.toUpperCase()))
 		    {
 			    case CHROME:
@@ -481,7 +489,7 @@ public class BaseDriverHelper {
 		{
 			try
 			{
-				return Boolean.valueOf(System.getProperty("grid").toLowerCase(Locale.ENGLISH));
+				return Boolean.valueOf(System.getProperty("grid","false").toLowerCase(Locale.ENGLISH));
 			}
 			catch(NullPointerException exp)
 			{
