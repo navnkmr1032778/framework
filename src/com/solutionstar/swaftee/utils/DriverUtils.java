@@ -40,7 +40,7 @@ public class DriverUtils
 		try {
 		 
 			saveFileFromUrlWithJavaIO(
-			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName));
+			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName.toLowerCase()));
 			unZipIt(dirName + "\\"+ DriverName +".zip",dirName);
 			File file = new File(dirName + "\\"+ DriverName +".zip");
 			file.delete(); 
