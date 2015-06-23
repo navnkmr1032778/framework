@@ -114,7 +114,7 @@ public class BaseDriverHelper {
 		 	    }
 		 	    else
 		 	    {
-		 	    	String browserName = getBrowserName("primary");
+		 	    	String browserName = getBrowserToRun(); //getBrowserName("primary");
 		 	    	logger.info("browserName -- "+ browserName);
 		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
 		 	    	if (cap == null)

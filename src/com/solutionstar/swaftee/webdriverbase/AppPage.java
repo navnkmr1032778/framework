@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoAlertPresentException;
@@ -217,6 +218,20 @@ public class AppPage extends TestListenerAdapter
 		  }
 	 }
 	  
+	 public void selectDropDownContainingText(WebElement element, String value)
+	 {
+		 Select select = new Select(element);
+		 List<String> allOptions = getAllSelectOptions(element);
+		 for(String s: allOptions)
+		 {
+			 if(s.contains(value))
+			 {
+				 select.selectByVisibleText(s);
+				 break;
+			 }
+		 } 
+	 }
+	 
 	 public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	 {
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
@@ -268,6 +283,12 @@ public class AppPage extends TestListenerAdapter
 	public void maximizeWindow()
 	{
 		driver.manage().window().maximize();
+	}
+	
+	public void windowResize(int hight, int width)
+	{
+		Dimension di = new Dimension(width, hight);
+		driver.manage().window().setSize(di);
 	}
 
 	public void dragAndDropElements(WebElement dragElem, WebElement dropElem) throws InterruptedException 
@@ -758,11 +779,19 @@ public class AppPage extends TestListenerAdapter
            driver.switchTo().alert(); 
            return true; 
        } 
-       catch (Exception Ex) 
+       catch (Exception e) 
        { 
+    	   e.printStackTrace();
+    	   logger.info("Error while checking if alert is present"+ e.getMessage());
            return false; 
        } 
    } 
+   
+   public Alert switchToAlert() throws Exception
+   {
+	   Alert alert = driver.switchTo().alert();
+	   return alert;
+   }
    
    public void dismissAlertIfPresent(boolean shouldWait)
    {
@@ -782,7 +811,15 @@ public class AppPage extends TestListenerAdapter
 		   sleep(100);
 		   if(isAlertPresent())
 		   {
-			   driver.switchTo().alert().accept();
+			   try
+			   {
+				   driver.switchTo().alert().accept();
+			   }
+			   catch(Exception e)
+			   {
+				   e.printStackTrace();
+				   logger.info("Error in dismissing alert.."+e.getMessage());
+			   }
 			   dismissed = true;
 		   }
 	   }
@@ -978,5 +1015,58 @@ public class AppPage extends TestListenerAdapter
 			e.printStackTrace();
 		}
 		return absolutePath;
+	}
+	
+	public boolean hoverOnElement(WebElement element)
+	{
+		try{
+			Actions builder = new Actions(this.driver); 
+			Actions hoverOverRegistrar = builder.moveToElement(element);
+			hoverOverRegistrar.perform();
+			Thread.sleep(500);
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/***
+	 * Verify that the given attribute is present inside the webelement
+	 * @param element - WebElement
+	 * @param attribute - attribute text
+	 * @return boolean
+	 */
+	
+	public boolean isAttribtuePresent(WebElement element, String attribute)
+	{
+	    Boolean result = false;
+	    try {
+	        String value = element.getAttribute(attribute);
+	        if (value != null){
+	            result = true;
+	        }
+	    } catch (Exception e) {}
+
+	    return result;
+	}
+	
+	public String getAttributeValue(WebElement element, String attribute)
+	{
+		try{
+			if(isAttribtuePresent(element, attribute))
+			{
+				return element.getAttribute(attribute);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public void gotoURL(String url)
+	{
+		this.driver.get(url);
+		waitForAJaxCompletion();
 	}
 }
