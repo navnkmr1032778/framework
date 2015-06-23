@@ -499,7 +499,9 @@ public class BaseDriverHelper {
 		
 		public String getBrowserToRun()
 		{
-			return System.getProperty("gridbrowser").toLowerCase(Locale.ENGLISH);
+			String browser = System.getProperty("gridbrowser",WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase(Locale.ENGLISH);
+			System.setProperty("webdriver.browser", browser);
+			return browser;
 		}
 		
 		public String getGridServerWithPort()
