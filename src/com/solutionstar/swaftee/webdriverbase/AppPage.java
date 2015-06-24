@@ -623,6 +623,11 @@ public class AppPage extends TestListenerAdapter
     {
 		this.driver.switchTo().frame(frameId);
 	}
+
+    public void switchToFrame(WebElement frameElement) 
+    {
+		this.driver.switchTo().frame(frameElement);
+	}
     
     public void switchToFrame(int index) 
     {
