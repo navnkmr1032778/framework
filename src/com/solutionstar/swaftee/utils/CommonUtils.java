@@ -222,6 +222,26 @@ public class CommonUtils {
 
 	}
 	
+	public void copyToSFTPLocation(String hostname, int port, String username,
+			String password, String sourceLocation, String destination,
+			List<String> files) {
+		try {
+
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			for (String file : files) {
+				//channelSftp.get(sourceLocation + file, destination);
+				channelSftp.put(sourceLocation, destination + file, null);
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	public List<String> listFilesInSFTPLocation(String hostname, int port,
 			String username, String password, String sourceLocation) {
 
