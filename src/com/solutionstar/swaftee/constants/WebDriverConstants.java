@@ -1,10 +1,16 @@
 package com.solutionstar.swaftee.constants;
 
+import io.appium.java_client.remote.MobileBrowserType;
+
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WebDriverConstants {
+	
+	public static boolean IS_MOBILE=false;
+	public static String DEVICE_NAME="Nexus 6";
+	public static String DEVICE_BROWSER=MobileBrowserType.CHROME;
 	
 	public static String PATH_TO_BROWSER_EXECUTABLE = "/resources/drivers/";
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
@@ -17,7 +23,7 @@ public class WebDriverConstants {
 	public static int WAIT_ONE_MIN = 60;
 	public static int WAIT_HALF_MIN = 30;
 	public static int WAIT_TWO_MIN = 120;
-	public static int MAX_TIMEOUT_PAGE_LOAD = 500;
+	public static int MAX_TIMEOUT_PAGE_LOAD = 120;
 	final public static String PROXY_SERVER  = "proxyserver.enabled";
 	final public static String GRID_SERVER  = "grid.enabled";
 	public static final String DEFAULT_BROWSER_OS = "windows";

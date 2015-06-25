@@ -116,6 +116,8 @@ public class BaseDriverHelper {
 						dr.setPlatform(Platform.WINDOWS);
 					else if(platform.equals("mac"))
 						dr.setPlatform(Platform.MAC);
+					else if(platform.equals("android"))
+						dr.setPlatform(Platform.ANDROID);
 					
 					
 					driver = setRemoteWebDriver(dr);
@@ -124,14 +126,25 @@ public class BaseDriverHelper {
 		 	    {
 		 	    	
 		 	    }
-		 	    else
+		 	    else if(WebDriverConstants.IS_MOBILE==false)
 		 	    {
 		 	    	String browserName = getBrowserToRun(); //getBrowserName("primary");
+		 	    	logger.info("FETCHING DRIVER");
 		 	    	logger.info("browserName -- "+ browserName);
 		 	    	DesiredCapabilities cap = createDriverCapabilities(browserName);		
 		 	    	if (cap == null)
 		 	    		throw new MyCoreExceptions("Capabilities return as Null");
 		 	    	driver = setWebDriver(cap);
+		 	    }
+		 	    else
+		 	    {
+		 	    	logger.info("mobile");
+		 	    	DesiredCapabilities capabilities = new DesiredCapabilities();
+			        capabilities.setCapability("platformName", "Android");
+			        capabilities.setCapability("platformVersion", "5.0.1");
+			        capabilities.setCapability("deviceName", WebDriverConstants.DEVICE_NAME);
+			        capabilities.setCapability("browserName", WebDriverConstants.DEVICE_BROWSER);
+			        driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 		 	    }
 		 
 		}
@@ -146,7 +159,7 @@ public class BaseDriverHelper {
 		        capabilities.setCapability("deviceName", "new4");
 		        capabilities.setCapability("browserName", MobileBrowserType.BROWSER);
 		        mobiledriver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-		        System.out.println("started");
+		        logger.info("started");
 		   }
 	   }
 	   

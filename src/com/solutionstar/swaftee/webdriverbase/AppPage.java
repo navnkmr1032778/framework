@@ -64,7 +64,9 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
-		 maximizeWindow(); 
+		 //android does not supports maximizeWindow;
+		 if(WebDriverConstants.IS_MOBILE==false)
+			 maximizeWindow(); 
 	 }
 	 
 	 public AppPage(AppiumDriver driver)
@@ -639,6 +641,11 @@ public class AppPage extends TestListenerAdapter
     {
 		this.driver.switchTo().frame(frameElement);
 	}
+    
+    public void switchToFrame(WebElement frame)
+    {
+    	this.driver.switchTo().frame(frame);
+    }
     
     public void switchToFrame(int index) 
     {
