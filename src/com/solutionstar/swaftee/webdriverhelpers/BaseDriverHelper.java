@@ -122,10 +122,6 @@ public class BaseDriverHelper {
 					
 					driver = setRemoteWebDriver(dr);
 		 	    }
-		 	    else if(ismobile())
-		 	    {
-		 	    	
-		 	    }
 		 	    else if(WebDriverConstants.IS_MOBILE==false)
 		 	    {
 		 	    	String browserName = getBrowserToRun(); //getBrowserName("primary");
@@ -543,7 +539,7 @@ public class BaseDriverHelper {
 		
 		public boolean ismobile()
 		{
-			return true;
+			return false;
 		}
 		
 		public String getBrowserToRun()
