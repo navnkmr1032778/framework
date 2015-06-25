@@ -42,30 +42,6 @@ public class AppDriver extends TestListenerAdapter {
 	CommonUtils utils = new CommonUtils();
 	 
 	
-	public AppiumDriver getmobileDriver()
-	{
-		try
-		{
-			if(baseDriverHelper.getmobileDriver()==null)
-			{
-				System.out.println("inside getmobileDriver");
-				baseDriverHelper.startServer();
-				baseDriverHelper.startmobileDriver();
-			}
-			else
-			{
-				logger.info("Driver already running.. ");
-			}
-		}
-		catch(Exception e)
-		{
-			logger.info("exception caught.. ");
-			e.printStackTrace();
-		}
-		return baseDriverHelper.getmobileDriver();
-	}
-	
-	
 	public WebDriver getDriver()
 	{ 
 	    try 
