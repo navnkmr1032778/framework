@@ -1074,4 +1074,31 @@ public class AppPage extends TestListenerAdapter
 		this.driver.get(url);
 		waitForAJaxCompletion();
 	}
+	
+	public boolean hasEditableFields(WebElement element) {
+		boolean flag = (Boolean)(getJavaScriptExecutor().executeScript("var inputElements = arguments[0].getElementsByTagName('input');" + 
+				"	var textareaElements = arguments[0].getElementsByTagName('textarea');" + 
+				"	var selectElements = arguments[0].getElementsByTagName('select');" + 
+				"	var flag = false;" +  
+				"	for(var index = 0; !flag && index < inputElements.length; index++) {" + 
+				"		if(inputElements[index].type == 'hidden') {" + 
+				"			continue;" + 
+				"		}" + 
+				"		if(!inputElements[index].disabled) {" + 
+				"			flag = true;" + 
+				"		}" + 
+				"	}" + 
+				"	for(var index = 0; !flag && index < textareaElements.length; index++) {" + 
+				"		if(!textareaElements[index].disabled) {" + 
+				"			flag = true;" + 
+				"		}" + 
+				"	}" + 
+				"	for(var index = 0; !flag && index < selectElements.length; index++) {" + 
+				"		if(!selectElements[index].disabled) {" + 
+				"			flag = true;" + 
+				"		}" + 
+				"	}" + 
+				"	return flag;", element));
+		return flag;
+	}
 }

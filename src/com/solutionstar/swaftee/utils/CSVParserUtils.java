@@ -355,8 +355,12 @@ public class CSVParserUtils {
 	public List<HashMap<String, String>> getDataFromCSV(String fileName) {
 		return getDataFromCSV(fileName, true);
 	}
-
+	
 	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks) {
+		return getDataFromCSV(fileName,sendNullForBlanks,'\\');
+	}
+	
+	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks, char escapeCharacter) {
 		if(!fileName.endsWith(".csv")) {
 			fileName += ".csv";
 		}
@@ -368,7 +372,7 @@ public class CSVParserUtils {
 			CSVReader reader = new CSVReader(new FileReader(
 					utils.getCurrentWorkingDirectory()
 							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName));
+							+ fileName),',','"',escapeCharacter);
 			List<String[]> data = reader.readAll();
 			String[] header = data.remove(0);
 			for (String[] row : data) {
@@ -388,6 +392,8 @@ public class CSVParserUtils {
 		}
 		return list;
 	}
+
+
 	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
