@@ -56,6 +56,7 @@ public class AppDriver extends TestListenerAdapter {
 	    		logger.info("Driver already running..");
 	    	}
 		} catch (Exception e) {
+			logger.info("Checking driver exception..");	
 			e.printStackTrace();
 		}
 		return baseDriverHelper.getDriver();

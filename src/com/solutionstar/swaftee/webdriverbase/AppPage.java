@@ -43,13 +43,14 @@ import org.testng.TestListenerAdapter;
 
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class AppPage extends TestListenerAdapter 
 {
 	 protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	 protected WebDriver driver;
-	 protected AppiumDriver mobiledriver;
 	 JavascriptExecutor javaScriptExecutor; 
+	 BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	 
 	 enum ByTypes{
 		  INDEX, VALUE, TEXT
@@ -65,17 +66,10 @@ public class AppPage extends TestListenerAdapter
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
 		 //android does not supports maximizeWindow;
-		 if(WebDriverConstants.IS_MOBILE==false)
+		 if(baseDriverHelper.ismobile()==false)
 			 maximizeWindow(); 
 	 }
 	 
-	 public AppPage(AppiumDriver driver)
-	 {
-		 this.mobiledriver = driver;
-		 waitForPageLoadComplete();
-		 PageFactory.initElements(driver, this);
-		 maximizeWindow(); 
-	 }
 	 
 	 public WebDriver getDriver()
 	 {

@@ -8,9 +8,6 @@ import java.util.Map;
 
 public class WebDriverConstants {
 	
-	public static boolean IS_MOBILE=false;
-	public static String DEVICE_NAME="Nexus 6";
-	public static String DEVICE_BROWSER=MobileBrowserType.CHROME;
 	
 	public static String PATH_TO_BROWSER_EXECUTABLE = "/resources/drivers/";
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
