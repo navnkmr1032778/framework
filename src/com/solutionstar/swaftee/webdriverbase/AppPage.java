@@ -1,5 +1,7 @@
 package com.solutionstar.swaftee.webdriverbase;
 
+import io.appium.java_client.AppiumDriver;
+
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
@@ -41,12 +43,14 @@ import org.testng.TestListenerAdapter;
 
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class AppPage extends TestListenerAdapter 
 {
 	 protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	 protected WebDriver driver;
 	 JavascriptExecutor javaScriptExecutor; 
+	 BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	 
 	 enum ByTypes{
 		  INDEX, VALUE, TEXT
@@ -61,8 +65,11 @@ public class AppPage extends TestListenerAdapter
 		 this.driver = driver;
 		 waitForPageLoadComplete();
 		 PageFactory.initElements(driver, this);
-		 maximizeWindow(); 
+		 //android does not supports maximizeWindow;
+		 if(baseDriverHelper.ismobile()==false)
+			 maximizeWindow(); 
 	 }
+	 
 	 
 	 public WebDriver getDriver()
 	 {
@@ -624,10 +631,12 @@ public class AppPage extends TestListenerAdapter
 		this.driver.switchTo().frame(frameId);
 	}
 
-    public void switchToFrame(WebElement frameElement) 
+   
+    
+    public void switchToFrame(WebElement frame)
     {
-		this.driver.switchTo().frame(frameElement);
-	}
+    	this.driver.switchTo().frame(frame);
+    }
     
     public void switchToFrame(int index) 
     {

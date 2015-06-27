@@ -159,11 +159,17 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.52</version>
+		
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.3.1</version>
+			</dependency>
+		<dependency>
+		  <groupId>io.appium</groupId>
+		  <artifactId>java-client</artifactId>
+		  <version>2.2.0</version>
 		</dependency>
 	</dependencies>
 	<repositories>
