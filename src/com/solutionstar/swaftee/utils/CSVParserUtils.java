@@ -302,11 +302,12 @@ public class CSVParserUtils {
 			 List<String[]> allRows = reader.readAll();
 			 reader.close();
 			 List<String[]> rowEntries = new ArrayList<String[]>();
-			 if(allRows.size()<rangeMin || allRows.size()<rangeMax) {
-				 logger.error("FATAL : getCSVArray - CSV has fewer elements.. Change range specified "+ rangeMin + " "+ rangeMax+ "for file "+fileName);
+			 if(allRows.size()<=rangeMin) {
+				 logger.error("FATAL : getCSVArray - CSV has fewer elements.. Change minium range specified - "+ rangeMin + "for file "+fileName);
 			 }
 			 else
 			 {
+				 rangeMax = allRows.size()-1<rangeMax ? allRows.size()-1 : rangeMax; 
 				 for(int i=rangeMin;i<=rangeMax;i++)
 				 {
 					 rowEntries.add(allRows.get(i));
