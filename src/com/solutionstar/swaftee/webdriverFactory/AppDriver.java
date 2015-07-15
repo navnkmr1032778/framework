@@ -5,14 +5,17 @@ import io.appium.java_client.AppiumDriver;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import net.lightbody.bmp.core.har.Har;
 
+import org.hamcrest.core.IsNot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
@@ -21,6 +24,7 @@ import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterClass;
@@ -28,6 +32,8 @@ import org.testng.annotations.DataProvider;
 
 import com.opencsv.CSVReader;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
+import com.solutionstar.swaftee.jira.Jira;
+import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
@@ -37,10 +43,15 @@ public class AppDriver extends TestListenerAdapter {
 
 	protected static Logger logger = LoggerFactory.getLogger(AppDriver.class.getName());
 	
+	static String PASS = "1";
+	static String FAIL = "2";
+	static String UNEXECUTED = "-1";
+	static String BLOCKED = "4";
+	
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
-	 
+	ZephyrUtils zUtils = new ZephyrUtils();
 	
 	public WebDriver getDriver()
 	{ 
@@ -189,13 +200,22 @@ public class AppDriver extends TestListenerAdapter {
 		return data;
 	}
 
+	
 	@Override
 	public void onTestFailure(ITestResult testResult) 
 	{
 	   try 
 	   {
 		   logger.info("Test " + testResult.getName() + "' FAILED");
-			processResults(testResult,true);
+		   processResults(testResult,true);
+		   if(jiraUpdate())
+		   {
+			   String[] testCases = getJiraTestCases(testResult);
+			   if(testCases!= null && testCases.length>0)
+				   zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), FAIL);
+			   else
+				   logger.info("No JIRA test cases to update");
+		   }
 	   } 
 	   catch (MyCoreExceptions e) 
 	   {
@@ -210,13 +230,43 @@ public class AppDriver extends TestListenerAdapter {
 		   {
 				logger.info("Test : " + testResult.getName() + "' PASSED");
 				processResults(testResult,false);
+				if(jiraUpdate())
+				{
+					String[] testCases = getJiraTestCases(testResult);
+					if(testCases!= null && testCases.length>0)
+						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), PASS);
+					else
+						logger.info("No JIRA test cases to update");
+				}
 		   } 
 		   catch (MyCoreExceptions e) 
 		   {
 				e.printStackTrace();
 		   }
 	}
-	
+
+	@Override
+	public void onTestSkipped(ITestResult testResult) 
+	{
+		 try 
+		   {
+				logger.info("Test : " + testResult.getName() + "' SKIPPED");
+				processResults(testResult,false);
+				if(jiraUpdate())
+				{
+					String[] testCases = getJiraTestCases(testResult);
+					if(testCases!= null && testCases.length>0)
+						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), BLOCKED);
+					else
+						logger.info("No JIRA test cases to update");
+				}
+		   } 
+		   catch (MyCoreExceptions e) 
+		   {
+				e.printStackTrace();
+		   }
+	}
+
 	private void processResults(ITestResult testResult,boolean takeScreenShot) throws MyCoreExceptions
 	{
 		 Map<String,WebDriver> drivers = getDriverfromResult(testResult);
@@ -241,6 +291,20 @@ public class AppDriver extends TestListenerAdapter {
 	{
 		  Object currentClass = testResult.getInstance();
 	      return ((AppDriver) currentClass);
+	}
+	
+	protected String[] getJiraTestCases(ITestResult testResult)
+	{
+		Annotation a = testResult.getMethod().getConstructorOrMethod().getMethod().getAnnotation(Jira.class);
+		if(a!=null)
+			return ((Jira) a).TC();
+		else
+			return null;
+	}
+	
+	protected boolean jiraUpdate()
+	{
+		return Boolean.valueOf(System.getProperty("jira","false").toLowerCase(Locale.ENGLISH));
 	}
 	
 	@AfterClass

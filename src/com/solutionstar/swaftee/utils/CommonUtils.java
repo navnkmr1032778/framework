@@ -10,7 +10,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
@@ -24,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
@@ -337,5 +340,30 @@ public class CommonUtils {
 		Date d = getDateFromString(date, new SimpleDateFormat(sourceFormat));
 
 		return getStringFromDate(d,new SimpleDateFormat(destinationFormat));
+	}
+	
+	public String convertStringArraytoJSONArray(String[] values)
+	{
+		if (values.length > 0) {
+		    StringBuilder nameBuilder = new StringBuilder();
+
+		    for (String n : values) {
+		        nameBuilder.append("'").append(n.replace("'", "\\'")).append("',");
+		        // can also do the following
+		        // nameBuilder.append("'").append(n.replace("'", "''")).append("',");
+		    }
+
+		    nameBuilder.deleteCharAt(nameBuilder.length() - 1);
+
+		    return nameBuilder.toString();
+		} else {
+		    return "";
+		}
+	}
+	
+	public Map<String,Object> convertJSONToMap(String jsonString)
+	{
+		Map<String, Object> retMap = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {}.getType());
+		return retMap;
 	}
 }
