@@ -132,6 +132,11 @@ public class AppPage extends TestListenerAdapter
 		 }
      }
 	 
+	public boolean isElementPresentAndDisplayed(By xpath)
+	{
+		return isElementPresentAndDisplayed(this.driver.findElement(xpath));
+	}
+	 
 	 public Boolean isElementPresentInContainer(WebElement container, final By locator) 
 	 {
 		    Boolean isElementPresent = false;
