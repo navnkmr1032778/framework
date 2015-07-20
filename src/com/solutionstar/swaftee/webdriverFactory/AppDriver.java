@@ -207,12 +207,6 @@ public class AppDriver extends TestListenerAdapter {
 	   {
 		   logger.info("Test " + testResult.getName() + "' FAILED");
 		   processResults(testResult,true);
-		   System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		   Throwable thr = testResult.getThrowable();
-			if(thr != null) {
-				System.out.println("Printing from custom code:");
-				System.out.println(thr.getMessage());
-			}
 		   if(jiraUpdate())
 		   {
 			   String[] testCases = getJiraTestCases(testResult);
@@ -235,12 +229,6 @@ public class AppDriver extends TestListenerAdapter {
 		   {
 				logger.info("Test : " + testResult.getName() + "' PASSED");
 				processResults(testResult,false);
-				System.out.println("---------------------------------------------------");
-				Throwable thr = testResult.getThrowable();
-				if(thr != null) {
-					System.out.println("Printing from custom code:");
-					System.out.println(thr.getMessage());
-				}
 				if(jiraUpdate())
 				{
 					String[] testCases = getJiraTestCases(testResult);
