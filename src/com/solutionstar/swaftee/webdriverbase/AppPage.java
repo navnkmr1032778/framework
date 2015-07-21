@@ -26,7 +26,10 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -98,6 +101,7 @@ public class AppPage extends TestListenerAdapter
 	 
 	 public JavascriptExecutor getJavaScriptExecutor()
 	 {
+		 driver.manage().timeouts().setScriptTimeout(2000, TimeUnit.SECONDS); 
 		 if( javaScriptExecutor == null)
 			javaScriptExecutor = (JavascriptExecutor) driver;
 		 return javaScriptExecutor;
@@ -170,7 +174,7 @@ public class AppPage extends TestListenerAdapter
 	 public void waitForVisible(By locator) 
 	 {
 		    WebDriverWait wait =
-		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
+		        new WebDriverWait(driver,200);
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
      }
 	 
@@ -267,15 +271,29 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-		    wait.until(new ExpectedCondition<Boolean>() 
-		    {
-		      public Boolean apply(WebDriver driver) 
-		      {
-		        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
-		            "complete");
-		      }
-		    });
+		Boolean hasnoException = false;
+		while(hasnoException == false)
+		{
+			try
+			{
+				hasnoException = true;
+				Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			    wait.until(new ExpectedCondition<Boolean>() 
+			    {
+			      public Boolean apply(WebDriver driver) 
+			      {
+			        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
+			            "complete");
+			      }
+			    });
+			}
+			catch(WebDriverException ex)
+			{
+				logger.info("JS Timeout Exception ");
+				hasnoException = false;
+			}
+		}   
+		    
 			return;
 	}
 	
@@ -302,7 +320,9 @@ public class AppPage extends TestListenerAdapter
 	
 	public void maximizeWindow()
 	{
-		driver.manage().window().maximize();
+		//driver.manage().window().maximize();
+		if (driver instanceof ChromeDriver == false)
+			driver.manage().window().maximize();
 	}
 	
 	public void windowResize(int hight, int width)
@@ -1125,7 +1145,7 @@ public class AppPage extends TestListenerAdapter
 	public void gotoURL(String url)
 	{
 		this.driver.get(url);
-		waitForAJaxCompletion();
+		//waitForAJaxCompletion();
 	}
 	
 	public boolean hasEditableFields(WebElement element) {
