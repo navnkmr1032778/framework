@@ -250,7 +250,6 @@ public class AppDriver extends TestListenerAdapter {
 		 try 
 		   {
 				logger.info("Test : " + testResult.getName() + "' SKIPPED");
-				processResults(testResult,false);
 				if(jiraUpdate() && !isExpectedSkip(testResult))
 				{
 					String[] testCases = getJiraTestCases(testResult);
@@ -260,7 +259,7 @@ public class AppDriver extends TestListenerAdapter {
 						logger.info("No JIRA test cases to update");
 				}
 		   } 
-		   catch (MyCoreExceptions e) 
+		   catch (Exception e) 
 		   {
 				e.printStackTrace();
 		   }
