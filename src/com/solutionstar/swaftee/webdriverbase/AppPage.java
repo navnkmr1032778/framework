@@ -358,6 +358,10 @@ public class AppPage extends TestListenerAdapter
 		boolean switchSuccess = false;
 		List<String>windows = new ArrayList<String>(getWindowHandles());
 		String currentWindow = getWindowHandle();
+		if(windows.size()==1)
+		{
+			return true;
+		}
 		for(int index=0; index<windows.size();index++)
 		{
 			if(currentWindow.equals(windows.get(index)))
@@ -986,9 +990,24 @@ public class AppPage extends TestListenerAdapter
     *
     * @param s The text string that should be in the HTML source
     */
+   public boolean isPageContainsText(String s)
+   {
+	   return pageSource().contains(s);
+   }
+   
    public void assertText(String s) 
    {
 	   Assert.assertTrue(pageSource().contains(s),"Expect text '"+s+"' in html source but not found.");
+   }
+   
+   /**
+    * Assert text <code>s</code> in the HTML source
+    *
+    * @param s The text string that should be in the HTML source
+    */
+   public void assertTextNotPresent(String s) 
+   {
+	   Assert.assertTrue(!(pageSource().contains(s)),"Expect text '"+s+"' in html source is found.");
    }
    
    /**
@@ -998,8 +1017,6 @@ public class AppPage extends TestListenerAdapter
     */
    public void assertTitle(String s) 
    {
-        //WebDriverWait wait = new WebDriverWait(this.driver, Long.parseLong(timeout));
-       // wait.until(ExpectedConditions.titleIs(s));
        Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
    }
 
