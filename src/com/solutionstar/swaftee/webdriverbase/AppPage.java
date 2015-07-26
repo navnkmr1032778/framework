@@ -524,6 +524,20 @@ public class AppPage extends TestListenerAdapter
 	    return false;
   	}
 	
+	public void switchToWindowClosingOthers(String handle)
+	{
+		List<String>windows = new ArrayList<String>(getWindowHandles());
+		
+		for(String window : windows)
+		{
+			this.driver.switchTo().window(window);
+			if(!window.equals(handle))
+				this.driver.close();
+		}
+		
+		this.driver.switchTo().window(handle);
+	}
+	
 	public String getvalueUsingJavaScript(String by, String ele)
 	{
 		String val = null;
