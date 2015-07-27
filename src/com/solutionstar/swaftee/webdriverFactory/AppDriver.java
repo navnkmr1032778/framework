@@ -15,6 +15,8 @@ import java.util.Set;
 
 import net.lightbody.bmp.core.har.Har;
 
+import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -205,16 +207,21 @@ public class AppDriver extends TestListenerAdapter {
 	{
 	   try 
 	   {
-		   logger.info("Test " + testResult.getName() + "' FAILED");
-		   processResults(testResult,true);
-		   if(jiraUpdate())
-		   {
-			   String[] testCases = getJiraTestCases(testResult);
-			   if(testCases!= null && testCases.length>0)
-				   zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), FAIL);
-			   else
-				   logger.info("No JIRA test cases to update");
-		   }
+			logger.info("Test " + testResult.getName() + "' FAILED");
+			if (!(testResult.getThrowable() instanceof NoSuchWindowException || testResult
+					.getThrowable() instanceof NoSuchFrameException))
+			{
+				processResults(testResult, true);
+			}
+			if (jiraUpdate())
+			{
+				String[] testCases = getJiraTestCases(testResult);
+				if (testCases != null && testCases.length > 0)
+					zUtils.updateExecutionStatusOfTests(
+							getJiraTestCases(testResult), FAIL);
+				else
+					logger.info("No JIRA test cases to update");
+			}
 	   } 
 	   catch (MyCoreExceptions e) 
 	   {
