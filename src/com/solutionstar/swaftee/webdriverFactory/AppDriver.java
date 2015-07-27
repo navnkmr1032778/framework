@@ -278,17 +278,25 @@ public class AppDriver extends TestListenerAdapter {
 	public Map<String, WebDriver> getDriverfromResult(ITestResult testResult)
 	{
 		Map<String, WebDriver> driverList = new HashMap<String,WebDriver>();
-		if(getAppDriver(testResult).hasDriver())
-			driverList.put("primary",getAppDriver(testResult).getDriver());
-		if(getAppDriver(testResult).hasSecondaryDriver())
-			driverList.put("secondary",getAppDriver(testResult).getSecondaryDriver());
+		AppDriver appDriver = getAppDriver(testResult);
+		if(appDriver != null)
+		{
+			if(appDriver.hasDriver())
+				driverList.put("primary",appDriver.getDriver());
+			if(getAppDriver(testResult).hasSecondaryDriver())
+				driverList.put("secondary",appDriver.getSecondaryDriver());
+		}
+		
 		return driverList;
 	}
 	
 	protected AppDriver getAppDriver(ITestResult testResult)
 	{
 		  Object currentClass = testResult.getInstance();
-	      return ((AppDriver) currentClass);
+		  if(currentClass instanceof AppDriver)
+			  return ((AppDriver) currentClass);
+		  else
+			  return null;
 	}
 	
 	protected String[] getJiraTestCases(ITestResult testResult)
