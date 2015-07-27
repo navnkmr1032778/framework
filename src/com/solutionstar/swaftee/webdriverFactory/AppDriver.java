@@ -352,7 +352,8 @@ public class AppDriver extends TestListenerAdapter {
 		}
 		if (flag)
 		{
-			skippedMethods.add(testResult.getMethod().getMethodName());
+			String className = testResult.getMethod().getConstructorOrMethod().getMethod().getDeclaringClass().getName();
+			skippedMethods.add( className + "." + testResult.getMethod().getMethodName());
 		}
 		return flag;
 	}
