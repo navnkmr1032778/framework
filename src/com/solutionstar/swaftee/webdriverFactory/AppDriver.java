@@ -1,31 +1,28 @@
 package com.solutionstar.swaftee.webdriverFactory;
 
-import io.appium.java_client.AppiumDriver;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import net.lightbody.bmp.core.har.Har;
 
-import org.hamcrest.core.IsNot;
+import org.openqa.selenium.NoSuchFrameException;
+import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.logging.Logs;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
+import org.testng.SkipException;
 import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
@@ -48,10 +45,14 @@ public class AppDriver extends TestListenerAdapter {
 	static String UNEXECUTED = "-1";
 	static String BLOCKED = "4";
 	
+	private final static String SKIP_EXCEPTION_MESSAGE = "Expected skip.";
+	
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
 	ZephyrUtils zUtils = new ZephyrUtils();
+	
+	Set<String> skippedMethods = new HashSet<String>();
 	
 	public WebDriver getDriver()
 	{ 
@@ -206,16 +207,21 @@ public class AppDriver extends TestListenerAdapter {
 	{
 	   try 
 	   {
-		   logger.info("Test " + testResult.getName() + "' FAILED");
-		   processResults(testResult,true);
-		   if(jiraUpdate())
-		   {
-			   String[] testCases = getJiraTestCases(testResult);
-			   if(testCases!= null && testCases.length>0)
-				   zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), FAIL);
-			   else
-				   logger.info("No JIRA test cases to update");
-		   }
+			logger.info("Test " + testResult.getName() + "' FAILED");
+			if (!(testResult.getThrowable() instanceof NoSuchWindowException || testResult
+					.getThrowable() instanceof NoSuchFrameException))
+			{
+				processResults(testResult, true);
+			}
+			if (jiraUpdate())
+			{
+				String[] testCases = getJiraTestCases(testResult);
+				if (testCases != null && testCases.length > 0)
+					zUtils.updateExecutionStatusOfTests(
+							getJiraTestCases(testResult), FAIL);
+				else
+					logger.info("No JIRA test cases to update");
+			}
 	   } 
 	   catch (MyCoreExceptions e) 
 	   {
@@ -251,8 +257,7 @@ public class AppDriver extends TestListenerAdapter {
 		 try 
 		   {
 				logger.info("Test : " + testResult.getName() + "' SKIPPED");
-				processResults(testResult,false);
-				if(jiraUpdate())
+				if(jiraUpdate() && !isExpectedSkip(testResult))
 				{
 					String[] testCases = getJiraTestCases(testResult);
 					if(testCases!= null && testCases.length>0)
@@ -261,7 +266,7 @@ public class AppDriver extends TestListenerAdapter {
 						logger.info("No JIRA test cases to update");
 				}
 		   } 
-		   catch (MyCoreExceptions e) 
+		   catch (Exception e) 
 		   {
 				e.printStackTrace();
 		   }
@@ -280,17 +285,25 @@ public class AppDriver extends TestListenerAdapter {
 	public Map<String, WebDriver> getDriverfromResult(ITestResult testResult)
 	{
 		Map<String, WebDriver> driverList = new HashMap<String,WebDriver>();
-		if(getAppDriver(testResult).hasDriver())
-			driverList.put("primary",getAppDriver(testResult).getDriver());
-		if(getAppDriver(testResult).hasSecondaryDriver())
-			driverList.put("secondary",getAppDriver(testResult).getSecondaryDriver());
+		AppDriver appDriver = getAppDriver(testResult);
+		if(appDriver != null)
+		{
+			if(appDriver.hasDriver())
+				driverList.put("primary",appDriver.getDriver());
+			if(getAppDriver(testResult).hasSecondaryDriver())
+				driverList.put("secondary",appDriver.getSecondaryDriver());
+		}
+		
 		return driverList;
 	}
 	
 	protected AppDriver getAppDriver(ITestResult testResult)
 	{
 		  Object currentClass = testResult.getInstance();
-	      return ((AppDriver) currentClass);
+		  if(currentClass instanceof AppDriver)
+			  return ((AppDriver) currentClass);
+		  else
+			  return null;
 	}
 	
 	protected String[] getJiraTestCases(ITestResult testResult)
@@ -305,6 +318,44 @@ public class AppDriver extends TestListenerAdapter {
 	protected boolean jiraUpdate()
 	{
 		return Boolean.valueOf(System.getProperty("jira","false").toLowerCase(Locale.ENGLISH));
+	}
+	
+	public void skipTest(String message)
+	{
+		throw new SkipException(SKIP_EXCEPTION_MESSAGE + message);
+	}
+	
+	public void skipTest()
+	{
+		skipTest(" Note: No additional skip message was provided.\n");
+	}
+	
+	protected boolean isExpectedSkip(ITestResult testResult)
+	{
+		Throwable thr = testResult.getThrowable();
+		boolean flag = false;
+		if (thr.getMessage().startsWith(SKIP_EXCEPTION_MESSAGE))
+		{
+			flag = true;
+		}
+		else
+		{
+			for (String methodDependentUpon : testResult.getMethod()
+					.getMethodsDependedUpon())
+			{
+				if (skippedMethods.contains(methodDependentUpon))
+				{
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (flag)
+		{
+			String className = testResult.getMethod().getConstructorOrMethod().getMethod().getDeclaringClass().getName();
+			skippedMethods.add( className + "." + testResult.getMethod().getMethodName());
+		}
+		return flag;
 	}
 	
 	@AfterClass
