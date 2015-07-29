@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.lightbody.bmp.core.har.Har;
-
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
@@ -33,6 +32,7 @@ import com.solutionstar.swaftee.jira.Jira;
 import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.webdriverbase.AppPage;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 
@@ -51,6 +51,7 @@ public class AppDriver extends TestListenerAdapter {
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
 	ZephyrUtils zUtils = new ZephyrUtils();
+	AppPage appPage;
 	
 	Set<String> skippedMethods = new HashSet<String>();
 	
@@ -404,5 +405,5 @@ public class AppDriver extends TestListenerAdapter {
 	public void setSecondaryDriver(WebDriver driver) 
 	{
 		baseDriverHelper.setSecondaryDriver(driver);
-	 }
- }
+	}
+}

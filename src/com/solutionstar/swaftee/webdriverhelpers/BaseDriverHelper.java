@@ -552,7 +552,8 @@ public class BaseDriverHelper {
 
 	public Har getHar()
 	{
-		try{
+		try
+		{
 			logger.info("No of headers captured - "+ proxyServer.getHar().getLog().getEntries().size()); 
 			Har har = proxyServer.getHar();
 			String fileName = "resources/testdata/har-"+commonUtils.getCurrentTimeString()+".json";
@@ -620,5 +621,39 @@ public class BaseDriverHelper {
 	{
 		logger.info(System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH));
 		return System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH);
+	}
+	
+	public boolean getIsDryRun()
+	{
+		try
+		{
+			return Boolean.valueOf(System.getProperty("isDryRun","false").toLowerCase(Locale.ENGLISH));
+		}
+		catch(NullPointerException exp)
+		{
+			return false;
+		}
+	}
+	
+	public boolean getCompareImages()
+	{
+		try
+		{
+			return Boolean.valueOf(System.getProperty("compareImages","false").toLowerCase(Locale.ENGLISH));
+		}
+		catch(NullPointerException exp)
+		{
+			return false;
+		}
+	}
+	
+	public String getBaseDirLocation()
+	{
+		return System.getProperty("baseDirectoryLocation").toLowerCase(Locale.ENGLISH);
+	}
+
+	public String getCurrentDirLocation()
+	{
+		return System.getProperty("currentDirectoryLocation").toLowerCase(Locale.ENGLISH);
 	}
 }
