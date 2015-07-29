@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,7 +15,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FileUtils;
+import org.junit.rules.TestName;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -208,6 +212,34 @@ public class AppPage extends TestListenerAdapter
 		  element.sendKeys(text);
 	 }
 	  
+	 public void takeScreenShot() 
+	 {
+		 waitForPageLoadComplete();
+		 waitForAJaxCompletion();
+		 String fileName="E:\\TEST-PROJECT\\XOME\\BaseDirectory\\";
+		 BaseDriverHelper baseDriverHelper=new BaseDriverHelper();
+		 if(baseDriverHelper.getIsDryRun()==true && baseDriverHelper.getBaseDirLocation()!=null)
+		 {
+			 fileName=baseDriverHelper.getBaseDirLocation();
+		 }
+		 else if(baseDriverHelper.getCompareImages()==true && baseDriverHelper.getCurrentDirLocation()!=null)
+		 {
+			 fileName=baseDriverHelper.getCurrentDirLocation();
+		 }
+	      File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+	      try 
+	      {
+	    	  StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+	    	  System.out.println("method name:  "+stackTraceElements[2].getMethodName());
+	    	  FileUtils.copyFile(scrFile, new File(fileName+stackTraceElements[2].getMethodName()+".png"));	//Files.move(src,dest);
+	      } 
+	      catch (IOException e) 
+	      {
+	    	  logger.info("Error While taking Screen Shot");
+	    	  e.printStackTrace();
+	      }
+	 }
+	 
 	 public void takeScreenShot(String fileName) 
 	 {
 	      File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -216,6 +248,60 @@ public class AppPage extends TestListenerAdapter
 	        FileUtils.copyFile(scrFile, new File(fileName));
 	      } 
 	      catch (IOException e) 
+	      {
+	    	  e.printStackTrace();
+	    	  logger.error("Error While taking Screen Shot");
+	      }
+	 }
+	 
+	 public void takeScreenShot(String fileName, WebElement element) throws IOException
+	 {
+		  File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+	      BufferedImage  fullImg = ImageIO.read(scrFile);
+	      
+	      Point point = element.getLocation();
+	      int eleWidth = element.getSize().getWidth();
+	      int eleHeight = element.getSize().getHeight();
+	      
+	      BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
+	      ImageIO.write(eleScreenshot, "png", scrFile);
+	      try 
+	      {
+	        FileUtils.copyFile(scrFile, new File(fileName));
+	      } 
+	      catch (IOException e) 
+	      {
+	    	  e.printStackTrace();
+	    	  logger.error("Error While taking Screen Shot");
+	      }
+	 }
+	 
+	 public void takeScreenShot(WebElement element) throws IOException
+	 {
+		 String fileName="E:\\TEST-PROJECT\\XOME\\BaseDirectory";
+		 BaseDriverHelper baseDriverHelper=new BaseDriverHelper();
+		 if(baseDriverHelper.getIsDryRun()==true && baseDriverHelper.getBaseDirLocation()!=null)
+		 {
+			 fileName=baseDriverHelper.getBaseDirLocation();
+		 }
+		 else if(baseDriverHelper.getCompareImages()==true && baseDriverHelper.getCurrentDirLocation()!=null)
+		 {
+			 fileName=baseDriverHelper.getCurrentDirLocation();
+		 }
+		 File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		 BufferedImage  fullImg = ImageIO.read(scrFile);
+
+		 Point point = element.getLocation();
+		 int eleWidth = element.getSize().getWidth();
+		 int eleHeight = element.getSize().getHeight();
+
+		 BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
+		 ImageIO.write(eleScreenshot, "png", scrFile);
+		 try 
+		 {
+			 FileUtils.copyFile(scrFile, new File(fileName));
+		 } 
+		 catch (IOException e) 
 	      {
 	    	  e.printStackTrace();
 	    	  logger.error("Error While taking Screen Shot");

@@ -27,6 +27,7 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
@@ -34,6 +35,7 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class CommonUtils {
 	

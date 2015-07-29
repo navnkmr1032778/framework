@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.lightbody.bmp.core.har.Har;
-
 import org.jenkinsci.testinprogress.messagesender.IMessageSenderFactory;
 import org.jenkinsci.testinprogress.messagesender.MessageSender;
 import org.jenkinsci.testinprogress.messagesender.SocketMessageSenderFactory;
@@ -46,6 +45,7 @@ import com.solutionstar.swaftee.jira.Jira;
 import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.webdriverbase.AppPage;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 
@@ -59,6 +59,8 @@ public class AppDriver extends TestListenerAdapter {
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
 	private static boolean zephyrStarted = false;
+	ZephyrUtils zUtils = new ZephyrUtils();
+	AppPage appPage;
 	
 	Set<String> skippedMethods = new HashSet<String>();
 	
@@ -630,7 +632,5 @@ public class AppDriver extends TestListenerAdapter {
 			classMap.put(className, methodList);
 		}
 		return classMap;
-	}
-	
-	
+	}	
  }
