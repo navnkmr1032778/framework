@@ -14,9 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.sound.midi.SysexMessage;
-
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.ProxyServer;
@@ -127,8 +124,6 @@ public class BaseDriverHelper {
 		}
 		else if(ismobile()==false)
 		{
-			String brows = System.getProperty("webdriver.browser","chrome");
-			
 			logger.info("fetching driver");
 			String browserName = getBrowserToRun(); //getBrowserName("primary");
 			logger.info("browserName -- "+ browserName);
@@ -293,17 +288,13 @@ public class BaseDriverHelper {
 			{
 			case CHROME:
 				ChromeOptions options = new ChromeOptions();
-				//options.addArguments("--disable-extensions");
-			    options.addArguments("start-maximized");
-				cap.setCapability(ChromeOptions.CAPABILITY, options);
+				options.addArguments("--disable-extensions");
+			    cap.setCapability(ChromeOptions.CAPABILITY, options);
 				driver = new ChromeDriver(cap);
 				break;
 			case INTERNET_EXPLORER:
-
-
 				cap.setCapability(InternetExplorerDriver.
 						INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true); 
-
 				driver = new InternetExplorerDriver(cap);
 				break;
 			case FIREFOX:
