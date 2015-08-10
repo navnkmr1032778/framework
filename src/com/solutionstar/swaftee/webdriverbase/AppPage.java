@@ -28,8 +28,6 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.PageFactory;
@@ -174,7 +172,7 @@ public class AppPage extends TestListenerAdapter
 	 public void waitForVisible(By locator) 
 	 {
 		    WebDriverWait wait =
-		        new WebDriverWait(driver,200);
+		        new WebDriverWait(driver,WebDriverConstants.WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC);
 		    wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
      }
 	 
@@ -272,6 +270,7 @@ public class AppPage extends TestListenerAdapter
 	public void waitForPageLoad(int timeout) 
 	{
 		Boolean hasnoException = false;
+		int exceptionCnt = 0;
 		while(hasnoException == false)
 		{
 			try
@@ -289,8 +288,8 @@ public class AppPage extends TestListenerAdapter
 			}
 			catch(WebDriverException ex)
 			{
-				logger.info("JS Timeout Exception ");
-				hasnoException = false;
+				logger.info("JS Exception ");
+				hasnoException = (++exceptionCnt < 5 ? false:true);
 			}
 		}   
 		    
@@ -320,9 +319,7 @@ public class AppPage extends TestListenerAdapter
 	
 	public void maximizeWindow()
 	{
-		//driver.manage().window().maximize();
-		if (driver instanceof ChromeDriver == false)
-			driver.manage().window().maximize();
+		driver.manage().window().maximize();
 	}
 	
 	public void windowResize(int hight, int width)
@@ -1145,7 +1142,7 @@ public class AppPage extends TestListenerAdapter
 	public void gotoURL(String url)
 	{
 		this.driver.get(url);
-		//waitForAJaxCompletion();
+		waitForAJaxCompletion();
 	}
 	
 	public boolean hasEditableFields(WebElement element) {
