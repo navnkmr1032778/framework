@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.ProxyServer;
@@ -290,15 +289,12 @@ public class BaseDriverHelper {
 			case CHROME:
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--disable-extensions");
-				cap.setCapability(ChromeOptions.CAPABILITY, options);
+			    cap.setCapability(ChromeOptions.CAPABILITY, options);
 				driver = new ChromeDriver(cap);
 				break;
 			case INTERNET_EXPLORER:
-
-
 				cap.setCapability(InternetExplorerDriver.
 						INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true); 
-
 				driver = new InternetExplorerDriver(cap);
 				break;
 			case FIREFOX:
@@ -591,7 +587,7 @@ public class BaseDriverHelper {
 
 	public String getBrowserToRun()
 	{
-		return System.getProperty("gridbrowser","chrome").toLowerCase(Locale.ENGLISH);
+		return System.getProperty("gridbrowser",System.getProperty("webdriver.browser","chrome")).toLowerCase(Locale.ENGLISH);
 	}
 
 	public String getGridServerWithPort()

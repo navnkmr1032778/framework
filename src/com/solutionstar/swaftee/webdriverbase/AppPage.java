@@ -26,6 +26,7 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
@@ -267,16 +268,16 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-		    wait.until(new ExpectedCondition<Boolean>() 
-		    {
-		      public Boolean apply(WebDriver driver) 
-		      {
-		        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
-		            "complete");
-		      }
-		    });
-			return;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
+	    wait.until(new ExpectedCondition<Boolean>() 
+	    {
+	      public Boolean apply(WebDriver driver) 
+	      {
+	        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
+	            "complete");
+	      }
+	    });
+		return; 
 	}
 	
 	public boolean verifyDropDownElements(WebElement drpdown, List<String> listExpected) 
