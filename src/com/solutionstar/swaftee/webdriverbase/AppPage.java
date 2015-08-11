@@ -268,22 +268,13 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
 	    wait.until(new ExpectedCondition<Boolean>() 
 	    {
 	      public Boolean apply(WebDriver driver) 
 	      {
-	    	int exeptionCntr = 0;
-	    	try
-	    	{
-	    		return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
+	        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
 	            "complete");
-	    	}
-	    	catch(WebDriverException ex)
-	    	{
-	    		if(++exeptionCntr<5) return false;
-	    		else throw ex;
-	    	}
 	      }
 	    });
 		return; 
