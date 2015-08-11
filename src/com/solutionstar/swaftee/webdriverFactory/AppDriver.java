@@ -50,7 +50,7 @@ public class AppDriver extends TestListenerAdapter {
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
-	ZephyrUtils zUtils = new ZephyrUtils();
+	ZephyrUtils zUtils ;
 	
 	Set<String> skippedMethods = new HashSet<String>();
 	
@@ -317,7 +317,15 @@ public class AppDriver extends TestListenerAdapter {
 	
 	protected boolean jiraUpdate()
 	{
-		return Boolean.valueOf(System.getProperty("jira","false").toLowerCase(Locale.ENGLISH));
+		if (Boolean.valueOf(System.getProperty("jira","false").toLowerCase(Locale.ENGLISH)))
+		{
+			if(zUtils == null)
+				zUtils = new ZephyrUtils();
+			return true;
+		}
+		else
+			return false;
+
 	}
 	
 	public void skipTest(String message)
