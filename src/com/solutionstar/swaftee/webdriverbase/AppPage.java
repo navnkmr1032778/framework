@@ -99,7 +99,6 @@ public class AppPage extends TestListenerAdapter
 	 
 	 public JavascriptExecutor getJavaScriptExecutor()
 	 {
-		 driver.manage().timeouts().setScriptTimeout(2000, TimeUnit.SECONDS); 
 		 if( javaScriptExecutor == null)
 			javaScriptExecutor = (JavascriptExecutor) driver;
 		 return javaScriptExecutor;
@@ -269,31 +268,25 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-		Boolean hasnoException = false;
-		int exceptionCnt = 0;
-		while(hasnoException == false)
-		{
-			try
-			{
-				hasnoException = true;
-				Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-			    wait.until(new ExpectedCondition<Boolean>() 
-			    {
-			      public Boolean apply(WebDriver driver) 
-			      {
-			        return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
-			            "complete");
-			      }
-			    });
-			}
-			catch(WebDriverException ex)
-			{
-				logger.info("JS Exception ");
-				hasnoException = (++exceptionCnt < 5 ? false:true);
-			}
-		}   
-		    
-			return;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+	    wait.until(new ExpectedCondition<Boolean>() 
+	    {
+	      public Boolean apply(WebDriver driver) 
+	      {
+	    	int exeptionCntr = 0;
+	    	try
+	    	{
+	    		return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
+	            "complete");
+	    	}
+	    	catch(WebDriverException ex)
+	    	{
+	    		if(++exeptionCntr<5) return false;
+	    		else throw ex;
+	    	}
+	      }
+	    });
+		return; 
 	}
 	
 	public boolean verifyDropDownElements(WebElement drpdown, List<String> listExpected) 
