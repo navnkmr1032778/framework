@@ -371,12 +371,12 @@ public class CommonUtils {
 	}
 
 	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
-			String password, String sourceLocation, Date startTime) {
+			String password, String sourceLocation, Date startTime,String fileExtension) {
 		List<String> list = new ArrayList<String>();
 		try {
 			channelSftp = getChannelSftp(hostname, port, username, password);
 			channelSftp.cd(sourceLocation);
-			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*.csv");
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*."+fileExtension);
 			for (ChannelSftp.LsEntry o : v) {
 				//if(startTime.before(o.getAttrs().()))
 				String ti = o.getAttrs().getMtimeString();
@@ -394,5 +394,10 @@ public class CommonUtils {
 			ex.printStackTrace();
 		}
 		return list;
+	}
+	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
+			String password, String sourceLocation, Date startTime) {
+		return listFilesInSFTPLocation(hostname, port,username,
+				password,sourceLocation, startTime,"csv");
 	}
 }

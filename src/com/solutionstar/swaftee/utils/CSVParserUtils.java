@@ -442,17 +442,26 @@ public class CSVParserUtils {
 		}
 	}
 
-	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index) 
+	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index) throws Exception 
 	{
 		HashMap<String, HashMap<String, String>> output = new HashMap<String, HashMap<String, String>>();
 		if (directoryListing == null) 
 			 return null;
-	    for (File assetFile : directoryListing) 
-	    {
-	    	for(HashMap<String, String> hsh : getDataFromCSV(assetFile.getAbsolutePath()))
-				output.put(hsh.get(index), hsh);
+		try
+		{
+			for (File file : directoryListing) 
+		    {
+		    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
+					output.put(hsh.get(index), hsh);
+			}
+			return output;
 		}
-		return output;
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			if(output.size()==0) throw ex;
+			return output;
+		}
 	}
 	
 	
