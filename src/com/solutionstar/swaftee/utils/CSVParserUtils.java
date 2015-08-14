@@ -370,10 +370,11 @@ public class CSVParserUtils {
 		if (utils == null)
 			utils = new CommonUtils();
 		try {
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName),',','"',escapeCharacter);
+			
+			if(new File(fileName).isAbsolute() == false)
+				fileName += utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName;
+			
+			CSVReader reader = new CSVReader(new FileReader(fileName),',','"',escapeCharacter);
 			List<String[]> data = reader.readAll();
 			String[] header = data.remove(0);
 			for (String[] row : data) {
@@ -439,6 +440,19 @@ public class CSVParserUtils {
 		} catch (Exception e) {
 			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
 		}
+	}
+
+	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index) 
+	{
+		HashMap<String, HashMap<String, String>> output = new HashMap<String, HashMap<String, String>>();
+		if (directoryListing == null) 
+			 return null;
+	    for (File assetFile : directoryListing) 
+	    {
+	    	for(HashMap<String, String> hsh : getDataFromCSV(assetFile.getAbsolutePath()))
+				output.put(hsh.get(index), hsh);
+		}
+		return output;
 	}
 	
 	
