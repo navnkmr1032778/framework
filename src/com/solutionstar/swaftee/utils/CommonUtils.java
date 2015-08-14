@@ -253,8 +253,7 @@ public class CommonUtils {
 		List<String> list = new ArrayList<String>();
 		try {
 			channelSftp = getChannelSftp(hostname, port, username, password);
-			channelSftp.cd(sourceLocation);
-			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*.csv");
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls(sourceLocation);
 			for (ChannelSftp.LsEntry o : v) {
 				list.add(o.getFilename());
 			}
@@ -378,7 +377,6 @@ public class CommonUtils {
 			channelSftp.cd(sourceLocation);
 			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*."+fileExtension);
 			for (ChannelSftp.LsEntry o : v) {
-				//if(startTime.before(o.getAttrs().()))
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
