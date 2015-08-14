@@ -52,7 +52,7 @@ public class WebDriverConstants {
 	public static final Map<String, String> WINDOWS_DRIVERS;
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("chrome", "https://github.com/sheltonpaul89/WebDrivers/raw/master/chromedriver_win32.zip");
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.16/chromedriver_win32.zip");
 	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_win32.zip");
 	  tmp.put("ie", "https://github.com/sheltonpaul89/WebDrivers/raw/master/IEDriverServer.zip");
 	  WINDOWS_DRIVERS = Collections.unmodifiableMap(tmp);
