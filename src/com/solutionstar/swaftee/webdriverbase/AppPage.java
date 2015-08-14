@@ -839,6 +839,12 @@ public class AppPage extends TestListenerAdapter
 	   return alert;
    }
    
+   public String getAlertText() throws Exception
+   {
+	   Alert alert = driver.switchTo().alert();
+	   return alert.getText();
+   }
+ 
    public void dismissAlertIfPresent(boolean shouldWait)
    {
 	   boolean dismissed = false;
