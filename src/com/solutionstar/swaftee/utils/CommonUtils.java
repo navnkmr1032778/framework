@@ -380,7 +380,6 @@ public class CommonUtils {
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
-				
 				if(startTime.before(createdDate))
 					list.add(o.getFilename());
 			}
@@ -393,6 +392,7 @@ public class CommonUtils {
 		}
 		return list;
 	}
+	
 	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
 			String password, String sourceLocation, Date startTime) {
 		return listFilesInSFTPLocation(hostname, port,username,
