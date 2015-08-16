@@ -442,7 +442,7 @@ public class CSVParserUtils {
 		}
 	}
 
-	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index) throws Exception 
+	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index,Boolean includeFileName) throws Exception 
 	{
 		HashMap<String, HashMap<String, String>> output = new HashMap<String, HashMap<String, String>>();
 		if (directoryListing == null) 
@@ -452,7 +452,13 @@ public class CSVParserUtils {
 			for (File file : directoryListing) 
 		    {
 		    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
+		    	{
+		    		if(includeFileName)
+						hsh.put("fileName",file.getAbsolutePath());
 					output.put(hsh.get(index), hsh);
+						
+		    	}
+		    		
 			}
 			return output;
 		}
