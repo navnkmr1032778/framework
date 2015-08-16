@@ -451,13 +451,16 @@ public class CSVParserUtils {
 		{
 			for (File file : directoryListing) 
 		    {
-		    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
-		    	{
-		    		if(includeFileName)
-						hsh.put("fileName",file.getAbsolutePath());
-					output.put(hsh.get(index), hsh);
-						
-		    	}
+				if(file.getAbsolutePath().endsWith(".csv"));
+				{
+			    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
+			    	{
+			    		if(includeFileName)
+							hsh.put("fileName",file.getAbsolutePath());
+						output.put(hsh.get(index), hsh);
+							
+			    	}
+				}
 		    		
 			}
 			return output;
