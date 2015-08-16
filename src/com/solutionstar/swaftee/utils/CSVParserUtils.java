@@ -451,7 +451,7 @@ public class CSVParserUtils {
 		{
 			for (File file : directoryListing) 
 		    {
-				if(file.getAbsolutePath().endsWith(".csv"));
+				if(file.getAbsolutePath().endsWith(".csv"))
 				{
 			    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
 			    	{
