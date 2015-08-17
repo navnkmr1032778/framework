@@ -370,10 +370,11 @@ public class CSVParserUtils {
 		if (utils == null)
 			utils = new CommonUtils();
 		try {
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName),',','"',escapeCharacter);
+			
+			if(new File(fileName).isAbsolute() == false)
+				fileName += utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName;
+			
+			CSVReader reader = new CSVReader(new FileReader(fileName),',','"',escapeCharacter);
 			List<String[]> data = reader.readAll();
 			String[] header = data.remove(0);
 			for (String[] row : data) {
@@ -438,6 +439,37 @@ public class CSVParserUtils {
 			writeToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
 			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
+		}
+	}
+
+	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index,Boolean includeFileName) throws Exception 
+	{
+		HashMap<String, HashMap<String, String>> output = new HashMap<String, HashMap<String, String>>();
+		if (directoryListing == null) 
+			 return null;
+		try
+		{
+			for (File file : directoryListing) 
+		    {
+				if(file.getAbsolutePath().endsWith(".csv"))
+				{
+			    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
+			    	{
+			    		if(includeFileName)
+							hsh.put("fileName",file.getAbsolutePath());
+						output.put(hsh.get(index), hsh);
+							
+			    	}
+				}
+		    		
+			}
+			return output;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			if(output.size()==0) throw ex;
+			return output;
 		}
 	}
 	

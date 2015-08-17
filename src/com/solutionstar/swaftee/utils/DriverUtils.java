@@ -38,7 +38,10 @@ public class DriverUtils
 	{
 		String dirName = utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE;		 
 		try {
-		 
+			File destDir = new File(dirName);
+			if (!destDir.exists()) 
+				destDir.mkdir();
+			
 			saveFileFromUrlWithJavaIO(
 			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName.toLowerCase()));
 			unZipIt(dirName + "\\"+ DriverName +".zip",dirName);

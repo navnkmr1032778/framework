@@ -9,9 +9,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Vector;
 
@@ -365,5 +367,35 @@ public class CommonUtils {
 	{
 		Map<String, Object> retMap = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {}.getType());
 		return retMap;
+	}
+
+	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
+			String password, String sourceLocation, Date startTime,String fileExtension) {
+		List<String> list = new ArrayList<String>();
+		try {
+			channelSftp = getChannelSftp(hostname, port, username, password);
+			channelSftp.cd(sourceLocation);
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*."+fileExtension);
+			for (ChannelSftp.LsEntry o : v) {
+				String ti = o.getAttrs().getMtimeString();
+				int t = o.getAttrs().getMTime();
+				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
+				if(startTime.before(createdDate))
+					list.add(o.getFilename());
+			}
+			if (channelSftp != null)
+				channelSftp.disconnect();
+			if (session != null)
+				session.disconnect();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return list;
+	}
+	
+	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
+			String password, String sourceLocation, Date startTime) {
+		return listFilesInSFTPLocation(hostname, port,username,
+				password,sourceLocation, startTime,"csv");
 	}
 }
