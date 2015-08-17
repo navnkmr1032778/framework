@@ -335,6 +335,7 @@ public class CSVParserUtils {
 							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
 							+ fileName + ".csv"));
 			rowEntries = reader.readAll();
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
