@@ -40,11 +40,6 @@ public class AppDriver extends TestListenerAdapter {
 
 	protected static Logger logger = LoggerFactory.getLogger(AppDriver.class.getName());
 	
-	static String PASS = "1";
-	static String FAIL = "2";
-	static String UNEXECUTED = "-1";
-	static String BLOCKED = "4";
-	
 	private final static String SKIP_EXCEPTION_MESSAGE = "Expected skip.";
 	
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
@@ -218,7 +213,7 @@ public class AppDriver extends TestListenerAdapter {
 				String[] testCases = getJiraTestCases(testResult);
 				if (testCases != null && testCases.length > 0)
 					zUtils.updateExecutionStatusOfTests(
-							getJiraTestCases(testResult), FAIL);
+							getJiraTestCases(testResult), ZephyrUtils.FAIL);
 				else
 					logger.info("No JIRA test cases to update");
 			}
@@ -240,7 +235,7 @@ public class AppDriver extends TestListenerAdapter {
 				{
 					String[] testCases = getJiraTestCases(testResult);
 					if(testCases!= null && testCases.length>0)
-						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), PASS);
+						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.PASS);
 					else
 						logger.info("No JIRA test cases to update");
 				}
@@ -261,7 +256,7 @@ public class AppDriver extends TestListenerAdapter {
 				{
 					String[] testCases = getJiraTestCases(testResult);
 					if(testCases!= null && testCases.length>0)
-						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), BLOCKED);
+						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.BLOCKED);
 					else
 						logger.info("No JIRA test cases to update");
 				}
