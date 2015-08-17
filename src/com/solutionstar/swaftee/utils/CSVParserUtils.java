@@ -372,7 +372,7 @@ public class CSVParserUtils {
 		try {
 			
 			if(new File(fileName).isAbsolute() == false)
-				fileName += utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName;
+				fileName = utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName;
 			
 			CSVReader reader = new CSVReader(new FileReader(fileName),',','"',escapeCharacter);
 			List<String[]> data = reader.readAll();
