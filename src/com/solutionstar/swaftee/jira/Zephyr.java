@@ -17,6 +17,7 @@ public class Zephyr
 	
 	public static void main(String[] args)
 	{
+		
 		String mode = System.getProperty("zephyr");
 		if(mode.equals("reset"))
 		{

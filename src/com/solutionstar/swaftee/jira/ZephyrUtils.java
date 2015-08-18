@@ -40,17 +40,22 @@ public class ZephyrUtils
 	{
 		if (cycleId == null)
 		{
-			CommonProperties props = CommonProperties.getInstance();
 			cycleId = testCycleId;
-			try
+			jiraServer = System.getProperty("jiraServer");
+			jiraAuth = System.getProperty("jiraAuth");
+			if(jiraServer == null)
 			{
-				props.load("./conf/jiraconfiguration.properties");
-				jiraServer = props.get("jira_server");
-				jiraAuth = props.get("jira_auth_token");
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
+				CommonProperties props = CommonProperties.getInstance();
+				try
+				{
+					props.load("./conf/jiraconfiguration.properties");
+					jiraServer = props.get("jira_server");
+					jiraAuth = props.get("jira_auth_token");
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		}
 	}
