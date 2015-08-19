@@ -45,7 +45,7 @@ public class AppDriver extends TestListenerAdapter {
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
-	ZephyrUtils zUtils ;
+	private static boolean zephyrStarted = false;
 	
 	Set<String> skippedMethods = new HashSet<String>();
 	
@@ -212,7 +212,7 @@ public class AppDriver extends TestListenerAdapter {
 			{
 				String[] testCases = getJiraTestCases(testResult);
 				if (testCases != null && testCases.length > 0)
-					zUtils.updateExecutionStatusOfTests(
+					ZephyrUtils.updateExecutionStatusOfTests(
 							getJiraTestCases(testResult), ZephyrUtils.FAIL);
 				else
 					logger.info("No JIRA test cases to update");
@@ -235,7 +235,7 @@ public class AppDriver extends TestListenerAdapter {
 				{
 					String[] testCases = getJiraTestCases(testResult);
 					if(testCases!= null && testCases.length>0)
-						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.PASS);
+						ZephyrUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.PASS);
 					else
 						logger.info("No JIRA test cases to update");
 				}
@@ -256,7 +256,7 @@ public class AppDriver extends TestListenerAdapter {
 				{
 					String[] testCases = getJiraTestCases(testResult);
 					if(testCases!= null && testCases.length>0)
-						zUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.BLOCKED);
+						ZephyrUtils.updateExecutionStatusOfTests(getJiraTestCases(testResult), ZephyrUtils.BLOCKED);
 					else
 						logger.info("No JIRA test cases to update");
 				}
@@ -314,13 +314,22 @@ public class AppDriver extends TestListenerAdapter {
 	{
 		if (Boolean.valueOf(System.getProperty("jira","false").toLowerCase(Locale.ENGLISH)))
 		{
-			if(zUtils == null)
-				zUtils = new ZephyrUtils();
+			if(!zephyrStarted)
+			{
+				zephyrStarted = true;
+				ZephyrUtils.initZephyr(getTestCycleId());
+			}
 			return true;
 		}
 		else
 			return false;
 
+	}
+	
+	protected String getTestCycleId()
+	{
+		String testCycleId = System.getProperty("testCycleId");
+		return testCycleId;
 	}
 	
 	public void skipTest(String message)
