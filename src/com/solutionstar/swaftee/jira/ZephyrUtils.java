@@ -165,6 +165,9 @@ public class ZephyrUtils
 				.request(MediaType.APPLICATION_JSON_TYPE)
 				.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
 
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - "
+				+ response.toString());
+		
 		Map<String, Object> responseMap = utils.convertJSONToMap(response
 				.readEntity(String.class));
 		
