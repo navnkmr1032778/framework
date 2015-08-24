@@ -231,18 +231,19 @@ public class ZephyrUtils
 		try
 		{
 			// group test cases as per status
-
+			HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
+			
 			HashMap<String, Collection<String>> groupingMap = new HashMap<String, Collection<String>>();
 			for (String testCase : testCaseStatus.keySet())
 			{
 				if (groupingMap.containsKey(testCaseStatus.get(testCase)))
 				{
-					groupingMap.get(testCaseStatus.get(testCase)).add(testCase);
+					groupingMap.get(testCaseStatus.get(testCase)).add(testCaseExecutionMap.get(testCase));
 				}
 				else
 				{
 					Collection<String> testCases = new ArrayList<String>();
-					testCases.add(testCase);
+					testCases.add(testCaseExecutionMap.get(testCase));
 					groupingMap.put(testCaseStatus.get(testCase), testCases);
 				}
 			}
