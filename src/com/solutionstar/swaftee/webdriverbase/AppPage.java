@@ -809,7 +809,7 @@ public class AppPage extends TestListenerAdapter
     
     public void waitForElementToDisappear(WebElement e)
     {
-    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
+    	WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
     	if(isElementPresent(e))
     		wait.until(invisibilityOfElementLocated(e));
     }
