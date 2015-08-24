@@ -129,7 +129,7 @@ public class CommonUtils {
 			return null;
 		}
 	}
-
+	
 	public boolean isNumeric(String s) 
 	{
 		return s.matches("[-+]?\\d*\\.?\\d+");
