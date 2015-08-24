@@ -146,10 +146,8 @@ public class BaseDriverHelper {
 
 			if(cap==null)
 				throw new MyCoreExceptions("Capabilities return as Null");
-
 			driver = setMobileWebDriver(cap,mobilePlatform);
 		}
-
 	}
 
 	public WebDriver setWebDriver(DesiredCapabilities cap) throws Exception
