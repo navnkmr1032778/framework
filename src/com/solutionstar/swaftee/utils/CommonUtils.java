@@ -100,14 +100,31 @@ public class CommonUtils {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
 		String curDate = dateFormat.format(date);
-		screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + curDate+".jpg", webDriver); 
+		File dir=new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
+		if (!dir.exists()) 
+		{
+		    logger.info("creating directory: " + dir);
+		    try
+		    {
+		        dir.mkdir();
+		        screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
+		    } 
+		    catch(SecurityException ex)
+		    {
+		        logger.info("exception in creating director"+ExceptionUtils.getFullStackTrace(ex));
+		    }   
+		}
+		else
+		{
+			screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+".png", webDriver); 
+		}
 	}
 
 	public void screenShot(String fileName, WebDriver webDriver) 
 	{
-		File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
 		try 
 		{
+			File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(fileName));
 		} 
 		catch (IOException e) 
@@ -143,7 +160,7 @@ public class CommonUtils {
 		return sDate;
 	}
 
-	public String compareDate(String d1) throws ParseException
+	public String compareDateWithToday(String d1) throws ParseException
 	{
 		try
 		{
@@ -155,7 +172,7 @@ public class CommonUtils {
 			if(date1.compareTo(date2)>0)
 			{
 				logger.info(date1+" date is future "+date2);
-				return "requested";
+				return "future";
 			}
 			else if(date1.compareTo(date2)<0)
 			{
@@ -165,7 +182,7 @@ public class CommonUtils {
 			else
 			{
 				logger.info("present ongoing");
-				return "ongoing";
+				return "present";
 			}
 		}
 		catch(Exception ex)
@@ -200,12 +217,12 @@ public class CommonUtils {
 
 			SimpleDateFormat sdf = new SimpleDateFormat(toFormat);
 			String formatTime = sdf.format(date);
-			System.out.println(formatTime);
+			logger.info("after formatting: "+formatTime);
 			return formatTime;
 		}
 		catch(Exception ex)
 		{
-			System.out.println("change time format exception: "+ExceptionUtils.getFullStackTrace(ex));
+			logger.info("change time format exception: "+ExceptionUtils.getFullStackTrace(ex));
 			return null;
 		}
 	}

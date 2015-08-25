@@ -126,6 +126,12 @@
 			<version>2.44.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId> 
+			<artifactId>sqljdbc4</artifactId> 
+			<version>4.0</version>
+			<scope>runtime</scope>
+		</dependency> 
+		<dependency>
 			<groupId>net.jsourcerer.webdriver</groupId>
 			<artifactId>JSErrorCollector</artifactId>
 			<version>0.5-atlassian-2</version>
@@ -194,6 +200,10 @@
 		<repository>
 			<id>opencast-public</id>
 			<url>http://repository.opencastproject.org/nexus/content/repositories/public/</url>
+		</repository>
+		<repository>
+			<id>sqljdbc</id>
+			<url>http://asfqa2.cloudapp.net/grapher/resources/OtherContent/</url>
 		</repository>
 	</repositories>
 	<distributionManagement>

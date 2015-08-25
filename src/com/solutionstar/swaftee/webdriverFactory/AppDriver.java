@@ -45,7 +45,6 @@ import com.solutionstar.swaftee.jira.Jira;
 import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.webdriverbase.AppPage;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 
@@ -60,8 +59,6 @@ public class AppDriver extends TestListenerAdapter {
 	CommonUtils utils = new CommonUtils();
 	private static boolean zephyrStarted = false;
 	ZephyrUtils zUtils = new ZephyrUtils();
-	AppPage appPage;
-	
 	Set<String> skippedMethods = new HashSet<String>();
 	
 	private Map<String, String> testKIds = new HashMap<String, String>();

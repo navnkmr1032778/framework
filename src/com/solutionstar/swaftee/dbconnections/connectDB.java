@@ -57,35 +57,20 @@ public class connectDB extends DatabaseConnection
 	public String constructConnectionString(String hostName,String port,String database)
 	{
 		String dbUrl="";
-		if(dbServerName.equals("sqlserver"))
+		switch(dbServerName)
 		{
+		case "sqlserver":
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
-		}
-		else if(dbServerName.equals("postgresql"))
-		{
+			break;
+		case "postgresql":
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database+";" ;
-		}
-		else
-		{
-			
+			break;
+		default:
+			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
+			break;
+				
 		}
 		return dbUrl;
-	}
-	
-	public String getPortNumber()
-	{
-		if(dbServerName.equals("sqlserver"))
-		{
-			return "1433";
-		}
-		else if(dbServerName.equals("postgresql"))
-		{
-			return "5432" ;
-		}
-		else
-		{
-			return "";
-		}
 	}
 	
 	public Connection establishConnection() throws MyCoreExceptions
@@ -127,7 +112,7 @@ public class connectDB extends DatabaseConnection
 		try{
 			Class.forName(dbClassName);
 			
-			port=getPortNumber();
+			port=DEFAULT_PORTS.get(dbServerName);
 			dbUrl=constructConnectionString(hostName,port,database);
 			
 			con = DriverManager.getConnection(dbUrl, 
@@ -160,11 +145,10 @@ public class connectDB extends DatabaseConnection
 		try{
 			Class.forName(dbClassName);
 
-			port=getPortNumber();
+			port=DEFAULT_PORTS.get(dbServerName);
 			dbUrl=constructConnectionString(hostName,port,database);
 
-			con = DriverManager.getConnection(dbUrl, 
-					generateProperty("", ""));
+			con = DriverManager.getConnection(dbUrl,generateProperty("", ""));
 
 		}catch(Exception e){
 			throw new MyCoreExceptions("Exception while establishing db connection.."+e.getLocalizedMessage());
@@ -186,9 +170,9 @@ public class connectDB extends DatabaseConnection
 	}
 
 	@Override
-	public HashMap<Integer, String[]> executeQueryForArray(String query) throws MyCoreExceptions
+	public List<String[]> executeQueryForArray(String query) throws MyCoreExceptions
 	{
-		HashMap<Integer, String[]> resultHash = null;
+		List<String[]> resultHash = null;
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -196,11 +180,11 @@ public class connectDB extends DatabaseConnection
 
 			int numberOfColumns = rsmd.getColumnCount();
 
-			resultHash = new HashMap<Integer, String[]>();
+			resultHash = new ArrayList<String[]>();
 			int i =1;
 			while ( rs.next() ) 
 			{
-				resultHash.put(i++, constructStringArray(rs, numberOfColumns));
+				resultHash.add(constructStringArray(rs, numberOfColumns));
 			}
 			rs.close();
 			stmt.close();
@@ -211,9 +195,9 @@ public class connectDB extends DatabaseConnection
 	}
 
 	@Override
-	public HashMap<Integer, HashMap<String, String>> executeQueryForHash(String query) throws MyCoreExceptions
+	public List<HashMap<String, String>> executeQueryForHash(String query) throws MyCoreExceptions
 	{
-		HashMap<Integer, HashMap<String, String>> resultHash = null;
+		List<HashMap<String, String>> resultHash = null;
 		try{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -221,11 +205,11 @@ public class connectDB extends DatabaseConnection
 
 			int numberOfColumns = rsmd.getColumnCount();
 
-			resultHash = new HashMap<Integer, HashMap<String, String>>();
+			resultHash = new ArrayList<HashMap<String, String>>();
 			int i =1;
 			while ( rs.next() ) 
 			{
-				resultHash.put(i++, constructStringArray(rs,rsmd, numberOfColumns));
+				resultHash.add(constructStringArray(rs,rsmd, numberOfColumns));
 			}
 			rs.close();
 			stmt.close();
@@ -241,12 +225,8 @@ public class connectDB extends DatabaseConnection
 		{
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
-			ResultSetMetaData rsmd = rs.getMetaData();
 			String result=null;
-			int numberOfColumns = rsmd.getColumnCount();
-
-			int i =1;
-			while ( rs.next() ) 
+			if( rs.next() ) 
 			{
 				result=rs.getString(1);
 			}
