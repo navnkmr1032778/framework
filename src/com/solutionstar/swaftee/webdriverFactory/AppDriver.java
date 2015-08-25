@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import net.lightbody.bmp.core.har.Har;
-
 import org.jenkinsci.testinprogress.messagesender.IMessageSenderFactory;
 import org.jenkinsci.testinprogress.messagesender.MessageSender;
 import org.jenkinsci.testinprogress.messagesender.SocketMessageSenderFactory;
@@ -59,7 +58,7 @@ public class AppDriver extends TestListenerAdapter {
 	CSVParserUtils csvParser = new CSVParserUtils();
 	CommonUtils utils = new CommonUtils();
 	private static boolean zephyrStarted = false;
-	
+	ZephyrUtils zUtils = new ZephyrUtils();
 	Set<String> skippedMethods = new HashSet<String>();
 	
 	private Map<String, String> testKIds = new HashMap<String, String>();
@@ -630,7 +629,5 @@ public class AppDriver extends TestListenerAdapter {
 			classMap.put(className, methodList);
 		}
 		return classMap;
-	}
-	
-	
+	}	
  }

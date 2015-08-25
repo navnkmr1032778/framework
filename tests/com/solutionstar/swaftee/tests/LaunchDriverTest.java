@@ -123,13 +123,13 @@ public class LaunchDriverTest extends AppDriver {
 	@Test
 	public void testDBConnection()
 	{
-		PostgresDB postgresDB = new PostgresDB() ;
+		ConnectDB connectDB = new ConnectDB() ;
 	    try {
-	    	postgresDB.establishConnection("localhost", "5432", "sstestdb", "postgres", "");
+	    	connectDB.establishConnection("localhost", "5432", "sstestdb", "postgres", "");
 	    	logger.info("Opened database successfully");
 	    	
 	    	//Test result as Array
-		    HashMap<Integer, String[]> resultHash = postgresDB.executeQueryForArray("SELECT * FROM setting;");
+		    HashMap<Integer, String[]> resultHash = connectDB.executeQueryForArray("SELECT * FROM setting;");
 		    for(Integer key : resultHash.keySet())
 		    {
 		    	 String[] array = resultHash.get(key);
