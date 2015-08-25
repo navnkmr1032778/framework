@@ -20,6 +20,14 @@ public abstract class DatabaseConnection {
 	  DEFAULT_PORTS = Collections.unmodifiableMap(tmp);
 	}
 	
+	public static final Map<String, String> DB_CLASS_NAMES;
+	static {
+	  Map<String, String> tmp = new LinkedHashMap<String, String>();
+	  tmp.put("sqlserver", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+	  tmp.put("postgresql", "org.postgresql.Driver");
+	  DB_CLASS_NAMES = Collections.unmodifiableMap(tmp);
+	}
+	
 	abstract Connection establishConnection(String hostName, String port, String database, String userName, String passwd) throws MyCoreExceptions;
 	
 	abstract Connection establishConnection(String hostName, String database, String userName, String passwd) throws MyCoreExceptions;

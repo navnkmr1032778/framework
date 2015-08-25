@@ -37,23 +37,12 @@ public class connectDB extends DatabaseConnection
 			database = props.get("db_name");
 			userName = props.get("user_name");
 			passwd = props.get("password");
-			if(dbServerName.equals("sqlserver"))
-			{
-				dbClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver";
-			}
-			else if(dbServerName.equals("postgresql"))
-			{
-				dbClassName="org.postgresql.Driver";
-			}
-			else
-			{
-
-			}
+			dbClassName=DB_CLASS_NAMES.get(dbServerName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public String constructConnectionString(String hostName,String port,String database)
 	{
 		String dbUrl="";
@@ -181,7 +170,6 @@ public class connectDB extends DatabaseConnection
 			int numberOfColumns = rsmd.getColumnCount();
 
 			resultHash = new ArrayList<String[]>();
-			int i =1;
 			while ( rs.next() ) 
 			{
 				resultHash.add(constructStringArray(rs, numberOfColumns));
@@ -206,7 +194,6 @@ public class connectDB extends DatabaseConnection
 			int numberOfColumns = rsmd.getColumnCount();
 
 			resultHash = new ArrayList<HashMap<String, String>>();
-			int i =1;
 			while ( rs.next() ) 
 			{
 				resultHash.add(constructStringArray(rs,rsmd, numberOfColumns));
@@ -278,7 +265,8 @@ public class connectDB extends DatabaseConnection
 		}
 	}
 
-	public List<String> executeQuery(String query) {
+	/* todo */
+	public List<String> executeQueryResultAsList(String query) {
 		try
 		{
 			Statement stmt = con.createStatement();
