@@ -116,7 +116,7 @@ public class CommonUtils {
 		}
 		else
 		{
-			screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+".png", webDriver); 
+			screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
 		}
 	}
 
