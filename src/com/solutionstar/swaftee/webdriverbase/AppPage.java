@@ -49,6 +49,7 @@ import org.testng.TestListenerAdapter;
 
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class AppPage extends TestListenerAdapter 
@@ -372,6 +373,11 @@ public class AppPage extends TestListenerAdapter
 
 	public void selectDateDatePicker(WebElement element, String date) 
 	{
+		CommonUtils utils = new CommonUtils();
+		if(utils.isNumeric(date))
+		{
+			date = utils.getFutureDate(Integer.parseInt(date));
+		}
 		getJavaScriptExecutor().executeScript( "arguments[0].removeAttribute('readonly','readonly')",element);
 		sleep(500);
 		element.clear();
