@@ -14,6 +14,8 @@ public class WebDriverConstants {
 	public static String PATH_TO_BROWSER_SCREENSHOT_BASE="resources/screenshot/base";
 	public static String PATH_TO_TEST_DATA_FILE = "/resources/testdata/";
 	public static String WINDOWS_PATH_TO_TEST_DATA_DIR = "\\resources\\testdata\\";
+	public static String GMAIL_IMAP_HOST = "imap.gmail.com";
+	public static String IMAP_PROTOCOL = "imaps";
 	
 	public static String DEFAULT_BROWSER_NAME = "chrome";
 	public static int WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC = 30;
@@ -22,6 +24,8 @@ public class WebDriverConstants {
 	public static int WAIT_HALF_MIN = 30;
 	public static int WAIT_TWO_MIN = 120;
 	public static int MAX_TIMEOUT_PAGE_LOAD = 120;
+	public static int EMAIL_PULL_LIMIT = 120;
+	
 	final public static String PROXY_SERVER  = "proxyserver.enabled";
 	final public static String GRID_SERVER  = "grid.enabled";
 	public static final String DEFAULT_BROWSER_OS = "windows";
