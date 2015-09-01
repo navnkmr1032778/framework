@@ -20,7 +20,7 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 public class EmailUtils {
 	protected static Logger logger = LoggerFactory.getLogger(EmailUtils.class.getName());
 	
-	private String getText(Part p) throws MessagingException, IOException 
+	private String getResponseBodyText(Part p) throws MessagingException, IOException 
 	{
 		if (p.isMimeType("text/*")) {
 		String s = (String)p.getContent();
@@ -35,21 +35,21 @@ public class EmailUtils {
 		    Part bp = mp.getBodyPart(i);
 		    if (bp.isMimeType("text/plain")) {
 		        if (text == null)
-		            text = getText(bp);
+		            text = getResponseBodyText(bp);
 		        continue;
 		    } else if (bp.isMimeType("text/html")) {
-		        String s = getText(bp);
+		        String s = getResponseBodyText(bp);
 		        if (s != null)
 		            return s;
 		    } else {
-		        return getText(bp);
+		        return getResponseBodyText(bp);
 		    }
 		}
 		return text;
 		} else if (p.isMimeType("multipart/*")) {
 		Multipart mp = (Multipart)p.getContent();
 		for (int i = 0; i < mp.getCount(); i++) {
-		    String s = getText(mp.getBodyPart(i));
+		    String s = getResponseBodyText(mp.getBodyPart(i));
 		    if (s != null)
 		        return s;
 		}
@@ -60,11 +60,11 @@ public class EmailUtils {
 	
 	public HashMap<String, String> getLastGmailfrom(String userName,String passWord,String fromEmail) throws Exception
 	{
-		return getLastGmailfrom(userName,passWord,fromEmail,WebDriverConstants.GMAIL_IMAP_HOST);
+		return getLastmailfromImap(userName,passWord,fromEmail,WebDriverConstants.GMAIL_IMAP_HOST);
 	}
 	
 	
-	private HashMap<String, String> getLastGmailfrom(String userName, String passWord, String fromEmail,
+	private HashMap<String, String> getLastmailfromImap(String userName, String passWord, String fromEmail,
 			String imapHost) throws Exception 
 	{
 		HashMap<String, String> result = new HashMap<String, String>();
@@ -88,7 +88,7 @@ public class EmailUtils {
 			        	result.put("Subject", msg.getSubject());
 			        	result.put("ReceivedDate", msg.getSentDate().toString());
 			        	result.put("From", msg.getFrom()[0].toString());
-			        	result.put("Body", getText(msg));
+			        	result.put("Body", getResponseBodyText(msg));
 			        	return result;
 			        }
 		        }
