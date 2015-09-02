@@ -2,6 +2,7 @@ package com.solutionstar.swaftee.utils;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -66,13 +67,19 @@ public class EmailUtils {
 		return getLastmailfromImap(userName,passWord,fromEmail,WebDriverConstants.GMAIL_IMAP_HOST);
 	}
 	
-	public HashMap<String, String> getLastWebMailfrom(String userName,String passWord,String fromEmail) throws Exception
+	public HashMap<String, String> getLastXomeMailfrom(String userName,String passWord,String fromEmail) throws Exception
 	{
+		return getLastExchangeMailfrom(userName,passWord,fromEmail,WebDriverConstants.SOLUTIONSTAR_IMAP_HOST,WebDriverConstants.SOLUTIONSTAR_DOMAIN_NAME);
+	}
+	
+	private HashMap<String, String> getLastExchangeMailfrom(String userName, String passWord, String fromEmail,
+			String exchangeServer, String domainName) throws Exception {
+		// TODO Auto-generated method stub
 		HashMap<String, String> result = new HashMap<String, String>();
 		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
-	    ExchangeCredentials credentials = new WebCredentials(userName,passWord,WebDriverConstants.SOLUTIONSTAR_DOMAIN_NAME );
+	    ExchangeCredentials credentials = new WebCredentials(userName,passWord,domainName );
 	    service.setCredentials(credentials);
-	    service.setUrl(new URI("https://"+ WebDriverConstants.WEBMAIL_IMAP_HOST +"/ews/exchange.asmx"));
+	    service.setUrl(new URI("https://"+ exchangeServer +"/ews/exchange.asmx"));
 
 	    ItemView view = new ItemView (10);
 	    FindItemsResults findResults = service.findItems(WellKnownFolderName.Inbox, view);
@@ -93,7 +100,7 @@ public class EmailUtils {
 	    }
 		return null;
 	}
-	
+
 	private String getReturnPath(Item item)
 	{
 		try 
