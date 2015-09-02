@@ -520,6 +520,33 @@ public class AppPage extends TestListenerAdapter
 		return switchSuccess;
 	}
 
+	public boolean switchToNextWindow(int currentHandleCount)
+	{
+		boolean switchSuccess = false;
+		if(getWindowHandles().size()==currentHandleCount)
+		{
+			logger.info("Waiting for new window to open");
+			waitForNewWindow(1);
+		}
+		List<String> windows = new ArrayList<String>(getWindowHandles());
+		String currentWindow = getWindowHandle();
+		int count = windows.size();
+		for(int index=0; index<count;index++)
+		{
+			if(currentWindow.equals(windows.get(index)))
+			{
+				if(index==count-1)
+				{
+					logger.info("switchToNextWindow() - Current window is last window..Switch not possible");
+					break;
+				}
+				switchSuccess = switchToNthWindow(index+1);  
+				break;
+			}
+		}
+		return switchSuccess;
+	}
+	
 	public boolean switchToPreviousWindow()
 	{
 		return switchToPreviousWindowClosingCurrent(false);
