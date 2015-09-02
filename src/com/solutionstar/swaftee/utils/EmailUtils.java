@@ -1,8 +1,11 @@
 package com.solutionstar.swaftee.utils;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Properties;
+
+import microsoft.exchange.webservices.data.*;
 
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -63,6 +66,54 @@ public class EmailUtils {
 		return getLastmailfromImap(userName,passWord,fromEmail,WebDriverConstants.GMAIL_IMAP_HOST);
 	}
 	
+	public HashMap<String, String> getLastWebMailfrom(String userName,String passWord,String fromEmail) throws Exception
+	{
+		HashMap<String, String> result = new HashMap<String, String>();
+		ExchangeService service = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
+	    ExchangeCredentials credentials = new WebCredentials(userName,passWord,WebDriverConstants.SOLUTIONSTAR_DOMAIN_NAME );
+	    service.setCredentials(credentials);
+	    service.setUrl(new URI("https://"+ WebDriverConstants.WEBMAIL_IMAP_HOST +"/ews/exchange.asmx"));
+
+	    ItemView view = new ItemView (10);
+	    FindItemsResults findResults = service.findItems(WellKnownFolderName.Inbox, view);
+
+	    for(Object i : findResults.getItems())
+	    {
+	      Item item = (Item)i;
+	      item.load(new PropertySet(BasePropertySet.FirstClassProperties, ItemSchema.MimeContent));
+	      String sender = getReturnPath(item);
+	      if(sender.equalsIgnoreCase(fromEmail))
+	      {
+		      result.put("Subject", item.getSubject());
+	          result.put("ReceivedDate", item.getDateTimeReceived().toString());
+	          result.put("From", sender);
+	          result.put("Body", item.getBody().toString());
+	          return result;
+	      }
+	    }
+		return null;
+	}
+	
+	private String getReturnPath(Item item)
+	{
+		try 
+		{
+			  InternetMessageHeaderCollection inhead = item.getInternetMessageHeaders();
+			  for(InternetMessageHeader head : inhead)
+		      {
+		    	  if(head.getName().equalsIgnoreCase(WebDriverConstants.SENDER_INTERNET_HEADER))
+		    			  return head.getValue();
+		      }
+		      return null;
+		} 
+		catch (ServiceLocalException e) 
+		{
+			e.printStackTrace();
+			return null;
+		}
+	    
+	}
+	
 	
 	private HashMap<String, String> getLastmailfromImap(String userName, String passWord, String fromEmail,
 			String imapHost) throws Exception 
@@ -98,9 +149,10 @@ public class EmailUtils {
 		catch(Exception ex)
 		{
 			ex.printStackTrace();
-			folder.close(false);
-		    store.close();
+			if(folder!=null)folder.close(false);
+		    if(store!=null)store.close();
 		    throw ex;
+		    
 		}
 		return null;
 		
