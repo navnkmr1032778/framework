@@ -382,7 +382,7 @@ public class AppDriver extends TestListenerAdapter {
 		{
 			if(appDriver.hasDriver())
 				driverList.put("primary",appDriver.getDriver());
-			if(getAppDriver(testResult).hasSecondaryDriver())
+			if(appDriver.hasSecondaryDriver())
 				driverList.put("secondary",appDriver.getSecondaryDriver());
 		}
 		
