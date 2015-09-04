@@ -164,6 +164,22 @@ public class BaseDriverHelper {
 
 		return driver;
 	}
+	
+	public WebDriver setSecondaryWebDriver(DesiredCapabilities cap) throws Exception
+	{
+		if(WebDriverConfig.usingProxyServer())
+			createProxy(cap);
+		//		   setLoggingPref(cap);
+		if(WebDriverConfig.usingGrid())
+		{
+			cap = setRemoteDriverCapabilities(cap.getBrowserName());
+			secondaryDriver = setRemoteWebDriver(cap);
+		}
+		else
+			secondaryDriver = startBrowser(cap);
+
+		return secondaryDriver;
+	}
 
 	public WebDriver setMobileWebDriver(DesiredCapabilities cap, String mobilePlatform) throws Exception
 	{
@@ -201,7 +217,7 @@ public class BaseDriverHelper {
 		if (cap == null)
 			throw new MyCoreExceptions("Capabilities return as Null");
 		logger.info("browserName -- "+ browserName);
-		secondaryDriver = setWebDriver(cap);
+		secondaryDriver = setSecondaryWebDriver(cap);
 
 	}
 
