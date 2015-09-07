@@ -884,7 +884,7 @@ public class AppPage extends TestListenerAdapter
 	 */
 	public void scrolltoElement(WebElement element) 
 	{
-		getJavaScriptExecutor().executeScript("arguments[0].scrollintoview(true)",element);
+		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(true)",element);
 	}
 
 	public void rightClick(By locator)
