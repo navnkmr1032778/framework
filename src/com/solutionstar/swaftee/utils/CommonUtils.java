@@ -299,6 +299,17 @@ public class CommonUtils {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(pastDate);
 	}
+	
+	public String getPastHour(int timeToSubtract)
+	{
+		DateTime now = new DateTime();
+		DateTime pastTime = now.minusHours(timeToSubtract);
+		DateTimeFormatter formatter=DateTimeFormat.forPattern("mm");
+		String presentMin=formatter.print(pastTime);
+		pastTime=pastTime.minusMinutes(Integer.parseInt(presentMin));
+		formatter=DateTimeFormat.forPattern("HH:mm aa");
+		return formatter.print(pastTime);
+	}
 
 	/**
 	 * Copies file from SFTP

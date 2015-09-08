@@ -337,6 +337,18 @@ public class AppPage extends TestListenerAdapter
 			}
 		} 
 	}
+	
+	public void selectValueFromUnorderedList(WebElement unorderedList, final String value) {
+	    List<WebElement> options = unorderedList.findElements(By.tagName("li"));
+
+	    for (WebElement option : options) {
+	    	String presentValue=option.getText();
+	        if (value.equals(presentValue)) {
+	            option.click();
+	            break;
+	        }
+	    }
+	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	{
