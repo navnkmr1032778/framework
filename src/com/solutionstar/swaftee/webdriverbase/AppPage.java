@@ -526,7 +526,7 @@ public class AppPage extends TestListenerAdapter
 		if(getWindowHandles().size()==currentHandleCount)
 		{
 			logger.info("Waiting for new window to open");
-			waitForNewWindow(1);
+			waitForNewWindow(currentHandleCount);
 		}
 		List<String> windows = new ArrayList<String>(getWindowHandles());
 		String currentWindow = getWindowHandle();
@@ -1283,5 +1283,11 @@ public class AppPage extends TestListenerAdapter
 				"	}" + 
 				"	return flag;", element));
 		return flag;
+	}
+	
+	public void elementHighlighter(WebElement element)
+	{
+		scrolltoElement(element);
+		getJavaScriptExecutor().executeScript("arguments[0].setAttribute(\"style\", \"background-color: red;\");", element);
 	}
 }
