@@ -1288,6 +1288,6 @@ public class AppPage extends TestListenerAdapter
 	public void elementHighlighter(WebElement element)
 	{
 		scrolltoElement(element);
-		getJavaScriptExecutor().executeScript("arguments[0].setAttribute(\"style\", \"background-color: red;\");", element);
+		getJavaScriptExecutor().executeScript("arguments[0].setAttribute(\"style\", \"border: 5px solid red;\");", element);
 	}
 }
