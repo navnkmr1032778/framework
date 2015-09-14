@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,6 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
@@ -37,7 +35,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class CommonUtils {
 
@@ -208,7 +205,7 @@ public class CommonUtils {
 		}
 	}
 
-	public static String changeTimeFormat(String fromFormat,String toFormat,String time)
+	public String changeTimeFormat(String fromFormat,String toFormat,String time)
 	{
 		try
 		{
@@ -310,7 +307,15 @@ public class CommonUtils {
 		formatter=DateTimeFormat.forPattern("hh:mm aa");
 		return formatter.print(pastTime);
 	}
-
+	
+	public String addMinToTime(String time,int minToAdd)
+	{
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("hh:mm aa");
+		DateTime now=formatter.parseDateTime(time);
+		DateTime pastDate = now.plusMinutes(minToAdd);
+		formatter = DateTimeFormat.forPattern("hh:mm aa");
+		return formatter.print(pastDate);
+	}
 	/**
 	 * Copies file from SFTP
 	 * 
