@@ -1,7 +1,5 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import io.appium.java_client.AppiumDriver;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
@@ -19,13 +17,11 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.junit.rules.TestName;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -338,16 +334,18 @@ public class AppPage extends TestListenerAdapter
 		} 
 	}
 	
-	public void selectValueFromUnorderedList(WebElement unorderedList, final String value) {
-	    List<WebElement> options = unorderedList.findElements(By.tagName("li"));
-
-	    for (WebElement option : options) {
-	    	String presentValue=option.getText();
-	        if (value.equals(presentValue)) {
-	            option.click();
-	            break;
-	        }
-	    }
+	public void selectDropDownWithText(WebElement element, String value)
+	{
+		Select select = new Select(element);
+		List<String> allOptions = getAllSelectOptions(element);
+		for(String s: allOptions)
+		{
+			if(s.equals(value))
+			{
+				select.selectByVisibleText(s);
+				break;
+			}
+		} 
 	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 

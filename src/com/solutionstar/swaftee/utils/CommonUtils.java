@@ -231,7 +231,7 @@ public class CommonUtils {
 	{
 		try
 		{
-		 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm aa");
+		 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
 		    Date d1 = sdf.parse(startTime);
 		    Date d2 = sdf.parse(endTime);
 		    long elapsed = d2.getTime() - d1.getTime(); 
@@ -307,7 +307,7 @@ public class CommonUtils {
 		DateTimeFormatter formatter=DateTimeFormat.forPattern("mm");
 		String presentMin=formatter.print(pastTime);
 		pastTime=pastTime.minusMinutes(Integer.parseInt(presentMin));
-		formatter=DateTimeFormat.forPattern("HH:mm aa");
+		formatter=DateTimeFormat.forPattern("hh:mm aa");
 		return formatter.print(pastTime);
 	}
 
