@@ -334,7 +334,7 @@ public class AppPage extends TestListenerAdapter
 		} 
 	}
 	
-	public void selectDropDownWithText(WebElement element, String value)
+	public boolean selectDropDownWithText(WebElement element, String value)
 	{
 		Select select = new Select(element);
 		List<String> allOptions = getAllSelectOptions(element);
@@ -343,9 +343,10 @@ public class AppPage extends TestListenerAdapter
 			if(s.equals(value))
 			{
 				select.selectByVisibleText(s);
-				break;
+				return true;
 			}
 		} 
+		return false;
 	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 

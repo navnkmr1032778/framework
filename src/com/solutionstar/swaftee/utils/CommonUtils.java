@@ -310,10 +310,10 @@ public class CommonUtils {
 	
 	public String addMinToTime(String time,int minToAdd)
 	{
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("hh:mm aa");
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("h:mm aa");
 		DateTime now=formatter.parseDateTime(time);
 		DateTime pastDate = now.plusMinutes(minToAdd);
-		formatter = DateTimeFormat.forPattern("hh:mm aa");
+		formatter = DateTimeFormat.forPattern("h:mm aa");
 		return formatter.print(pastDate);
 	}
 	/**
