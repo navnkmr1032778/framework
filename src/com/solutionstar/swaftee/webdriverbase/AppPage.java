@@ -333,21 +333,6 @@ public class AppPage extends TestListenerAdapter
 			}
 		} 
 	}
-	
-	public boolean selectDropDownWithText(WebElement element, String value)
-	{
-		Select select = new Select(element);
-		List<String> allOptions = getAllSelectOptions(element);
-		for(String s: allOptions)
-		{
-			if(s.equals(value))
-			{
-				select.selectByVisibleText(s);
-				return true;
-			}
-		} 
-		return false;
-	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	{
