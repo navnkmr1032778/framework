@@ -1,7 +1,5 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import io.appium.java_client.AppiumDriver;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
@@ -19,13 +17,11 @@ import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.junit.rules.TestName;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;

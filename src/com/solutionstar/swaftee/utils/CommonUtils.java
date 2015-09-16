@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +30,6 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
@@ -39,7 +37,6 @@ import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class CommonUtils {
 
@@ -211,7 +208,7 @@ public class CommonUtils {
 		}
 	}
 
-	public static String changeTimeFormat(String fromFormat,String toFormat,String time)
+	public String changeTimeFormat(String fromFormat,String toFormat,String time)
 	{
 		try
 		{
@@ -234,7 +231,7 @@ public class CommonUtils {
 	{
 		try
 		{
-		 SimpleDateFormat sdf = new SimpleDateFormat("HH:mm aa");
+		 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
 		    Date d1 = sdf.parse(startTime);
 		    Date d2 = sdf.parse(endTime);
 		    long elapsed = d2.getTime() - d1.getTime(); 
@@ -304,7 +301,26 @@ public class CommonUtils {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(pastDate);
 	}
-
+	
+	public String getPastHour(int timeToSubtract)
+	{
+		DateTime now = new DateTime();
+		DateTime pastTime = now.minusHours(timeToSubtract);
+		DateTimeFormatter formatter=DateTimeFormat.forPattern("mm");
+		String presentMin=formatter.print(pastTime);
+		pastTime=pastTime.minusMinutes(Integer.parseInt(presentMin));
+		formatter=DateTimeFormat.forPattern("hh:mm aa");
+		return formatter.print(pastTime);
+	}
+	
+	public String addMinToTime(String time,int minToAdd)
+	{
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("h:mm aa");
+		DateTime now=formatter.parseDateTime(time);
+		DateTime pastDate = now.plusMinutes(minToAdd);
+		formatter = DateTimeFormat.forPattern("h:mm aa");
+		return formatter.print(pastDate);
+	}
 	/**
 	 * Copies file from SFTP
 	 * 
