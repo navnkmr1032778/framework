@@ -16,11 +16,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openqa.selenium.OutputType;
@@ -139,6 +141,7 @@ public class CommonUtils {
 	{
 		try{
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 			Date date = new Date();
 			return sdf.format(date); 		 
 		}catch(Exception e){
@@ -264,7 +267,9 @@ public class CommonUtils {
 
 	public String getDateToday()
 	{
-		return new SimpleDateFormat("MM/dd/yyyy").format(new Date());
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		df.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return df.format(new Date());
 	}
 
 	public String getDateTomorrow()
@@ -279,14 +284,14 @@ public class CommonUtils {
 
 	public String getFutureDate(int daysToAdd, SimpleDateFormat sdf)
 	{
-		DateTime now = new DateTime();
+		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime futureDate = now.plusDays(daysToAdd);
 		return sdf.format(futureDate.toDate());
 	}
 
 	public String getFutureDate(int daysToAdd)
 	{
-		DateTime now = new DateTime();
+		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime futureDate = now.plusDays(daysToAdd);
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(futureDate);
@@ -294,7 +299,7 @@ public class CommonUtils {
 
 	public String getPastDate(int daysToAdd)
 	{
-		DateTime now = new DateTime();
+		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime pastDate = now.minusDays(daysToAdd);
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(pastDate);
