@@ -840,6 +840,13 @@ public class AppPage extends TestListenerAdapter
 		if(isElementPresent(e))
 			wait.until(invisibilityOfElementLocated(e));
 	}
+	
+	public void waitForElementToDisappear(WebElement e,int timeOut)
+	{
+		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
+		if(isElementPresent(e))
+			wait.until(invisibilityOfElementLocated(e));
+	}
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
 		return new ExpectedCondition<Boolean>() {
