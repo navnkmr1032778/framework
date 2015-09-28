@@ -1,10 +1,13 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.logging.LogType;
@@ -50,7 +53,7 @@ public class SetBrowserCapabilities {
    		}
    		return cap;
    	}
-   	
+	
    	public DesiredCapabilities setFirefoxDriver(DesiredCapabilities cap)
    	{
    		try{
