@@ -607,7 +607,7 @@ public class BaseDriverHelper {
 
 	public boolean ismobile()
 	{
-		return Boolean.valueOf(System.getProperty("ismobile","true").toLowerCase(Locale.ENGLISH));
+		return Boolean.valueOf(System.getProperty("ismobile","false").toLowerCase(Locale.ENGLISH));
 
 	}
 
@@ -676,7 +676,7 @@ public class BaseDriverHelper {
 	
 	public String getEmulationDeviceName()
 	{
-		return System.getProperty("emulationDeviceName","Apple iPhone 6");
+		return System.getProperty("emulationDeviceName","windows");//default "windows"
 	}
 	
 	public String getBaseDirLocation()
