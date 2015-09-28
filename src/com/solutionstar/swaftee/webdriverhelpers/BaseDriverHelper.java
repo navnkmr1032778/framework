@@ -121,7 +121,7 @@ public class BaseDriverHelper {
 
 			driver = setRemoteWebDriver(dr);
 		}
-		else if(ismobile()==false || ismobile() && !getEmulationDeviceName().equals("windows"))
+		else if(!ismobile() || ismobile() && !getEmulationDeviceName().equals("windows"))
 		{
 			logger.info("fetching driver");
 			String browserName = getBrowserToRun(); //getBrowserName("primary");
@@ -131,7 +131,7 @@ public class BaseDriverHelper {
 				throw new MyCoreExceptions("Capabilities return as Null");
 			driver = setWebDriver(cap);
 		}
-		else if(ismobile()==true)
+		else if(ismobile())
 		{
 			logger.info("fetching mobile driver");
 			String mobilePlatform=getMobilePlatform();
