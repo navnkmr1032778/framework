@@ -121,7 +121,7 @@ public class BaseDriverHelper {
 
 			driver = setRemoteWebDriver(dr);
 		}
-		else if(!ismobile() || ismobile() && !getEmulationDeviceName().equals("windows"))
+		else if((!ismobile()) || (ismobile() && !getEmulationDeviceName().equals("windows")))
 		{
 			logger.info("fetching driver");
 			String browserName = getBrowserToRun(); //getBrowserName("primary");
