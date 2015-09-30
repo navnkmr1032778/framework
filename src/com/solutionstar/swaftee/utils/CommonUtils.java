@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Months;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.openqa.selenium.OutputType;
@@ -102,16 +104,16 @@ public class CommonUtils {
 		File dir=new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
 		if (!dir.exists()) 
 		{
-		    logger.info("creating directory: " + dir);
-		    try
-		    {
-		        dir.mkdir();
-		        screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
-		    } 
-		    catch(SecurityException ex)
-		    {
-		        logger.info("exception in creating director"+ExceptionUtils.getFullStackTrace(ex));
-		    }   
+			logger.info("creating directory: " + dir);
+			try
+			{
+				dir.mkdir();
+				screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
+			} 
+			catch(SecurityException ex)
+			{
+				logger.info("exception in creating director"+ExceptionUtils.getFullStackTrace(ex));
+			}   
 		}
 		else
 		{
@@ -146,12 +148,28 @@ public class CommonUtils {
 			return null;
 		}
 	}
-	
+
 	public boolean isNumeric(String s) 
 	{
 		return s.matches("[-+]?\\d*\\.?\\d+");
 	}
 
+	public int getMonthNumberByName(String monthName)
+	{
+		try 
+		{
+			Date date = new SimpleDateFormat("MMM").parse(monthName);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			int monthNumber=cal.get(Calendar.MONTH);
+			return monthNumber+1;
+		} 
+		catch (ParseException e) 
+		{
+			e.printStackTrace();
+		}
+		return -1;
+	}
 
 	public String changeDateFormat(String date,String format) throws ParseException
 	{
@@ -192,6 +210,23 @@ public class CommonUtils {
 		}
 	}
 
+	public int getMonthDiffBtwnDatesByMonthAndYear(String from,String to)
+	{
+		try
+		{
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		DateTime date11=new DateTime(df.parse(from));
+		DateTime date12=new DateTime(df.parse(to));
+		return (Months.monthsBetween(
+			     date11.toLocalDate().withDayOfMonth(1),
+			     date12.toLocalDate().withDayOfMonth(1)).getMonths());
+		}
+		catch(Exception ex)
+		{
+			logger.info(ExceptionUtils.getFullStackTrace(ex));
+			return -1;
+		}
+	}
 
 	public String getDayForDate(String date)
 	{
@@ -231,12 +266,12 @@ public class CommonUtils {
 	{
 		try
 		{
-		 SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
-		    Date d1 = sdf.parse(startTime);
-		    Date d2 = sdf.parse(endTime);
-		    long elapsed = d2.getTime() - d1.getTime(); 
-		    logger.info(""+elapsed);
-		    return elapsed;
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
+			Date d1 = sdf.parse(startTime);
+			Date d2 = sdf.parse(endTime);
+			long elapsed = d2.getTime() - d1.getTime(); 
+			logger.info(""+elapsed);
+			return elapsed;
 		}
 		catch(Exception ex)
 		{
@@ -301,7 +336,7 @@ public class CommonUtils {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(pastDate);
 	}
-	
+
 	public String getPastHour(int timeToSubtract)
 	{
 		DateTime now = new DateTime();
@@ -309,10 +344,10 @@ public class CommonUtils {
 		DateTimeFormatter formatter=DateTimeFormat.forPattern("mm");
 		String presentMin=formatter.print(pastTime);
 		pastTime=pastTime.minusMinutes(Integer.parseInt(presentMin));
-		formatter=DateTimeFormat.forPattern("hh:mm aa");
+		formatter=DateTimeFormat.forPattern("h:mm aa");
 		return formatter.print(pastTime);
 	}
-	
+
 	public String addMinToTime(String time,int minToAdd)
 	{
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("h:mm aa");
@@ -528,7 +563,7 @@ public class CommonUtils {
 		}
 		return list;
 	}
-	
+
 	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
 			String password, String sourceLocation, Date startTime) {
 		return listFilesInSFTPLocation(hostname, port,username,

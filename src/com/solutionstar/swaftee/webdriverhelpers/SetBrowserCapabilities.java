@@ -50,7 +50,7 @@ public class SetBrowserCapabilities {
    		}
    		return cap;
    	}
-   	
+	
    	public DesiredCapabilities setFirefoxDriver(DesiredCapabilities cap)
    	{
    		try{

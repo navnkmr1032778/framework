@@ -53,6 +53,7 @@ public class AppPage extends TestListenerAdapter
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	protected WebDriver driver;
 	JavascriptExecutor javaScriptExecutor; 
+	protected static boolean mobileEmulationExecution=false;
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 
 	enum ByTypes{
@@ -71,6 +72,8 @@ public class AppPage extends TestListenerAdapter
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
+		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("windows"))
+			mobileEmulationExecution=true;
 	}
 
 
@@ -837,6 +840,13 @@ public class AppPage extends TestListenerAdapter
 	public void waitForElementToDisappear(WebElement e)
 	{
 		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
+		if(isElementPresent(e))
+			wait.until(invisibilityOfElementLocated(e));
+	}
+	
+	public void waitForElementToDisappear(WebElement e,int timeOut)
+	{
+		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
 		if(isElementPresent(e))
 			wait.until(invisibilityOfElementLocated(e));
 	}

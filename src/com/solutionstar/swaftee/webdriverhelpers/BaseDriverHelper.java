@@ -7,6 +7,7 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class BaseDriverHelper {
 
 			driver = setRemoteWebDriver(dr);
 		}
-		else if(ismobile()==false)
+		else if((!ismobile()) || (ismobile() && !getEmulationDeviceName().equals("windows")))
 		{
 			logger.info("fetching driver");
 			String browserName = getBrowserToRun(); //getBrowserName("primary");
@@ -130,7 +131,7 @@ public class BaseDriverHelper {
 				throw new MyCoreExceptions("Capabilities return as Null");
 			driver = setWebDriver(cap);
 		}
-		else if(ismobile()==true)
+		else if(ismobile())
 		{
 			logger.info("fetching mobile driver");
 			String mobilePlatform=getMobilePlatform();
@@ -292,6 +293,16 @@ public class BaseDriverHelper {
 		return cap;
 	}
 
+	public DesiredCapabilities setEmulationCapabilities(DesiredCapabilities capabilities,String emulDeviceName)
+	{
+		Map<String, String> mobileEmulation = new HashMap<String, String>();
+		mobileEmulation.put("deviceName", emulDeviceName);
+		Map<String, Object> chromeOptions = new HashMap<String, Object>();
+		chromeOptions.put("mobileEmulation", mobileEmulation);
+		capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+		return capabilities;
+	}
+	
 	private WebDriver startBrowser(DesiredCapabilities cap)
 	{  
 		WebDriver driver = null;
@@ -301,7 +312,15 @@ public class BaseDriverHelper {
 			case CHROME:
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--disable-extensions");
-			    cap.setCapability(ChromeOptions.CAPABILITY, options);
+				String emulDeviceName=getEmulationDeviceName();
+				if(!emulDeviceName.equals("windows"))
+				{
+					cap=setEmulationCapabilities(cap,emulDeviceName);
+				}
+				else
+				{
+					cap.setCapability(ChromeOptions.CAPABILITY, options);
+				}
 				driver = new ChromeDriver(cap);
 				break;
 			case INTERNET_EXPLORER:
@@ -655,6 +674,11 @@ public class BaseDriverHelper {
 		}
 	}
 	
+	public String getEmulationDeviceName()
+	{
+		return System.getProperty("emulationDeviceName","windows");//default "windows"
+	}
+	
 	public String getBaseDirLocation()
 	{
 		return System.getProperty("baseDirectoryLocation").toLowerCase(Locale.ENGLISH);
@@ -664,4 +688,5 @@ public class BaseDriverHelper {
 	{
 		return System.getProperty("currentDirectoryLocation").toLowerCase(Locale.ENGLISH);
 	}
+	
 }
