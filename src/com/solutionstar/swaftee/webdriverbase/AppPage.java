@@ -53,7 +53,7 @@ public class AppPage extends TestListenerAdapter
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	protected WebDriver driver;
 	JavascriptExecutor javaScriptExecutor; 
-	protected static boolean mobileEmulationExecution=false;
+	public static boolean mobileEmulationExecution=false;
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
 
 	enum ByTypes{
