@@ -213,6 +213,18 @@ public class AppPage extends TestListenerAdapter
 		element.sendKeys(text);
 	}
 
+	public void clearAttrValueUsingElementID(String elementId)
+	{
+		String query = "document.getElementById('"+elementId+"').value = ''";
+		getJavaScriptExecutor().executeScript(query);
+	}
+	
+	public void clearAttrValueUsingElementName(String elementName)
+	{
+		String query = "document.getElementsByName('"+elementName+"').value = ''";
+		getJavaScriptExecutor().executeScript(query);
+	}
+
 	public void takeScreenShot() 
 	{
 		waitForPageLoadComplete();
