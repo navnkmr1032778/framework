@@ -213,6 +213,17 @@ public class AppPage extends TestListenerAdapter
 		element.sendKeys(text);
 	}
 
+	public void clearAttrValueUsingElementID(String elementId)
+	{
+		String query = "document.getElementById('"+elementId+"').value = ''";
+		getJavaScriptExecutor().executeScript(query);
+	}
+	
+	public void clearFirstElementAttrValueUsingElementName(String elementName)
+	{
+		String query = "var eleList = document.getElementsByName('"+elementName+"'); eleList[0].value = ''";
+		getJavaScriptExecutor().executeScript(query);
+	}
 	public void takeScreenShot() 
 	{
 		waitForPageLoadComplete();
@@ -926,6 +937,11 @@ public class AppPage extends TestListenerAdapter
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(false)",element);
 	}
 
+	public void scrollTopToElement(WebElement element) 
+	{
+		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(true)",element);
+	}
+
 	public void rightClick(By locator)
 	{
 		WebElement elementToRightClick = this.driver.findElement(locator);
@@ -1116,7 +1132,7 @@ public class AppPage extends TestListenerAdapter
 		} 
 		catch (Exception e) 
 		{
-			logger.error(e.getMessage());
+			// logger.error(e.getMessage());  //Commenting out as it throwing unwanted errors in the console which NEED TO BE FIXED 
 		}
 	}
 
