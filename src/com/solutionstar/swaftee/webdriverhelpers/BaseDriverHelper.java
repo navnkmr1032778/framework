@@ -93,6 +93,7 @@ public class BaseDriverHelper {
 			{
 				dr= DesiredCapabilities.chrome();
 				dr.setBrowserName("chrome");
+				
 			}
 			else if(browserName.equals("ie"))
 			{
@@ -312,6 +313,7 @@ public class BaseDriverHelper {
 			case CHROME:
 				ChromeOptions options = new ChromeOptions();
 				options.addArguments("--disable-extensions");
+				options.addArguments("--session-override=true");
 				String emulDeviceName=getEmulationDeviceName();
 				if(!emulDeviceName.equals("windows"))
 				{
