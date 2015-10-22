@@ -273,7 +273,7 @@ public class AppDriver extends TestListenerAdapter {
 	{
 	   try 
 	   {
-			logger.info("Test " + testResult.getName() + "' FAILED");
+			logger.info("Test : " + testResult.getName() + "' FAILED");
 			if (!(testResult.getThrowable() instanceof NoSuchWindowException || testResult
 					.getThrowable() instanceof NoSuchFrameException))
 			{

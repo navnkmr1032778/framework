@@ -443,9 +443,9 @@ public class CSVParserUtils {
 		}
 	}
 
-	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index,String index2,Boolean includeFileName) throws Exception 
+	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index,String index2,Boolean includeFileName) throws Exception 
 	{
-		HashMap<String, HashMap<String, String>> output = new HashMap<String, HashMap<String, String>>();
+		HashMap<String, List<HashMap<String, String>>> output = new HashMap<String, List<HashMap<String, String>>>();
 		if (directoryListing == null) 
 			 return null;
 		try
@@ -459,9 +459,21 @@ public class CSVParserUtils {
 			    		if(includeFileName)
 							hsh.put("fileName",file.getAbsolutePath());
 			    		if(!index2.equals(""))
-			    			output.put(hsh.get(index) + "_" + hsh.get(index2) , hsh);
+			    		{
+			    			if(!output.containsKey(hsh.get(index) + "_" + hsh.get(index2)))
+			    			{
+			    				output.put(hsh.get(index) + "_" + hsh.get(index2), new ArrayList<HashMap<String, String>>());
+			    			}
+			    			output.get(hsh.get(index) + "_" + hsh.get(index2)).add(hsh);
+			    		}
 			    		else
-			    			output.put(hsh.get(index), hsh);
+			    		{
+			    			if(!output.containsKey(hsh.get(index)))
+			    			{
+			    				output.put(hsh.get(index), new ArrayList<HashMap<String, String>>());
+			    			}
+			    			output.get(hsh.get(index)).add(hsh);
+			    		}
 							
 			    	}
 				}
@@ -477,7 +489,7 @@ public class CSVParserUtils {
 		}
 	}
 	
-	public HashMap<String, HashMap<String, String>> getHashfromAllFiles(File[] directoryListing,String index, Boolean includeFileName) throws Exception 
+	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index, Boolean includeFileName) throws Exception 
 	{
 		return getHashfromAllFiles(directoryListing,index,"",includeFileName);
 	}
