@@ -551,6 +551,7 @@ public class CommonUtils {
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
+				logger.info("Start time is "+startTime.toString());
 				if(startTime.before(createdDate))
 					list.add(o.getFilename());
 			}
