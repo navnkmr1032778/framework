@@ -399,7 +399,10 @@ public class CSVParserUtils {
 	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
-			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
+			File file=new File(fileName);
+			if(!file.getParentFile().exists())
+				file.getParentFile().mkdirs();
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName),true));
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
