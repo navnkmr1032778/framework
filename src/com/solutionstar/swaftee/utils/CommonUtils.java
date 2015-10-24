@@ -547,10 +547,12 @@ public class CommonUtils {
 			channelSftp = getChannelSftp(hostname, port, username, password);
 			channelSftp.cd(sourceLocation);
 			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*."+fileExtension);
+			logger.info("Start time is "+startTime.toString());
 			for (ChannelSftp.LsEntry o : v) {
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
+				
 				if(startTime.before(createdDate))
 					list.add(o.getFilename());
 			}
