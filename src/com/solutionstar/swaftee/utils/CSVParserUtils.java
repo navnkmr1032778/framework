@@ -110,7 +110,6 @@ public class CSVParserUtils {
 			if (rowEntries.get(0).length < columnNumber)
 				throw new MyCoreExceptions(
 						"Column Number Provided is out of data range in the file given");
-
 			for (String[] row : rowEntries) {
 				if (headerRow) {
 					createCSVHeaderHash(row);
@@ -396,11 +395,23 @@ public class CSVParserUtils {
 		return list;
 	}
 
-
 	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
+			csvWriter.writeAll(data);
+			csvWriter.close();
+		} catch (Exception e) {
+			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+		}
+	}
+	
+	public void appendToCSVFile(String fileName, List<String[]> data) {
+		try {
+			File file=new File(fileName);
+			if(!file.getParentFile().exists())
+				file.getParentFile().mkdirs();
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(file,true));
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
@@ -416,6 +427,8 @@ public class CSVParserUtils {
 			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
 		}
 	}
+	
+	
 	
 	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
 		try {
