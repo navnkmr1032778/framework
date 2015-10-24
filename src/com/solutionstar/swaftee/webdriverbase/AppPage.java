@@ -347,6 +347,26 @@ public class AppPage extends TestListenerAdapter
 			}
 		} 
 	}
+	
+	public boolean selectValueFromUnorderedList(WebElement unorderedList, final String value) {
+		try
+		{
+	    List<WebElement> options = unorderedList.findElements(By.tagName("li"));
+
+	    for (WebElement option : options) {
+	    	String presentValue=option.getText();
+	        if (value.equals(presentValue)) {
+	            option.click();
+	            return true;
+	        }
+	    }
+		}
+		catch(Exception ex)
+		{
+			logger.info("Exception in selecting value from unordered list: "+ExceptionUtils.getFullStackTrace(ex));
+		}
+	    return false;
+	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	{
