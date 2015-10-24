@@ -398,7 +398,7 @@ public class CSVParserUtils {
 	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
-			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName),true));
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
