@@ -38,6 +38,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 public class CommonUtils {
@@ -400,8 +401,8 @@ public class CommonUtils {
 
 	public void copyToSFTPLocation(String hostname, int port, String username,
 			String password, String sourceLocation, String destination,
-			List<String> files) {
-		try {
+			List<String> files) throws SftpException  {
+
 			channelSftp = getChannelSftp(hostname, port, username, password);
 			for (String file : files) {
 				String fileName = file.substring(file.lastIndexOf("/") + 1);
@@ -413,9 +414,6 @@ public class CommonUtils {
 				channelSftp.disconnect();
 			if (session != null)
 				session.disconnect();
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
 	}
 
 	public List<String> listFilesInSFTPLocation(String hostname, int port,
