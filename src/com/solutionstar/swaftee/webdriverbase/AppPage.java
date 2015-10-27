@@ -1075,11 +1075,10 @@ public class AppPage extends TestListenerAdapter
 		return text;
 	}
 
-	public void executeScript(String script)
+	public Object executeScript(String script)
 	{
-		((JavascriptExecutor) this.driver).executeScript(script);
+		return ((JavascriptExecutor) this.driver).executeScript(script);
 	}
-
 	/**
 	 * Focus the element identified by <code>locator</code>.
 	 *
