@@ -24,7 +24,7 @@ Local setup steps:
   iv) Click add folder, and check src box under swaftee. Remove the source folder, that was present earlier 
 9. To download the dependencies
    i) Right click on the project module and select Run As -> Maven Install
-  ii) Verify that build status is success. Redo the step 8 for two more times.
+  ii) Verify that build status is success. If not, restart eclipse and import the projects again.
  iii) Once it completed, right click on the project module and select Maven -> Update Project
 
 
