@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -109,7 +110,24 @@ public class CommonUtils {
 			try
 			{
 				dir.mkdir();
-				screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
+				Set<String> handles = webDriver.getWindowHandles();
+				String currentHandle = webDriver.getWindowHandle();
+				int handleCount = 0;
+				for(String handle : handles)
+				{
+					handleCount++;
+					webDriver.switchTo().window(handle);
+					try
+					{
+						Thread.sleep(500);
+					}
+					catch(Exception e)
+					{
+						logger.info(ExceptionUtils.getFullStackTrace(e));
+					}
+					screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_handle"+ handleCount +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
+				}
+				webDriver.switchTo().window(currentHandle);
 			} 
 			catch(SecurityException ex)
 			{
