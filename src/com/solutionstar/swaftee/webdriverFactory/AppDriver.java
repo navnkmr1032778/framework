@@ -495,7 +495,7 @@ public class AppDriver extends TestListenerAdapter {
 		}
 	}
 	***/
-	protected void stopDriver() 
+	public void stopDriver() 
 	{
 	    baseDriverHelper.stopDriver();
     }
