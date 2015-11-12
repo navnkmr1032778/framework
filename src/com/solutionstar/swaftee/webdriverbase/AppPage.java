@@ -71,7 +71,7 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
-		getJavaScriptExecutor().executeScript("(function(xhr){xhr.ajaxCount = 0;function incrementAjaxCount(xhrInstance) {this.ajaxCount++;console.log('Monkey patch when triggering ajax send: ' + xhrInstance);console.log('Ajax count: ' + this.ajaxCount);}function decrementAjaxCount(xhrInstance) { this.ajaxCount--;console.log('Monkey patch when triggering ajax onreadystatechange: ' + xhrInstance);console.log('Ajax count: ' + this.ajaxCount);}var send = xhr.send;xhr.send = function(data) {var rsc = this.onreadystatechange;var that = this;console.log(this);this.onreadystatechange = function() {if (that.readyState == XMLHttpRequest.DONE) {decrementAjaxCount(that);}if (rsc) {return rsc.apply(this, arguments);}};incrementAjaxCount(this);return send.apply(this, arguments);};var abort = xhr.abort;xhr.abort = function(data) {decrementAjaxCount(this);return abort.apply(this, arguments);};return xhr;})(XMLHttpRequest.prototype);return;");
+		monkeyPatch();
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
@@ -837,7 +837,8 @@ public class AppPage extends TestListenerAdapter
 	 */
 	public void refresh() 
 	{    
-		this.driver.navigate().refresh();   
+		this.driver.navigate().refresh(); 
+		monkeyPatch();
 	}
 
 	public void closeWindow()
@@ -1242,7 +1243,13 @@ public class AppPage extends TestListenerAdapter
 					String ajaxCount = (String)((JavascriptExecutor)
 							driver).executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
 					System.out.println("Ajax count: " + ajaxCount);
-					if(ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
+					
+					if(ajaxCount != null && ajaxCount.equals("undefined"))
+					{
+						monkeyPatch();						
+					}
+					
+					if(ajaxCount != null && !ajaxCount.equals("undefined") && Double.parseDouble(ajaxCount) > 0.0d)
 					{
 						return false;
 					}
@@ -1264,6 +1271,10 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	public void monkeyPatch()
+	{
+		getJavaScriptExecutor().executeScript("(function(xhr){xhr.ajaxCount = 0;function incrementAjaxCount(xhrInstance) {this.ajaxCount++;console.log('Monkey patch when triggering ajax send: ' + xhrInstance);console.log('Ajax count: ' + this.ajaxCount);}function decrementAjaxCount(xhrInstance) { this.ajaxCount--;console.log('Monkey patch when triggering ajax onreadystatechange: ' + xhrInstance);console.log('Ajax count: ' + this.ajaxCount);}var send = xhr.send;xhr.send = function(data) {var rsc = this.onreadystatechange;var that = this;console.log(this);this.onreadystatechange = function() {if (that.readyState == XMLHttpRequest.DONE) {decrementAjaxCount(that);}if (rsc) {return rsc.apply(this, arguments);}};incrementAjaxCount(this);return send.apply(this, arguments);};var abort = xhr.abort;xhr.abort = function(data) {decrementAjaxCount(this);return abort.apply(this, arguments);};return xhr;})(XMLHttpRequest.prototype);");
+	}
 
 	public void uploadFile(WebElement element, String fileName)
 	{
