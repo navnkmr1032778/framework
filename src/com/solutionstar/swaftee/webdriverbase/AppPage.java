@@ -69,6 +69,41 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
+		getJavaScriptExecutor().executeScript("var ajaxCount = 0;" + 
+				"(function(xhr) {" + 
+				"	ajaxCount = 0;" + 
+				"	function incrementAjaxCount(xhrInstance) { // Example" + 
+				"		ajaxCount++;" + 
+				"		console.log('Monkey patch when triggering ajax send: ' + xhrInstance);" + 
+				"		console.log('Ajax count: ' + ajaxCount);" + 
+				"	}" + 
+				"	function decrementAjaxCount(xhrInstance) { // Example" + 
+				"		ajaxCount--;" + 
+				"		console.log('Monkey patch when triggering ajax onreadystatechange: ' + xhrInstance);" + 
+				"		console.log('Ajax count: ' + ajaxCount);" + 
+				"	}" + 
+				"	var send = xhr.send;" + 
+				"	xhr.send = function(data) {" + 
+				"		var rsc = this.onreadystatechange;" + 
+				"		var that = this;" + 
+				"		console.log(this);" + 
+				"		this.onreadystatechange = function() {" + 
+				"			if (that.readyState == XMLHttpRequest.DONE) {" + 
+				"				decrementAjaxCount(that);" + 
+				"			}" + 
+				"			if (rsc) {" + 
+				"				return rsc.apply(this, arguments);" + 
+				"			}" + 
+				"		};" + 
+				"		incrementAjaxCount(this);" + 
+				"		return send.apply(this, arguments);" + 
+				"	};" + 
+				"	var abort = xhr.abort;" + 
+				"	xhr.abort = function(data) {" + 
+				"		decrementAjaxCount(this);" + 
+				"		return abort.apply(this, arguments);" + 
+				"	};" + 
+				"})(XMLHttpRequest.prototype);");
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
@@ -1105,23 +1140,36 @@ public class AppPage extends TestListenerAdapter
 
 				public Boolean apply(WebDriver driver) {
 
-					boolean ajaxCallBack = Boolean.parseBoolean(((JavascriptExecutor)
-							driver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
-					Object obj = ((JavascriptExecutor)
-							driver).executeScript("return !window.ajaxActive");
-
-					Object jQueryActive = ((JavascriptExecutor)
-							driver).executeScript("return jQuery.active;");
-
-					if (obj != null && obj.toString().equals("true") && !ajaxCallBack &&
-							jQueryActive.toString().equals("0"))
-					{    
-						return Boolean.valueOf(true);
-					}
-					else
+//					boolean ajaxCallBack = Boolean.parseBoolean(((JavascriptExecutor)
+//							driver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
+//					Object obj = ((JavascriptExecutor)
+//							driver).executeScript("return !window.ajaxActive");
+//
+//					Object jQueryActive = ((JavascriptExecutor)
+//							driver).executeScript("return jQuery.active;");
+//
+//					if (obj != null && obj.toString().equals("true") && !ajaxCallBack &&
+//							jQueryActive.toString().equals("0"))
+//					{    
+//						return Boolean.valueOf(true);
+//					}
+//					else
+//					{
+//						return false;
+//					}
+					
+					String ajaxCount = (String)((JavascriptExecutor)
+							driver).executeScript("return '' + ajaxCount");
+					
+					if(ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
 					{
 						return false;
 					}
+					else
+					{
+						return true;
+					}
+					
 				}
 
 			};
