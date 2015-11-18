@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -92,6 +93,11 @@ public class AppPage extends TestListenerAdapter
 		return this.driver.getCurrentUrl();
 	}
 
+	public Set<Cookie> getCookies()
+	{
+		return this.driver.manage().getCookies();
+	}
+	
 	public void deleteCookies() 
 	{
 		this.driver.manage().deleteAllCookies();
