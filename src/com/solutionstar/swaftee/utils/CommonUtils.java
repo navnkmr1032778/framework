@@ -41,6 +41,8 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.dataarchive.DataArchive;
+import com.solutionstar.swaftee.utils.dataarchive.XLSXDataArchive;
 
 public class CommonUtils {
 
@@ -586,5 +588,33 @@ public class CommonUtils {
 			String password, String sourceLocation, Date startTime) {
 		return listFilesInSFTPLocation(hostname, port,username,
 				password,sourceLocation, startTime,"csv");
+	}
+	
+	public void writeDataToExcel(String filename, List<HashMap<String, String>> data) throws Exception
+	{
+		if (data.size() == 0)
+		{
+			return;
+		}
+
+		HashMap<String, String> map = data.get(0);
+		Set<String> header = map.keySet();
+		writeDataToExcel(filename, data, header.toArray(new String[header.size()]));
+	}
+
+	public void writeDataToExcel(String filename, List<HashMap<String, String>> data, String[] header) throws Exception
+	{
+		DataArchive dataArchive = new XLSXDataArchive();
+		dataArchive.addData(header);
+		for(HashMap<String, String> map : data)
+		{
+			String[] row = new String[header.length];
+			for(int i = 0; i < header.length; i++)
+			{
+				row[i] = map.get(header[i]);
+			}
+			dataArchive.addData(row);
+		}
+		dataArchive.saveData(filename);
 	}
 }
