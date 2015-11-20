@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -92,6 +94,22 @@ public class AppPage extends TestListenerAdapter
 		return this.driver.getCurrentUrl();
 	}
 
+	public Set<Cookie> getCookies()
+	{
+		return this.driver.manage().getCookies();
+	}
+	
+	public HashMap<String,String> getCookiesHash()
+	{
+		Set<Cookie> cookies = getCookies();
+		HashMap<String, String> cookieHash = new HashMap<String, String>();
+		for (Cookie c : cookies)
+		{
+			cookieHash.put(c.getName(), c.getValue());
+		}
+		return cookieHash;
+	}
+	
 	public void deleteCookies() 
 	{
 		this.driver.manage().deleteAllCookies();
