@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -96,6 +97,17 @@ public class AppPage extends TestListenerAdapter
 	public Set<Cookie> getCookies()
 	{
 		return this.driver.manage().getCookies();
+	}
+	
+	public HashMap<String,String> getCookiesHash()
+	{
+		Set<Cookie> cookies = getCookies();
+		HashMap<String, String> cookieHash = new HashMap<String, String>();
+		for (Cookie c : cookies)
+		{
+			cookieHash.put(c.getName(), c.getValue());
+		}
+		return cookieHash;
 	}
 	
 	public void deleteCookies() 
