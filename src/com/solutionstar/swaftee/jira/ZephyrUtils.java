@@ -43,7 +43,7 @@ public class ZephyrUtils
 			cycleId = testCycleId;
 			jiraServer = System.getProperty("jiraServer");
 			jiraAuth = System.getProperty("jiraAuth");
-			if(jiraServer == null)
+			if (jiraServer == null)
 			{
 				CommonProperties props = CommonProperties.getInstance();
 				try
@@ -60,8 +60,7 @@ public class ZephyrUtils
 		}
 	}
 
-	public static HashMap<String, String> createNewTestExecution(
-			String[] testCases)
+	public static HashMap<String, String> createNewTestExecution(String[] testCases)
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
 
@@ -70,15 +69,11 @@ public class ZephyrUtils
 		/*
 		 * Get project id
 		 */
-		Response response = client
-				.target(jiraServer + "rest/zapi/latest/cycle/" + cycleId)
-				.request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
+		Response response = client.target(jiraServer + "rest/zapi/latest/cycle/" + cycleId)
+				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - "
-				+ response.toString());
-		Map<String, Object> responseMap = utils.convertJSONToMap(response
-				.readEntity(String.class));
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
+		Map<String, Object> responseMap = utils.convertJSONToMap(response.readEntity(String.class));
 		Object projectId = responseMap.get("projectId");
 
 		/*
@@ -88,19 +83,14 @@ public class ZephyrUtils
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("issues", testCases);
 		hm.put("cycleId", cycleId);
-		hm.put("projectId",
-				String.valueOf(Double.valueOf(projectId.toString()).intValue()));
+		hm.put("projectId", String.valueOf(Double.valueOf(projectId.toString()).intValue()));
 		hm.put("methodId", String.valueOf(1));
 
-		response = client
-				.target(jiraServer
-						+ "rest/zapi/latest/execution/addTestsToCycle")
-				.request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
+		response = client.target(jiraServer + "rest/zapi/latest/execution/addTestsToCycle")
+				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
 				.post(Entity.json(utils.objToJson(hm)));
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - "
-				+ response.toString());
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
 		/*
 		 * Create & perform execution for all test cases
@@ -112,19 +102,15 @@ public class ZephyrUtils
 			 * Get JIRA issue id
 			 */
 			response = client.target(jiraServer + "rest/api/latest/search")
-					.queryParam("jql", "%20id%20in%20(" + s + ")")
-					.request(MediaType.APPLICATION_JSON_TYPE)
-					.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
-					.get();
+					.queryParam("jql", "%20id%20in%20(" + s + ")").request(MediaType.APPLICATION_JSON_TYPE)
+					.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
 
-			logger.info("Status : " + String.valueOf(response.getStatus())
-					+ " - " + response.toString());
+			logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
-			responseMap = (HashMap<String, Object>) utils.constructObjfromJson(
-					response.readEntity(String.class), responseMap.getClass());
+			responseMap = (HashMap<String, Object>) utils.constructObjfromJson(response.readEntity(String.class),
+					responseMap.getClass());
 			ArrayList<?> issues = (ArrayList<?>) responseMap.get("issues");
-			LinkedTreeMap<String, Object> ltm = (LinkedTreeMap<String, Object>) issues
-					.get(0);
+			LinkedTreeMap<String, Object> ltm = (LinkedTreeMap<String, Object>) issues.get(0);
 
 			/*
 			 * Create execution
@@ -132,54 +118,44 @@ public class ZephyrUtils
 			hm.clear();
 			hm.put("issueId", ltm.get("id").toString());
 			hm.put("cycleId", cycleId);
-			hm.put("projectId", String.valueOf(Double.valueOf(
-					projectId.toString()).intValue()));
+			hm.put("projectId", String.valueOf(Double.valueOf(projectId.toString()).intValue()));
 
-			response = client.target(jiraServer + "rest/zapi/latest/execution")
-					.request(MediaType.APPLICATION_JSON_TYPE)
-					.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
-					.post(Entity.json(utils.objToJson(hm)));
+			response = client.target(jiraServer + "rest/zapi/latest/execution").request(MediaType.APPLICATION_JSON_TYPE)
+					.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).post(Entity.json(utils.objToJson(hm)));
 
-			logger.info("Status : " + String.valueOf(response.getStatus())
-					+ " - " + response.toString());
+			logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
-			responseMap = (HashMap<String, Object>) utils.constructObjfromJson(
-					response.readEntity(String.class), responseMap.getClass());
+			responseMap = (HashMap<String, Object>) utils.constructObjfromJson(response.readEntity(String.class),
+					responseMap.getClass());
 
-			testExectionIdMap.put(s,
-					responseMap.keySet().toArray()[0].toString());
+			testExectionIdMap.put(s, responseMap.keySet().toArray()[0].toString());
 		}
 		client.close();
 
 		return testExectionIdMap;
 
 	}
-	
+
 	public static Map<String, Object> getInfoFromTestCycle()
 	{
 		Client client = ClientBuilder.newClient();
 
-		Response response = client
-				.target(jiraServer + "rest/zapi/latest/execution")
-				.queryParam("cycleId", cycleId)
-				.request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
+		Response response = client.target(jiraServer + "rest/zapi/latest/execution").queryParam("cycleId", cycleId)
+				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - "
-				+ response.toString());
-		
-		Map<String, Object> responseMap = utils.convertJSONToMap(response
-				.readEntity(String.class));
-		
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
+
+		Map<String, Object> responseMap = utils.convertJSONToMap(response.readEntity(String.class));
+
 		client.close();
-		
+
 		return responseMap;
 	}
 
 	public static HashMap<String, String> getExecutionIdFromTestCycle()
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
-		
+
 		Map<String, Object> responseMap = getInfoFromTestCycle();
 
 		List<LinkedTreeMap<String, Object>> executions = (List<LinkedTreeMap<String, Object>>) responseMap
@@ -187,35 +163,45 @@ public class ZephyrUtils
 
 		for (LinkedTreeMap<String, Object> execution : executions)
 		{
-			testExectionIdMap.put(execution.get("issueKey").toString(), ""
-					+ ((Double) execution.get("id")).longValue());
+			testExectionIdMap.put(execution.get("issueKey").toString(),
+					"" + ((Double) execution.get("id")).longValue());
+		}
+
+		List<String> testCasesToBeAddded = new ArrayList<String>();
+
+		for (String key : testCaseStatus.keySet())
+		{
+			if (!testExectionIdMap.containsKey(key))
+			{
+				testCasesToBeAddded.add(key);
+			}
+		}
+
+		if (testCasesToBeAddded.size() > 0)
+		{
+			testExectionIdMap.putAll(
+					createNewTestExecution(testCasesToBeAddded.toArray(new String[testCasesToBeAddded.size()])));
 		}
 
 		return testExectionIdMap;
 	}
 
-	public static void bulkUpdateStatus(Collection<String> executionIds,
-			String status)
+	public static void bulkUpdateStatus(Collection<String> executionIds, String status)
 	{
 		Client client = ClientBuilder.newClient();
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("status", status);
 		hm.put("stepStatus", "1");
-		hm.put("executions",
-				executionIds.toArray(new String[executionIds.size()]));
+		hm.put("executions", executionIds.toArray(new String[executionIds.size()]));
 
 		String json = utils.objToJson(hm);
 
-		Response response = client
-				.target(jiraServer
-						+ "rest/zapi/latest/execution/updateBulkStatus")
-				.request(MediaType.APPLICATION_JSON_TYPE)
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
+		Response response = client.target(jiraServer + "rest/zapi/latest/execution/updateBulkStatus")
+				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
 				.put(Entity.json(json));
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - "
-				+ response.toString());
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
 		client.close();
 	}
@@ -232,7 +218,7 @@ public class ZephyrUtils
 		{
 			// group test cases as per status
 			HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
-			
+
 			HashMap<String, Collection<String>> groupingMap = new HashMap<String, Collection<String>>();
 			for (String testCase : testCaseStatus.keySet())
 			{
@@ -283,13 +269,11 @@ public class ZephyrUtils
 				{
 					continue;
 				}
-				else if (testCaseStatus.get(testCase).equals(PASS)
-						&& !testCaseStatus.get(testCase).equals(status))
+				else if (testCaseStatus.get(testCase).equals(PASS) && !testCaseStatus.get(testCase).equals(status))
 				{
 					continue;
 				}
-				else if (testCaseStatus.get(testCase).equals(BLOCKED)
-						&& !testCaseStatus.get(testCase).equals(status))
+				else if (testCaseStatus.get(testCase).equals(BLOCKED) && !testCaseStatus.get(testCase).equals(status))
 				{
 					testCaseStatus.put(testCase, status);
 				}
