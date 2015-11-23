@@ -34,6 +34,9 @@ public class Zephyr
 	{
 		
 		String mode = System.getProperty("zephyr");
+		System.out.println("[User log] Zephyr: " + mode);
+		String writeToFile = System.getProperty("writeTo");
+		System.out.println("[User log] Write To: " + writeToFile);
 		if(mode.equals("reset"))
 		{
 			resetTestCycle();
