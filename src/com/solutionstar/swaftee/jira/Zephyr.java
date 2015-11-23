@@ -21,6 +21,7 @@ public class Zephyr
 		try
 		{
 			FileWriter fw = new FileWriter(writeToFile);
+			System.out.println("[User log] Output: " + output);
 			fw.write(output);
 			fw.close();
 		}
