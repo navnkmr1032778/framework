@@ -19,13 +19,15 @@ public class Zephyr
 	{
 		String writeToFile = System.getProperty("writeTo");
 		String output = "<table border=1><tr><th>Jira Key</th><th>Name</th><th>Description</th><th>Result</th></tr>";
+		String jiraServer = System.getProperty("jiraServer");
 		
 		ZephyrUtils.initZephyr(testCycleId);
 		List<HashMap<String, String>> results = ZephyrUtils.getExecutionStatusFromCycle();
 		
 		for(HashMap<String, String> result : results)
 		{
-			output += "<tr><td><a href='https://jira.solutionstarit.com/browse/"+ result.get("key") +"'>" + result.get("key") + "</a></td>";
+			output += "<tr><td><a href='" + jiraServer + "browse/" + result.get("key") + "'>" + result.get("key")
+					+ "</a></td>";
 			output += "<td>" + result.get("name") + "</td>";
 			output += "<td>" + result.get("description") + "</td>";
 			output += "<td>" + result.get("result") + "</td></tr>";
