@@ -25,7 +25,7 @@ public class Zephyr
 		
 		for(HashMap<String, String> result : results)
 		{
-			output += "<tr><td><a href='https://jira.solutionstarit.com/browse/'"+ result.get("key") +">" + result.get("key") + "</a></td>";
+			output += "<tr><td><a href='https://jira.solutionstarit.com/browse/"+ result.get("key") +"'>" + result.get("key") + "</a></td>";
 			output += "<td>" + result.get("name") + "</td>";
 			output += "<td>" + result.get("description") + "</td>";
 			output += "<td>" + result.get("result") + "</td></tr>";
