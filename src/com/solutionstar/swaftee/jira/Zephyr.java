@@ -36,7 +36,6 @@ public class Zephyr
 		try
 		{
 			FileWriter fw = new FileWriter(writeToFile);
-			System.out.println("[User log] Output: " + output);
 			fw.write(output);
 			fw.close();
 		}
@@ -50,9 +49,7 @@ public class Zephyr
 	{
 		
 		String mode = System.getProperty("zephyr");
-		System.out.println("[User log] Zephyr: " + mode);
 		String writeToFile = System.getProperty("writeTo");
-		System.out.println("[User log] Write To: " + writeToFile);
 		if(mode.equals("reset"))
 		{
 			resetTestCycle();
