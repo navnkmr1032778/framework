@@ -46,10 +46,8 @@ public class Zephyr
 	}
 	
 	public static void main(String[] args)
-	{
-		
+	{		
 		String mode = System.getProperty("zephyr");
-		String writeToFile = System.getProperty("writeTo");
 		if(mode.equals("reset"))
 		{
 			resetTestCycle();
