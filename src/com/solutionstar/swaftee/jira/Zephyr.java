@@ -2,6 +2,8 @@ package com.solutionstar.swaftee.jira;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
 
 public class Zephyr
 {
@@ -16,8 +18,21 @@ public class Zephyr
 	public static void generateHtmlReport()
 	{
 		String writeToFile = System.getProperty("writeTo");
-		String output = "<table><tr><th>Jira Key</th><th>Name</th><th>Description</th><th>Result</th></tr>" +
-		"<tr><td>CAS-123</td><td>Test 1</td><td>Description of the test</td><td>Unexecuted</td></tr>";
+		String output = "<table border=1><tr><th>Jira Key</th><th>Name</th><th>Description</th><th>Result</th></tr>";
+		
+		ZephyrUtils.initZephyr(testCycleId);
+		List<HashMap<String, String>> results = ZephyrUtils.getExecutionStatusFromCycle();
+		
+		for(HashMap<String, String> result : results)
+		{
+			output += "<tr><td>" + result.get("key") + "</td>";
+			output += "<td>" + result.get("name") + "</td>";
+			output += "<td>" + result.get("description") + "</td>";
+			output += "<td>" + result.get("result") + "</td></tr>";
+		}
+		
+		output += "</table>";
+		
 		try
 		{
 			FileWriter fw = new FileWriter(writeToFile);
