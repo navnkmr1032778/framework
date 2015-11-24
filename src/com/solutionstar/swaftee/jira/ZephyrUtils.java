@@ -218,6 +218,9 @@ public class ZephyrUtils
 		List<HashMap<String, String>> output = new ArrayList<HashMap<String, String>>();
 
 		Map<String, Object> responseMap = getInfoFromTestCycle();
+		
+		System.out.println("[User log] Info from JIRA: " + responseMap.toString());
+		
 		List<LinkedTreeMap<String, Object>> executions = (List<LinkedTreeMap<String, Object>>) responseMap
 				.get("executions");
 
