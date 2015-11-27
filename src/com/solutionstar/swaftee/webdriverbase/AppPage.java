@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -19,6 +20,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -92,6 +94,55 @@ public class AppPage extends TestListenerAdapter
 		return this.driver.getCurrentUrl();
 	}
 
+	public void waitForURLToChange(String url)
+	{
+		final String currentURL = url;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return !getCurrentUrl().equals(currentURL);
+			}
+				});
+		return;
+	}
+	
+	/**
+	 * 
+	 * @param urlText
+	 * @param timeout in seconds
+	 */
+	public void waitForURLContainingText(String urlText, int timeout)
+	{
+		final String expectedURL = urlText;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return getCurrentUrl().contains(expectedURL);
+			}
+				});
+		return;
+	}
+	
+	public Set<Cookie> getCookies()
+	{
+		return this.driver.manage().getCookies();
+	}
+	
+	public HashMap<String,String> getCookiesHash()
+	{
+		Set<Cookie> cookies = getCookies();
+		HashMap<String, String> cookieHash = new HashMap<String, String>();
+		for (Cookie c : cookies)
+		{
+			cookieHash.put(c.getName(), c.getValue());
+		}
+		return cookieHash;
+	}
+	
 	public void deleteCookies() 
 	{
 		this.driver.manage().deleteAllCookies();
@@ -193,7 +244,61 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
+	
+	public void waitForElementToBeEnabled(By locator)
+	{
+		final By loc = locator;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return driver.findElement(locator).isEnabled();
+			}
+				});
+		return;
+	}
+	
 
+	public void waitForElementToContainText(WebElement e, String text)
+	{
+		waitForElementToBeEnabled(e);
+		if(isElementPresentAndDisplayed(e))
+		{
+			final String innerText = text;
+			final WebElement element = e;
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			wait.until(new ExpectedCondition<Boolean>() 
+			{
+				public Boolean apply(WebDriver driver) 
+				{
+					return element.getText().contains(innerText);
+				}
+			});
+		}
+		return;
+	}
+	
+	public void waitForElementToContainText(By locator, String text)
+	{
+		waitForElementToBeEnabled(locator);
+		if(isElementPresentAndDisplayed(locator))
+		{
+			final String innerText = text;
+			final By loc = locator;
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			wait.until(new ExpectedCondition<Boolean>() 
+			{
+				public Boolean apply(WebDriver driver) 
+				{
+					return driver.findElement(loc).getText().contains(innerText);
+				}
+			});
+		}
+		return;
+	}
+	
+	
 	public void waitForPageLoadComplete() 
 	{
 		waitForPageLoad(WebDriverConstants.MAX_TIMEOUT_PAGE_LOAD);
@@ -457,7 +562,7 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
-
+	
 	public void waitForNewWindow(int winCount)
 	{
 		final int count = winCount;
