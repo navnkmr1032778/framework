@@ -151,7 +151,7 @@ public class ZephyrUtils
 
 		return responseMap;
 	}
-
+	
 	public static HashMap<String, String> getExecutionIdFromTestCycle()
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
@@ -210,6 +210,59 @@ public class ZephyrUtils
 	{
 		HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
 		bulkUpdateStatus(testCaseExecutionMap.values(), UNEXECUTED);
+	}
+	
+	public static List<HashMap<String, String>> getExecutionStatusFromCycle()
+	{
+
+		List<HashMap<String, String>> output = new ArrayList<HashMap<String, String>>();
+
+		Map<String, Object> responseMap = getInfoFromTestCycle();
+
+		List<LinkedTreeMap<String, Object>> executions = (List<LinkedTreeMap<String, Object>>) responseMap
+				.get("executions");
+
+		for (LinkedTreeMap<String, Object> execution : executions)
+		{
+			HashMap<String, String> tmp = new HashMap<String, String>();
+			tmp.put("key", execution.get("issueKey").toString());
+			if (execution.containsKey("summary"))
+			{
+				tmp.put("name", execution.get("summary").toString());
+			}
+			else
+			{
+				tmp.put("name", "");
+			}
+			if (execution.containsKey("issueDescription"))
+			{
+				tmp.put("description", execution.get("issueDescription").toString());
+			}
+			else
+			{
+				tmp.put("description", "");
+			}
+			switch (execution.get("executionStatus").toString())
+			{
+			case UNEXECUTED:
+				tmp.put("result", "UNEXECUTED");
+				break;
+			case PASS:
+				tmp.put("result", "PASS");
+				break;
+			case FAIL:
+				tmp.put("result", "FAIL");
+				break;
+			case BLOCKED:
+				tmp.put("result", "BLOCKED");
+				break;
+			default:
+				tmp.put("result", "");
+			}
+			output.add(tmp);
+		}
+
+		return output;
 	}
 
 	public static void updateExecutionStatusInJIRA()
