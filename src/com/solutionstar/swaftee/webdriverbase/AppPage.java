@@ -94,6 +94,39 @@ public class AppPage extends TestListenerAdapter
 		return this.driver.getCurrentUrl();
 	}
 
+	public void waitForURLToChange(String url)
+	{
+		final String currentURL = url;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return !getCurrentUrl().equals(currentURL);
+			}
+				});
+		return;
+	}
+	
+	/**
+	 * 
+	 * @param urlText
+	 * @param timeout in seconds
+	 */
+	public void waitForURLContainingText(String urlText, int timeout)
+	{
+		final String expectedURL = urlText;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return getCurrentUrl().contains(expectedURL);
+			}
+				});
+		return;
+	}
+	
 	public Set<Cookie> getCookies()
 	{
 		return this.driver.manage().getCookies();
@@ -211,7 +244,61 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
+	
+	public void waitForElementToBeEnabled(By locator)
+	{
+		final By loc = locator;
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+				{
+			public Boolean apply(WebDriver driver) 
+			{
+				return driver.findElement(locator).isEnabled();
+			}
+				});
+		return;
+	}
+	
 
+	public void waitForElementToContainText(WebElement e, String text)
+	{
+		waitForElementToBeEnabled(e);
+		if(isElementPresentAndDisplayed(e))
+		{
+			final String innerText = text;
+			final WebElement element = e;
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			wait.until(new ExpectedCondition<Boolean>() 
+			{
+				public Boolean apply(WebDriver driver) 
+				{
+					return element.getText().contains(innerText);
+				}
+			});
+		}
+		return;
+	}
+	
+	public void waitForElementToContainText(By locator, String text)
+	{
+		waitForElementToBeEnabled(locator);
+		if(isElementPresentAndDisplayed(locator))
+		{
+			final String innerText = text;
+			final By loc = locator;
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			wait.until(new ExpectedCondition<Boolean>() 
+			{
+				public Boolean apply(WebDriver driver) 
+				{
+					return driver.findElement(loc).getText().contains(innerText);
+				}
+			});
+		}
+		return;
+	}
+	
+	
 	public void waitForPageLoadComplete() 
 	{
 		waitForPageLoad(WebDriverConstants.MAX_TIMEOUT_PAGE_LOAD);
@@ -465,7 +552,7 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
-
+	
 	public void waitForNewWindow(int winCount)
 	{
 		final int count = winCount;
