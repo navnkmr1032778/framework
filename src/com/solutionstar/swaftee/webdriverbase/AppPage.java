@@ -422,6 +422,16 @@ public class AppPage extends TestListenerAdapter
 		Thread.sleep(5000);
 		dragElem.click();
 	}
+	
+	public String getVisibleTextOfElement(WebElement elem)
+	{
+		String visibleText= (String) getJavaScriptExecutor().executeScript("var clone = $(arguments[0]).clone();"
+				+ "clone.appendTo('body').find(':hidden').remove();"
+				+ "var text = clone.text();"
+				+ "clone.remove(); return text;", elem);
+		visibleText=visibleText.replaceAll("\\s+", " ");
+		return visibleText;
+	}
 
 	public Set<String> getWindowHandles()
 	{
@@ -844,7 +854,7 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForElementToDisappear(By locator) 
 	{	
-		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
 	}
 
