@@ -1272,8 +1272,42 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public void monkeyPatch()
-	{
-		getJavaScriptExecutor().executeScript("(function(xhr){xhr.ajaxCount = 0;function incrementAjaxCount(xhrInstance) {xhr.ajaxCount++;console.log('Monkey patch when triggering ajax send: ' + xhrInstance);console.log('Ajax count: ' + xhr.ajaxCount);}function decrementAjaxCount(xhrInstance) { xhr.ajaxCount--;console.log('Monkey patch when triggering ajax onreadystatechange: ' + xhrInstance);console.log('Ajax count: ' + xhr.ajaxCount);}var send = xhr.send;xhr.send = function(data) {var rsc = this.onreadystatechange;var that = this;console.log(this);this.onreadystatechange = function() {if (that.readyState == XMLHttpRequest.DONE) {decrementAjaxCount(that);}if (rsc) {return rsc.apply(this, arguments);}};incrementAjaxCount(this);return send.apply(this, arguments);};var abort = xhr.abort;xhr.abort = function(data) {decrementAjaxCount(this);return abort.apply(this, arguments);};return xhr;})(XMLHttpRequest.prototype);");
+	{	
+/*
+ * The actual source code for monkey patch, the compressed version while executing
+(function(xhr) {
+	xhr.ajaxCount = 0;
+	function incrementAjaxCount(xhrInstance) {
+		xhr.ajaxCount++;
+		console.log('Ajax count - Monkey patch when triggering ajax send: ' + xhr.ajaxCount);
+	}
+	function decrementAjaxCount(xhrInstance) {
+		xhr.ajaxCount--;
+		console.log('Ajax count - Monkey patch when resolving ajax send: ' + xhr.ajaxCount);
+	}
+	var send = xhr.send;
+	xhr.send = function(data) {
+		var rsc = this.onreadystatechange;
+		this.addEventListener('readystatechange', function() { 
+			if (this.readyState == XMLHttpRequest.DONE) {
+				decrementAjaxCount(this);
+				if (rsc) {
+					return rsc.apply(this, arguments);
+				}
+			}
+		}, false);
+		incrementAjaxCount(this);
+		return send.apply(this, arguments);
+	};
+	var abort = xhr.abort;
+	xhr.abort = function(data) {
+		decrementAjaxCount(this);
+		return abort.apply(this, arguments);
+	};
+	return xhr;
+})(XMLHttpRequest.prototype);
+*/
+		getJavaScriptExecutor().executeScript("!function(t){function n(n){t.ajaxCount++,console.log(\"Ajax count - Monkey patch when triggering ajax send: \"+t.ajaxCount)}function a(n){t.ajaxCount--,console.log(\"Ajax count - Monkey patch when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){var o=this.onreadystatechange;return this.addEventListener(\"readystatechange\",function(){return this.readyState==XMLHttpRequest.DONE&&(a(this),o)?o.apply(this,arguments):void 0},!1),n(this),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(this),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
 	}
 
 	public void uploadFile(WebElement element, String fileName)
