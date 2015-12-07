@@ -1213,36 +1213,14 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForAJaxCompletion()
 	{    
-		//Attempt to save us from Stale Element reference exceptions.
-		sleep(500);
 		try {
 
 			ExpectedCondition<Boolean> isLoadingFalse = new
 					ExpectedCondition<Boolean>() {
 
 				public Boolean apply(WebDriver driver) {
-
-//					boolean ajaxCallBack = Boolean.parseBoolean(((JavascriptExecutor)
-//							driver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
-//					Object obj = ((JavascriptExecutor)
-//							driver).executeScript("return !window.ajaxActive");
-//
-//					Object jQueryActive = ((JavascriptExecutor)
-//							driver).executeScript("return jQuery.active;");
-//
-//					if (obj != null && obj.toString().equals("true") && !ajaxCallBack &&
-//							jQueryActive.toString().equals("0"))
-//					{    
-//						return Boolean.valueOf(true);
-//					}
-//					else
-//					{
-//						return false;
-//					}
-					
 					String ajaxCount = (String)((JavascriptExecutor)
 							driver).executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
-					System.out.println("Ajax count: " + ajaxCount);
 					
 					if(ajaxCount != null && ajaxCount.equals("undefined"))
 					{
@@ -1307,7 +1285,7 @@ public class AppPage extends TestListenerAdapter
 	return xhr;
 })(XMLHttpRequest.prototype);
 */
-		getJavaScriptExecutor().executeScript("!function(t){function n(n){t.ajaxCount++,console.log(\"Ajax count - Monkey patch when triggering ajax send: \"+t.ajaxCount)}function a(n){t.ajaxCount--,console.log(\"Ajax count - Monkey patch when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){var o=this.onreadystatechange;return this.addEventListener(\"readystatechange\",function(){return this.readyState==XMLHttpRequest.DONE&&(a(this),o)?o.apply(this,arguments):void 0},!1),n(this),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(this),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
+		getJavaScriptExecutor().executeScript("(function(b){b.ajaxCount=0;function e(f){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(f){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(g){var f=this.onreadystatechange;this.addEventListener(\"readystatechange\",function(){if(this!=null){if(this.readyState==XMLHttpRequest.DONE){d(this);if(f){return f.apply(this,arguments)}}}},false);e(this);return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d(this);return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
 	}
 
 	public void uploadFile(WebElement element, String fileName)
