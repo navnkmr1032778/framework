@@ -452,6 +452,43 @@ public class AppPage extends TestListenerAdapter
 			}
 		} 
 	}
+	
+	public void selectSilverLightDropDown(WebElement element, String value) throws Exception
+	{
+		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
+		for(WebElement option : options)
+		{
+			if(option.getText().equals(value))
+			{
+				scrolltoElement(option);
+				option.click();
+				return;
+			}
+		}
+		throw new Exception("Value not found exception");
+	}
+	
+	private List<WebElement> _getAllOptionsFromSilverLightDropDown(WebElement element)
+	{
+		String inputId = element.getAttribute("id");
+		String wrapperId = inputId.replaceFirst("_Input$", "");
+		String dropDownId = wrapperId + "_DropDown";
+		element.click();
+		waitForVisible(By.id(dropDownId));
+		List<WebElement> options = driver.findElement(By.id(dropDownId)).findElements(By.tagName("li"));
+		return options;
+	}
+	
+	public List<String> getAllOptionsFromSilverLightDropDown(WebElement element)
+	{
+		List<String> optionText = new ArrayList<String>();
+		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
+		for(WebElement option : options)
+		{
+			optionText.add(option.getText());
+		}
+		return optionText;
+	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) 
 	{
