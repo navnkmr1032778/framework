@@ -1228,10 +1228,12 @@ public class AppPage extends TestListenerAdapter
 					}
 					if (ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
 					{
+						logger.info("Number of open ajax requests: " + ajaxCount);
 						return false;
 					}
 					else
 					{
+						logger.info("No more open ajax requests. Ajax Count: " + ajaxCount);
 						return true;
 					}
 				}
@@ -1243,7 +1245,7 @@ public class AppPage extends TestListenerAdapter
 		}
 		catch (Exception e)
 		{
-			logger.error(e.getMessage());
+			logger.error(ExceptionUtils.getFullStackTrace(e));
 		}
 	}
 
