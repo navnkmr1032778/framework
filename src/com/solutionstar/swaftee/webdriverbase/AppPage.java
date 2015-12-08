@@ -1212,22 +1212,21 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public void waitForAJaxCompletion()
-	{    
-		try {
-
-			ExpectedCondition<Boolean> isLoadingFalse = new
-					ExpectedCondition<Boolean>() {
-
-				public Boolean apply(WebDriver driver) {
-					String ajaxCount = (String)((JavascriptExecutor)
-							driver).executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
-					
-					if(ajaxCount != null && ajaxCount.equals("undefined"))
+	{
+		try
+		{
+			ExpectedCondition<Boolean> isLoadingFalse = new ExpectedCondition<Boolean>()
+			{
+				public Boolean apply(WebDriver driver)
+				{
+					String ajaxCount = (String) ((JavascriptExecutor) driver)
+							.executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
+					if (ajaxCount != null && ajaxCount.equals("undefined"))
 					{
-						monkeyPatch();						
+						monkeyPatch();
+						return true;
 					}
-					
-					if(ajaxCount != null && !ajaxCount.equals("undefined") && Double.parseDouble(ajaxCount) > 0.0d)
+					if (ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
 					{
 						return false;
 					}
@@ -1235,17 +1234,16 @@ public class AppPage extends TestListenerAdapter
 					{
 						return true;
 					}
-					
 				}
-
 			};
-
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS)
+					.ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
-			// logger.error(e.getMessage());  //Commenting out as it throwing unwanted errors in the console which NEED TO BE FIXED 
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -1255,37 +1253,34 @@ public class AppPage extends TestListenerAdapter
  * The actual source code for monkey patch, the compressed version while executing
 (function(xhr) {
 	xhr.ajaxCount = 0;
-	function incrementAjaxCount(xhrInstance) {
+	function incrementAjaxCount() {
 		xhr.ajaxCount++;
-		console.log('Ajax count - Monkey patch when triggering ajax send: ' + xhr.ajaxCount);
+		console.log('Ajax count when triggering ajax send: ' + xhr.ajaxCount);
 	}
-	function decrementAjaxCount(xhrInstance) {
+	function decrementAjaxCount() {
 		xhr.ajaxCount--;
-		console.log('Ajax count - Monkey patch when resolving ajax send: ' + xhr.ajaxCount);
+		console.log('Ajax count when resolving ajax send: ' + xhr.ajaxCount);
 	}
 	var send = xhr.send;
 	xhr.send = function(data) {
-		var rsc = this.onreadystatechange;
 		this.addEventListener('readystatechange', function() { 
-			if (this.readyState == XMLHttpRequest.DONE) {
-				decrementAjaxCount(this);
-				if (rsc) {
-					return rsc.apply(this, arguments);
-				}
+			if(this != null && this.readyState == XMLHttpRequest.DONE) {
+				decrementAjaxCount();
 			}
 		}, false);
-		incrementAjaxCount(this);
+		incrementAjaxCount();
 		return send.apply(this, arguments);
 	};
 	var abort = xhr.abort;
 	xhr.abort = function(data) {
-		decrementAjaxCount(this);
+		decrementAjaxCount();
 		return abort.apply(this, arguments);
 	};
 	return xhr;
 })(XMLHttpRequest.prototype);
 */
-		getJavaScriptExecutor().executeScript("(function(b){b.ajaxCount=0;function e(f){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(f){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(g){var f=this.onreadystatechange;this.addEventListener(\"readystatechange\",function(){if(this!=null){if(this.readyState==XMLHttpRequest.DONE){d(this);if(f){return f.apply(this,arguments)}}}},false);e(this);return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d(this);return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
+		getJavaScriptExecutor().executeScript(
+				"(function(b){b.ajaxCount=0;function e(){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(f){this.addEventListener(\"readystatechange\",function(){if(this!=null&&this.readyState==XMLHttpRequest.DONE){d()}},false);e();return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d();return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
 	}
 
 	public void uploadFile(WebElement element, String fileName)
