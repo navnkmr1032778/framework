@@ -1,8 +1,6 @@
 package com.solutionstar.swaftee.utils;
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
@@ -21,23 +19,10 @@ public class SFTPWrapper
 	private String password = "";
 	private int port = 22;
 	private String baseDirectory = "";
-
-	ChannelSftp channelSftp = null;
-
-	public String getBaseDirectory()
-	{
-		return baseDirectory;
-	}
-
-	public void setBaseDirectory(String baseDirectory)
-	{
-		this.baseDirectory = baseDirectory;
-	}
-
-	Session session = null;
-	ChannelExec channelExec = null;
-
 	private String touchFilename = null;
+	private ChannelSftp channelSftp = null;
+	private Session session = null;
+	private ChannelExec channelExec = null;
 
 	protected static Logger logger = LoggerFactory.getLogger(SFTPWrapper.class);
 
@@ -49,10 +34,25 @@ public class SFTPWrapper
 		this.port = port;
 		this.baseDirectory = baseDirectory;
 	}
+	
+	public String getBaseDirectory()
+	{
+		return baseDirectory;
+	}
+
+	public void setBaseDirectory(String baseDirectory)
+	{
+		this.baseDirectory = baseDirectory;
+	}
+	
+	public String getTouchFilename()
+	{
+		return touchFilename;
+	}
 
 	public void startSession() throws JSchException
 	{
-		if (session == null)
+		if (session == null || !hasSession())
 		{
 			JSch jsch = new JSch();
 			session = jsch.getSession(username, domain, port);
@@ -66,76 +66,116 @@ public class SFTPWrapper
 
 	public void endSession()
 	{
-		if (session != null)
+		if (hasSession())
 		{
 			session.disconnect();
+			session = null;
 		}
 	}
 
 	public boolean hasSession()
 	{
+		if(session == null)
+			return false;
 		return session.isConnected();
+	}
+	
+	public boolean hasChannelExec()
+	{
+		if(channelExec == null)
+			return false;
+		return channelExec.isConnected();
 	}
 
 	public void startExecSession() throws JSchException
 	{
-		startSession();
-		channelExec = (ChannelExec) session.openChannel("exec");
+		if(!hasChannelExec())
+		{
+			startSession();
+			channelExec = (ChannelExec) session.openChannel("exec");
+		}
 	}
 
 	public void endExecSession() throws JSchException
 	{
-		if (channelExec != null)
+		if (hasChannelExec())
 		{
 			channelExec.disconnect();
+			channelExec = null;
 		}
 		endSession();
 	}
 
-	public void createTouchFile() throws JSchException, IOException
+	private String execCommand(String command, boolean forceClose) throws Exception
 	{
+		StringBuilder result = new StringBuilder();
 		startExecSession();
-		InputStream in = channelExec.getInputStream();
-		touchFilename = "" + System.currentTimeMillis();
-		channelExec.setCommand("cd " + baseDirectory + ";touch " + touchFilename);
+		BufferedReader in=new BufferedReader(new InputStreamReader(channelExec.getInputStream()));
+		channelExec.setCommand(command);
 		channelExec.connect();
-		endExecSession();
+		String msg=null;
+		while((msg=in.readLine())!=null)
+		{
+		  result.append(msg);
+		}
+		int exitStatus = channelExec.getExitStatus();
+		channelExec.disconnect();
+		if(forceClose)
+			endExecSession();
+		System.out.println(result.toString());
+		logExitStatus(command, exitStatus);
+		return result.toString();
 	}
 
-	public void updateTouchFile() throws JSchException, IOException
+	public void createNewTouchFile() throws Exception
+	{
+		createNewTouchFile(false);
+	}
+	
+	public String createNewTouchFile(boolean forceClose) throws Exception
+	{
+		deleteTouchFile(forceClose);
+		updateTouchFile(forceClose);
+		return touchFilename;
+	}
+
+	public void updateTouchFile(boolean forceClose) throws Exception
+	{
+		if (touchFilename == null)
+		{
+			touchFilename = "" + System.currentTimeMillis();
+		}
+		execCommand("cd " + baseDirectory + ";touch " + touchFilename, forceClose);
+	}
+
+	public void deleteTouchFile(boolean forceClose) throws Exception
 	{
 		if (touchFilename != null)
 		{
+			execCommand("cd " + baseDirectory + ";rm " + touchFilename, forceClose);
+			touchFilename = null;
+		}
+	}
 
+	private void logExitStatus(String command, int exitStatus) throws Exception
+	{
+		if (exitStatus < 0)
+		{
+			logger.info("[User Log] SFTP command '" + command + "' execution done, but exit status not set!");
+		}
+		else if (exitStatus > 0)
+		{
+			throw new Exception("[User Exception] SFTP command '" + command + "' execution done, but with error! Error code: " + exitStatus);
 		}
 		else
 		{
-			createTouchFile();
+			logger.info("[User Log] SFTP command '" + command + "' execution done successfully!");
 		}
 	}
 
-	public void deleteTouchFile() throws Exception
+	public void createTarFile() throws Exception
 	{
-		if (touchFilename != null)
-		{
-			startExecSession();
-			channelExec.setCommand("cd " + baseDirectory + ";rm " + touchFilename);
-			channelExec.connect();
-			int exitStatus = channelExec.getExitStatus();
-			endExecSession();
-			touchFilename = null;
-			if (exitStatus < 0)
-			{
-				System.out.println("Done, but exit status not set!");
-			}
-			else if (exitStatus > 0)
-			{
-				throw new Exception("Done, but with error!");
-			}
-			else
-			{
-				System.out.println("Done!");
-			}
-		}
+		execCommand("cd " + baseDirectory + ";tar -cf " + touchFilename + ".tar --newer ./" + touchFilename + " *.csv", true);
+		execCommand("cd " + baseDirectory + ";tar -cf " + touchFilename + ".tar.gz -z "+ touchFilename + ".tar", true);
 	}
 }
