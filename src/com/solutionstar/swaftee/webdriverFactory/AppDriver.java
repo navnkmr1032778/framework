@@ -199,7 +199,7 @@ public class AppDriver extends TestListenerAdapter {
 	@DataProvider(name = "GenericDataProvider")
 	public Object[][] genericDataProvider(Method methodName) throws IOException {
 		logger.info("Method Name :" + methodName.getName());
-		Reader reader = new FileReader("./resources/Testdata/"+ methodName.getName() + ".csv");
+		Reader reader = new FileReader("./resources/testdata/"+ methodName.getName() + ".csv");
 		List<String[]> scenarioData = new CSVReader(reader).readAll();
 		Object[][] data = new Object[scenarioData.size() - 1][1];
 		Iterator<String[]> it = scenarioData.iterator();
