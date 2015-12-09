@@ -71,6 +71,7 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
+		monkeyPatch();
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
@@ -873,7 +874,8 @@ public class AppPage extends TestListenerAdapter
 	 */
 	public void refresh() 
 	{    
-		this.driver.navigate().refresh();   
+		this.driver.navigate().refresh(); 
+		monkeyPatch();
 	}
 
 	public void closeWindow()
@@ -1247,46 +1249,78 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public void waitForAJaxCompletion()
-	{    
-		//Attempt to save us from Stale Element reference exceptions.
-		sleep(500);
-		try {
-
-			ExpectedCondition<Boolean> isLoadingFalse = new
-					ExpectedCondition<Boolean>() {
-
-				public Boolean apply(WebDriver driver) {
-
-					boolean ajaxCallBack = Boolean.parseBoolean(((JavascriptExecutor)
-							driver).executeScript("return Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack();").toString());
-					Object obj = ((JavascriptExecutor)
-							driver).executeScript("return !window.ajaxActive");
-
-					Object jQueryActive = ((JavascriptExecutor)
-							driver).executeScript("return jQuery.active;");
-
-					if (obj != null && obj.toString().equals("true") && !ajaxCallBack &&
-							jQueryActive.toString().equals("0"))
-					{    
-						return Boolean.valueOf(true);
+	{
+		try
+		{
+			ExpectedCondition<Boolean> isLoadingFalse = new ExpectedCondition<Boolean>()
+			{
+				public Boolean apply(WebDriver driver)
+				{
+					String ajaxCount = (String) ((JavascriptExecutor) driver)
+							.executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
+					if (ajaxCount != null && ajaxCount.equals("undefined"))
+					{
+						monkeyPatch();
+						return true;
+					}
+					if (ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
+					{
+						logger.info("Number of open ajax requests: " + ajaxCount);
+						return false;
 					}
 					else
 					{
-						return false;
+						logger.info("No more open ajax requests. Ajax Count: " + ajaxCount);
+						return true;
 					}
 				}
-
 			};
-
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS)
+					.ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
-		} 
-		catch (Exception e) 
+		}
+		catch (Exception e)
 		{
-			// logger.error(e.getMessage());  //Commenting out as it throwing unwanted errors in the console which NEED TO BE FIXED 
+			logger.error(ExceptionUtils.getFullStackTrace(e));
 		}
 	}
 
+	public void monkeyPatch()
+	{	
+/*
+ * The actual source code for monkey patch, the compressed version while executing
+(function(xhr) {
+	xhr.ajaxCount = 0;
+	function incrementAjaxCount() {
+		xhr.ajaxCount++;
+		console.log('Ajax count when triggering ajax send: ' + xhr.ajaxCount);
+	}
+	function decrementAjaxCount() {
+		xhr.ajaxCount--;
+		console.log('Ajax count when resolving ajax send: ' + xhr.ajaxCount);
+	}
+	var send = xhr.send;
+	xhr.send = function(data) {
+		this.addEventListener('readystatechange', function() { 
+			if(this != null && this.readyState == XMLHttpRequest.DONE) {
+				decrementAjaxCount();
+			}
+		}, false);
+		incrementAjaxCount();
+		return send.apply(this, arguments);
+	};
+	var abort = xhr.abort;
+	xhr.abort = function(data) {
+		decrementAjaxCount();
+		return abort.apply(this, arguments);
+	};
+	return xhr;
+})(XMLHttpRequest.prototype);
+*/
+		getJavaScriptExecutor().executeScript(
+				"(function(b){b.ajaxCount=0;function e(){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(f){this.addEventListener(\"readystatechange\",function(){if(this!=null&&this.readyState==XMLHttpRequest.DONE){d()}},false);e();return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d();return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
+	}
 
 	public void uploadFile(WebElement element, String fileName)
 	{
