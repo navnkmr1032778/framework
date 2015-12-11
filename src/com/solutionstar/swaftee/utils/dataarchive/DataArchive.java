@@ -1,5 +1,8 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Data archive interface. All data archiving implementation classes 
  * need to implement this interface.
@@ -32,6 +35,8 @@ public interface DataArchive {
      * @throws Exception 
      */
     public void clearData() throws Exception;
+    
+    public List<HashMap<String, String>> retrieveData(String filename) throws Exception;
     
 }
 
