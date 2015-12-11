@@ -21,13 +21,13 @@ import com.solutionstar.swaftee.utils.CommonUtils;
  * 
  * @author Allen Godfrey
  */
-public class XLSDataArchiveBase extends DataArchiveBase
+public class SpreadsheetDataArchiveBase extends DataArchiveBase
 {
 
 	/**
 	 * logging object
 	 */
-	private static Logger log = Logger.getLogger(XLSDataArchiveBase.class);
+	private static Logger log = Logger.getLogger(SpreadsheetDataArchiveBase.class);
 
 	/**
 	 * Save the data to a file.
@@ -73,7 +73,7 @@ public class XLSDataArchiveBase extends DataArchiveBase
 		List<String> rowData = new ArrayList<String>();
 		for (int i = 0; i < row.getLastCellNum(); i++)
 		{
-			Cell cell = row.getCell(0);
+			Cell cell = row.getCell(i);
 			switch (cell.getCellType())
 			{
 			case Cell.CELL_TYPE_NUMERIC:
@@ -89,9 +89,8 @@ public class XLSDataArchiveBase extends DataArchiveBase
 		return rowData;
 	}
 
-	public List<HashMap<String, String>> retrieveData(String filename) throws Exception
+	public List<HashMap<String, String>> retrieveData(Workbook workbook) throws Exception
 	{
-		Workbook workbook = new XSSFWorkbook(new FileInputStream(filename));
 		Sheet sheet = workbook.getSheetAt(0);
 		Row headerRow = sheet.getRow(0);
 		List<String> header = getRowData(headerRow);
