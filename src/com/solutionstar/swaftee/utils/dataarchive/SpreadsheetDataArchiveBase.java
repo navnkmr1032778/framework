@@ -96,7 +96,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		List<String> header = getRowData(headerRow);
 		List<HashMap<String, String>> outputData = new ArrayList<HashMap<String, String>>();
 		int totalRows = sheet.getLastRowNum();
-		for (int i = 1; i < totalRows; i++)
+		for (int i = 1; i <= totalRows; i++)
 		{
 			List<String> rowData = getRowData(sheet.getRow(i));
 			int j = 0;
