@@ -4,8 +4,12 @@ package com.solutionstar.swaftee.utils.dataarchive;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import com.solutionstar.swaftee.utils.CSVParserUtils;
 
 /**
  * Data archive base class for archiving to any kind of delimited files.
@@ -17,7 +21,9 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	/**
 	 *  logging object
 	 */
-	private static Logger log = Logger.getLogger(DelimitedDataArchiveBase.class);
+	private static Logger logger = Logger.getLogger(DelimitedDataArchiveBase.class);
+	
+	private CSVParserUtils csvUtils = new CSVParserUtils();
 
 	/**
 	 * Save the data to a file.
@@ -59,7 +65,7 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	 */
 	public void saveDataCreateNewFile(String filename, String delimiter) throws Exception {
 
-		log.debug("Attempting save data to filename in csv format (create new file): " + filename);
+		logger.debug("Attempting save data to filename in csv format (create new file): " + filename);
 
 		saveData(filename, false, delimiter);
 
@@ -75,12 +81,15 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	 */
 	public void saveDataAppendToFile(String filename, String delimiter) throws Exception {
 
-		log.debug("Attempting save data to filename in csv format (append to file): " + filename);
+		logger.debug("Attempting save data to filename in csv format (append to file): " + filename);
 
 		saveData(filename, true, delimiter);
 
 	}
-
+	
+	public List<HashMap<String, String>> retrieveData(String fileName) {
+		return csvUtils.getDataFromCSV(fileName);
+	}
 
 }
 

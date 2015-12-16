@@ -1,7 +1,10 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
-import org.apache.log4j.Logger;
+import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -10,7 +13,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * 
  * @author Allen Godfrey
  */
-public class XLSXDataArchive extends XLSDataArchiveBase implements DataArchive {
+public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataArchive {
 
 	/**
 	 *  logging object
@@ -35,6 +38,19 @@ public class XLSXDataArchive extends XLSDataArchiveBase implements DataArchive {
 
 		saveData(new XSSFWorkbook(), filename);
 
+	}
+	
+	
+	/**
+	 * Retrieve data from the given excel file
+	 * 
+	 * @param excel filename
+	 * @return List<HashMap<String, String>> - All the rows in excel, each row as a hashmap
+	 * @throws Exception
+	 */
+	public List<HashMap<String, String>> retrieveData(String filename) throws Exception
+	{
+		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)));
 	}
 
 }

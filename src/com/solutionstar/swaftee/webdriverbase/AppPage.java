@@ -819,23 +819,23 @@ public class AppPage extends TestListenerAdapter
 		this.driver.switchTo().window(handle);
 	}
 
-	public String getvalueUsingJavaScript(String by, String ele)
+	public String getValueUsingJavaScript(String by, String ele)
 	{
 		String val = null;
 		try{
 			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
 			{
 			case ID:
-				val = (String) getJavaScriptExecutor().executeScript("document.getElementById('"+ele+"').value");
+				val = (String) getJavaScriptExecutor().executeScript("return document.getElementById('"+ele+"').value");
 				break;
 			case CLASS:
-				val = (String) getJavaScriptExecutor().executeScript("document.getElementsByClassName('"+ele+"').value");
+				val = (String) getJavaScriptExecutor().executeScript("return document.getElementsByClassName('"+ele+"').value");
 				break;
 			case TAGNAME:
-				val = (String) getJavaScriptExecutor().executeScript("document.getElementsByTagName('"+ele+"').value");
+				val = (String) getJavaScriptExecutor().executeScript("return document.getElementsByTagName('"+ele+"').value");
 				break;
 			case NAME:
-				val = (String) getJavaScriptExecutor().executeScript("document.getElementsByName('"+ele+"').value");
+				val = (String) getJavaScriptExecutor().executeScript("return document.getElementsByName('"+ele+"').value");
 				break;					
 			}
 			return val;
