@@ -996,6 +996,17 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	/**
+	 * check HTML validity of element
+	 * @param locator
+	 */
+	public boolean checkValidityOfElement(WebElement e)
+	{
+		boolean res=(boolean)getJavaScriptExecutor().executeScript("return arguments[0].checkValidity()",e);
+		logger.info("check validity: "+res);
+		return res;
+	}
+	
 	public void waitForElementToDisappear(By locator) 
 	{	
 		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
