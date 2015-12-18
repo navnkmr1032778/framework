@@ -1307,7 +1307,8 @@ public class AppPage extends TestListenerAdapter
 		console.log('Ajax count when triggering ajax send: ' + xhr.ajaxCount);
 	}
 	function decrementAjaxCount() {
-		xhr.ajaxCount--;
+		if(xhr.ajaxCount > 0)
+			xhr.ajaxCount--;
 		console.log('Ajax count when resolving ajax send: ' + xhr.ajaxCount);
 	}
 	var send = xhr.send;
@@ -1333,7 +1334,7 @@ public class AppPage extends TestListenerAdapter
 		if (ajaxCount != null && ajaxCount.equals("undefined"))
 		{
 			getJavaScriptExecutor().executeScript(
-					"(function(b){b.ajaxCount=0;function e(){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(f){this.addEventListener(\"readystatechange\",function(){if(this!=null&&this.readyState==XMLHttpRequest.DONE){d()}},false);e();return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d();return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
+					"!function(t){function n(){t.ajaxCount++,console.log(\"Ajax count when triggering ajax send: \"+t.ajaxCount)}function a(){t.ajaxCount>0&&t.ajaxCount--,console.log(\"Ajax count when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){return this.addEventListener(\"readystatechange\",function(){null!=this&&this.readyState==XMLHttpRequest.DONE&&a()},!1),n(),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
 		}
 	}
 

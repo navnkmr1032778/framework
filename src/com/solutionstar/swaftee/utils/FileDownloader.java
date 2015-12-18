@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
@@ -126,6 +127,20 @@ public class FileDownloader {
  
         return mimicWebDriverCookieStore;
     }
+    
+	public String getDownloadableFileNameUsingHref(WebElement element) throws Exception
+	{
+		return getDownloadableFileName(element, "href");
+	}
+
+	private String getDownloadableFileName(WebElement element, String attribute) throws Exception
+	{
+		String fileToDownloadLocation = element.getAttribute(attribute);
+		if (fileToDownloadLocation.trim().equals(""))
+			throw new NullPointerException("The element you have specified does not link to anything!");
+		URL fileToDownload  = new URL(fileToDownloadLocation);
+		return fileToDownload.getFile();
+	}
  
     /**
      * Perform the file/image download.
@@ -168,7 +183,7 @@ public class FileDownloader {
     	try {
     		// read this file into InputStream
     		inputStream = response.getEntity().getContent();
-     
+	
     		// write the inputStream to a FileOutputStream
     		outputStream = 
                         new FileOutputStream(downloadedFile);
