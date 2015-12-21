@@ -1275,18 +1275,16 @@ public class AppPage extends TestListenerAdapter
 					}
 					if (ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
 					{
-						logger.info("Number of open ajax requests: " + ajaxCount);
 						return false;
 					}
 					else
 					{
-						logger.info("No more open ajax requests. Ajax Count: " + ajaxCount);
 						return true;
 					}
 				}
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS)
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(500, TimeUnit.MILLISECONDS)
 					.ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		}
