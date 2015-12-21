@@ -71,7 +71,6 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
-		monkeyPatch();
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
@@ -1330,8 +1329,13 @@ public class AppPage extends TestListenerAdapter
 	return xhr;
 })(XMLHttpRequest.prototype);
 */
-		getJavaScriptExecutor().executeScript(
-				"!function(t){function n(){t.ajaxCount++,console.log(\"Ajax count when triggering ajax send: \"+t.ajaxCount)}function a(){t.ajaxCount>0&&t.ajaxCount--,console.log(\"Ajax count when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){return this.addEventListener(\"readystatechange\",function(){null!=this&&this.readyState==XMLHttpRequest.DONE&&a()},!1),n(),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
+		String ajaxCount = (String) ((JavascriptExecutor) driver)
+				.executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
+		if (ajaxCount != null && ajaxCount.equals("undefined"))
+		{
+			getJavaScriptExecutor().executeScript(
+					"!function(t){function n(){t.ajaxCount++,console.log(\"Ajax count when triggering ajax send: \"+t.ajaxCount)}function a(){t.ajaxCount>0&&t.ajaxCount--,console.log(\"Ajax count when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){return this.addEventListener(\"readystatechange\",function(){null!=this&&this.readyState==XMLHttpRequest.DONE&&a()},!1),n(),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
+		}
 	}
 
 	public void uploadFile(WebElement element, String fileName)
