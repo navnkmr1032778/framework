@@ -458,10 +458,12 @@ public class AppPage extends TestListenerAdapter
 		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
 		for(WebElement option : options)
 		{
+			
 			if(option.getText().equals(value))
 			{
 				scrolltoElement(option);
 				option.click();
+				sleep(500);
 				return;
 			}
 		}
@@ -475,6 +477,7 @@ public class AppPage extends TestListenerAdapter
 		String dropDownId = wrapperId + "_DropDown";
 		element.click();
 		waitForVisible(By.id(dropDownId));
+		sleep(500); //for the animation to end
 		List<WebElement> options = driver.findElement(By.id(dropDownId)).findElements(By.tagName("li"));
 		return options;
 	}
@@ -1099,11 +1102,13 @@ public class AppPage extends TestListenerAdapter
 	public void scrolltoElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(false)",element);
+		//sleep(500);
 	}
 
 	public void scrollTopToElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(true)",element);
+		//sleep(500);
 	}
 
 	public void rightClick(By locator)
