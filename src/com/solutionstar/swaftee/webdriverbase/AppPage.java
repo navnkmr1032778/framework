@@ -464,6 +464,7 @@ public class AppPage extends TestListenerAdapter
 			{
 				scrolltoElement(option);
 				option.click();
+				sleep(500);
 				return;
 			}
 		}
@@ -475,7 +476,6 @@ public class AppPage extends TestListenerAdapter
 		String inputId = element.getAttribute("id");
 		String wrapperId = inputId.replaceFirst("_Input$", "");
 		String dropDownId = wrapperId + "_DropDown";
-		logger.info(String.valueOf(isElementPresentAndDisplayed(By.id(dropDownId))));
 		element.click();
 		waitForVisible(By.id(dropDownId));
 		sleep(500); //for the animation to end
@@ -1103,11 +1103,13 @@ public class AppPage extends TestListenerAdapter
 	public void scrolltoElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(false)",element);
+		//sleep(500);
 	}
 
 	public void scrollTopToElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(true)",element);
+		//sleep(500);
 	}
 
 	public void rightClick(By locator)
