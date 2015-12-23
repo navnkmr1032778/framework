@@ -71,7 +71,6 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
-		monkeyPatch();
 		//android does not supports maximizeWindow;
 		if(baseDriverHelper.ismobile()==false)
 			maximizeWindow(); 
@@ -459,10 +458,12 @@ public class AppPage extends TestListenerAdapter
 		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
 		for(WebElement option : options)
 		{
+			
 			if(option.getText().equals(value))
 			{
 				scrolltoElement(option);
 				option.click();
+				sleep(500);
 				return;
 			}
 		}
@@ -476,6 +477,7 @@ public class AppPage extends TestListenerAdapter
 		String dropDownId = wrapperId + "_DropDown";
 		element.click();
 		waitForVisible(By.id(dropDownId));
+		sleep(500); //for the animation to end
 		List<WebElement> options = driver.findElement(By.id(dropDownId)).findElements(By.tagName("li"));
 		return options;
 	}
@@ -1100,11 +1102,13 @@ public class AppPage extends TestListenerAdapter
 	public void scrolltoElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(false)",element);
+		//sleep(500);
 	}
 
 	public void scrollTopToElement(WebElement element) 
 	{
 		getJavaScriptExecutor().executeScript("arguments[0].scrollIntoView(true)",element);
+		//sleep(500);
 	}
 
 	public void rightClick(By locator)
@@ -1276,18 +1280,16 @@ public class AppPage extends TestListenerAdapter
 					}
 					if (ajaxCount != null && Double.parseDouble(ajaxCount) > 0.0d)
 					{
-						logger.info("Number of open ajax requests: " + ajaxCount);
 						return false;
 					}
 					else
 					{
-						logger.info("No more open ajax requests. Ajax Count: " + ajaxCount);
 						return true;
 					}
 				}
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS)
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(500, TimeUnit.MILLISECONDS)
 					.ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		}
@@ -1308,7 +1310,8 @@ public class AppPage extends TestListenerAdapter
 		console.log('Ajax count when triggering ajax send: ' + xhr.ajaxCount);
 	}
 	function decrementAjaxCount() {
-		xhr.ajaxCount--;
+		if(xhr.ajaxCount > 0)
+			xhr.ajaxCount--;
 		console.log('Ajax count when resolving ajax send: ' + xhr.ajaxCount);
 	}
 	var send = xhr.send;
@@ -1329,8 +1332,13 @@ public class AppPage extends TestListenerAdapter
 	return xhr;
 })(XMLHttpRequest.prototype);
 */
-		getJavaScriptExecutor().executeScript(
-				"(function(b){b.ajaxCount=0;function e(){b.ajaxCount++;console.log(\"Ajax count when triggering ajax send: \"+b.ajaxCount)}function d(){b.ajaxCount--;console.log(\"Ajax count when resolving ajax send: \"+b.ajaxCount)}var a=b.send;b.send=function(f){this.addEventListener(\"readystatechange\",function(){if(this!=null&&this.readyState==XMLHttpRequest.DONE){d()}},false);e();return a.apply(this,arguments)};var c=b.abort;b.abort=function(f){d();return c.apply(this,arguments)};return b})(XMLHttpRequest.prototype);");
+		String ajaxCount = (String) ((JavascriptExecutor) driver)
+				.executeScript("return '' + XMLHttpRequest.prototype.ajaxCount");
+		if (ajaxCount != null && ajaxCount.equals("undefined"))
+		{
+			getJavaScriptExecutor().executeScript(
+					"!function(t){function n(){t.ajaxCount++,console.log(\"Ajax count when triggering ajax send: \"+t.ajaxCount)}function a(){t.ajaxCount>0&&t.ajaxCount--,console.log(\"Ajax count when resolving ajax send: \"+t.ajaxCount)}t.ajaxCount=0;var e=t.send;t.send=function(t){return this.addEventListener(\"readystatechange\",function(){null!=this&&this.readyState==XMLHttpRequest.DONE&&a()},!1),n(),e.apply(this,arguments)};var o=t.abort;return t.abort=function(t){return a(),o.apply(this,arguments)},t}(XMLHttpRequest.prototype);");
+		}
 	}
 
 	public void uploadFile(WebElement element, String fileName)
