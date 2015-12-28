@@ -233,7 +233,7 @@ public class connectDB extends DatabaseConnection
 		try{
 			for(int i=1; i <= numberOfColumns; i++)
 			{
-				rowHash.put(rsmd.getColumnName(i), row.getArray(i).toString());
+				rowHash.put(rsmd.getColumnName(i), row.getString(i));
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -247,7 +247,7 @@ public class connectDB extends DatabaseConnection
 		try{
 			for(int i=0; i < columnLength; i++)
 			{
-				tmpArray[i] = row.getArray(i+1).toString();
+				tmpArray[i] = row.getString(i+1);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
