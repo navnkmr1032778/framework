@@ -313,8 +313,7 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public void clearAndType(WebElement element, String text) 
-	{
-		
+	{		
 		element.clear();
 		element.sendKeys(text);
 	}
@@ -326,10 +325,7 @@ public class AppPage extends TestListenerAdapter
 	
 	public void hoverOverElementUsingJS(WebElement element)
 	{
-	
-		
 		String js = "var eventObj=document.createEvent('MouseEvent');eventObj.initMouseEvent('mouseover', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, false, 0, null);arguments[0].dispatchEvent(eventObj);"; 
-
 		getJavaScriptExecutor().executeScript(js,element);
 		sleep(1000);
 	}
@@ -870,6 +866,7 @@ public class AppPage extends TestListenerAdapter
 			switch (JavaScriptSelector.valueOf(by.toUpperCase())) 
 			{
 			case ID:
+				System.out.println(("document.getElementById('"+ele+"').value = \""+ val + "\"" ));
 				getJavaScriptExecutor().executeScript("document.getElementById('"+ele+"').value = \""+ val + "\"" );
 				break;
 			case CLASS:
