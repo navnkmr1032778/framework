@@ -314,10 +314,26 @@ public class AppPage extends TestListenerAdapter
 
 	public void clearAndType(WebElement element, String text) 
 	{
+		
 		element.clear();
 		element.sendKeys(text);
 	}
 
+	public void setText(WebElement element,String text)
+	{
+		getJavaScriptExecutor().executeScript("var element=null;var text=arguments[1];$(arguments[0]).val(text);", element, text);
+	}
+	
+	public void hoverAndclickElement(WebElement element)
+	{
+	
+		
+		String js = "var eventObj=document.createEvent('MouseEvent');eventObj.initMouseEvent('mouseover', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, false, 0, null);arguments[0].dispatchEvent(eventObj);"; 
+
+		getJavaScriptExecutor().executeScript(js,element);
+		sleep(1000);
+	}
+	
 	public void clearAttrValueUsingElementID(String elementId)
 	{
 		String query = "document.getElementById('"+elementId+"').value = ''";
