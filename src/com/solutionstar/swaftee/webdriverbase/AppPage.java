@@ -319,12 +319,12 @@ public class AppPage extends TestListenerAdapter
 		element.sendKeys(text);
 	}
 
-	public void setText(WebElement element,String text)
+	public void setTextUsingJS(WebElement element,String text)
 	{
-		getJavaScriptExecutor().executeScript("var element=null;var text=arguments[1];$(arguments[0]).val(text);", element, text);
+		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, text);
 	}
 	
-	public void hoverAndclickElement(WebElement element)
+	public void hoverOverElementUsingJS(WebElement element)
 	{
 	
 		
