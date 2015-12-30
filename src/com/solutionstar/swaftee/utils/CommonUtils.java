@@ -307,8 +307,8 @@ public class CommonUtils {
 		try {	 
 			date = formatter.parse(dateString);
 
-		} catch (ParseException e) {
-			logger.error(e.getMessage());
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getFullStackTrace(e));
 		}
 		return date;
 	}
