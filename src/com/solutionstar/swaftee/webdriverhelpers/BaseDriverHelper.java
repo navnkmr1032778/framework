@@ -573,7 +573,7 @@ public class BaseDriverHelper {
 
 	public String getGridPlatform()
 	{
-		return System.getProperty("gridplatform").toLowerCase(Locale.ENGLISH);
+		return System.getProperty("gridplatform", "windows").toLowerCase(Locale.ENGLISH);
 	}
 
 	public String getMobilePlatform()
