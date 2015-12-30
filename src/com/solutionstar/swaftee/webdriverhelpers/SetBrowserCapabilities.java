@@ -1,12 +1,16 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
@@ -44,7 +48,30 @@ public class SetBrowserCapabilities {
             LoggingPreferences loggingprefs = new LoggingPreferences();
             loggingprefs.enable(LogType.BROWSER, Level.ALL);
             cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
-	   
+            ChromeOptions options = new ChromeOptions();
+			options.addArguments("--disable-extensions");
+			options.addArguments("--session-override=true");
+			String windowSize = System.getProperty("windowSize","");
+			
+			if(windowSize.matches("^\\d+,\\d+$"))
+			{
+				options.addArguments("--window-size=" + windowSize);
+			}
+			
+			String emulDeviceName = System.getProperty("emulationDeviceName","windows");
+			if(!emulDeviceName.equals("windows"))
+			{
+				Map<String, String> mobileEmulation = new HashMap<String, String>();
+				mobileEmulation.put("deviceName", emulDeviceName);
+				Map<String, Object> chromeOptions = new HashMap<String, Object>();
+				chromeOptions.put("mobileEmulation", mobileEmulation);
+				cap.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+			}
+			else
+			{
+				cap.setCapability(ChromeOptions.CAPABILITY, options);
+			}
+			cap.setBrowserName("chrome");
    		}catch(Exception e){
    			e.printStackTrace();
    		}
@@ -57,7 +84,8 @@ public class SetBrowserCapabilities {
    			final FirefoxProfile profile = new FirefoxProfile();
             JavaScriptError.addExtension(profile);
             cap = DesiredCapabilities.firefox();
-            cap.setCapability(FirefoxDriver.PROFILE, profile);     
+            cap.setCapability(FirefoxDriver.PROFILE, profile);
+            cap.setBrowserName("firefox");
    		}catch(Exception e){
    			e.printStackTrace();
    		}
@@ -82,7 +110,10 @@ public class SetBrowserCapabilities {
    				return null;
    			}
    			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
-			cap = DesiredCapabilities.internetExplorer();   	     
+			cap = DesiredCapabilities.internetExplorer();
+			cap.setCapability(InternetExplorerDriver.
+					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
+			cap.setBrowserName("InternetExplorer");
    		}catch(Exception e){
    			e.printStackTrace();
    		}

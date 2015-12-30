@@ -71,9 +71,10 @@ public class AppPage extends TestListenerAdapter
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
+		String windowSize = System.getProperty("windowSize","");
 		//android does not supports maximizeWindow;
-		if(baseDriverHelper.ismobile()==false)
-			maximizeWindow(); 
+		if(windowSize.equals("") && !baseDriverHelper.ismobile())
+			maximizeWindow();
 		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("windows"))
 			mobileEmulationExecution=true;
 	}
