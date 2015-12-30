@@ -59,21 +59,28 @@ public class ZephyrUtils
 			}
 		}
 	}
+	
+	public static Map<String, Object> getCycleDetails()
+	{
+		Client client = ClientBuilder.newClient();
+		Response response = client.target(jiraServer + "rest/zapi/latest/cycle/" + cycleId)
+				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
+		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
+		Map<String, Object> responseMap = utils.convertJSONToMap(response.readEntity(String.class));
+		return responseMap;
+	}
+	
+	public static String getTestCycleURL()
+	{
+		String url = jiraServer + "/secure/enav/#?query=cycleName%20in%20(\"" + getCycleDetails().get("name").toString() + "\")";
+		return url;
+	}
 
 	public static HashMap<String, String> createNewTestExecution(String[] testCases)
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
-
 		Client client = ClientBuilder.newClient();
-
-		/*
-		 * Get project id
-		 */
-		Response response = client.target(jiraServer + "rest/zapi/latest/cycle/" + cycleId)
-				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth).get();
-
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
-		Map<String, Object> responseMap = utils.convertJSONToMap(response.readEntity(String.class));
+		Map<String, Object> responseMap = getCycleDetails();
 		Object projectId = responseMap.get("projectId");
 
 		/*
@@ -86,7 +93,7 @@ public class ZephyrUtils
 		hm.put("projectId", String.valueOf(Double.valueOf(projectId.toString()).intValue()));
 		hm.put("methodId", String.valueOf(1));
 
-		response = client.target(jiraServer + "rest/zapi/latest/execution/addTestsToCycle")
+		Response response = client.target(jiraServer + "rest/zapi/latest/execution/addTestsToCycle")
 				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
 				.post(Entity.json(utils.objToJson(hm)));
 

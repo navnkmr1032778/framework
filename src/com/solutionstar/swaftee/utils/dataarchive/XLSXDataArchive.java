@@ -34,7 +34,7 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	 * @throws Exception 
 	 */
 	public void saveData(String filename) throws Exception {
-		log.debug("Attempting save data to filename: " + filename);
+		log.info("Attempting save data to filename: " + filename);
 
 		saveData(new XSSFWorkbook(), filename);
 

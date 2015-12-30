@@ -66,7 +66,7 @@ public class Zephyr
 		// consolidated result:
 
 		StringBuilder output2 = new StringBuilder();
-		output2.append("<b>Execution Summary:</b><br /><table border=1>");
+		output2.append("Test Execution summary in <a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a><br /><b>Execution Summary:</b><br /><table border=1>");
 
 		if (countHash.containsKey("PASS"))
 		{

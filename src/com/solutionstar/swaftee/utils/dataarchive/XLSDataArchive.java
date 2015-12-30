@@ -33,7 +33,7 @@ public class XLSDataArchive extends SpreadsheetDataArchiveBase implements DataAr
 	 * @throws Exception 
 	 */
 	public void saveData(String filename) throws Exception {
-		log.debug("Attempting save data to filename: " + filename);
+		log.info("Attempting save data to filename: " + filename);
 
 		saveData(new HSSFWorkbook(), filename);
 
