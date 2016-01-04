@@ -387,10 +387,10 @@ public class CSVParserUtils {
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
-			logger.error("CSV file not found - getDataFromCSV() - "
-					+ e.getMessage());
+			logger.error("CSV file not found " +fileName+
+					 e.getMessage());
 		} catch (IOException e) {
-			logger.error("IO Exception - getDataFromCSV() - " + e.getMessage());
+			logger.error("IO Exception when reading " +fileName+ e.getMessage());
 		}
 		return list;
 	}
@@ -402,7 +402,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+			logger.error("Error while writing to " +fileName+ e.getMessage()); 
 		}
 	}
 	
@@ -415,7 +415,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+			logger.error("Error while appending to " +fileName+ e.getMessage()); 
 		}
 	}
 	
