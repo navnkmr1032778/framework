@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -379,18 +380,22 @@ public class CSVParserUtils {
 			String[] header = data.remove(0);
 			for (String[] row : data) {
 				HashMap<String, String> rowEntries = new HashMap<String, String>();
+				if(row.length!=header.length)
+					throw new Exception("Column entry missing: Header - "+header.toString()+"::Row - "+row.toString());
 				for (int i = 0; i < header.length; i++) {
+					String entry = row[i];
 					rowEntries
-							.put(header[i], ((row[i].equals("") && sendNullForBlanks) ? null : row[i]));
+							.put(header[i], ((entry.equals("") && sendNullForBlanks) ? null : entry));
 				}
 				list.add(rowEntries);
 			}
 			reader.close();
 		} catch (FileNotFoundException e) {
-			logger.error("CSV file not found - getDataFromCSV() - "
-					+ e.getMessage());
-		} catch (IOException e) {
-			logger.error("IO Exception - getDataFromCSV() - " + e.getMessage());
+			logger.error("CSV file not found " +fileName+
+					 ExceptionUtils.getFullStackTrace(e));
+		} catch (Exception e) {
+			
+			logger.error("Exception when reading " +fileName+ ExceptionUtils.getFullStackTrace(e));
 		}
 		return list;
 	}
@@ -402,7 +407,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+			logger.error("Error while writing to " +fileName+ ExceptionUtils.getFullStackTrace(e)); 
 		}
 	}
 	
@@ -415,7 +420,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error in writeToCSVFile() - " + e.getMessage()); 
+			logger.error("Error while appending to " +fileName+ ExceptionUtils.getFullStackTrace(e)); 
 		}
 	}
 	
@@ -424,7 +429,7 @@ public class CSVParserUtils {
 			Set<String> header = data.get(0).keySet();
 			writeListHashMapToCSV(fileName, data, header.toArray(new String[header.size()]));
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
 		}
 	}
 	
@@ -452,7 +457,7 @@ public class CSVParserUtils {
 			}
 			writeToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + e.getMessage()); 
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
 		}
 	}
 
