@@ -318,12 +318,19 @@ public class CommonUtils {
 		return formatter.format(d);
 	}
 
-	public String getDateToday()
+		public String getDateToday()
 	{
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return df.format(new Date());
+		return getDateToday(df);
+				
 	}
+			
+		public String getDateToday(SimpleDateFormat formatter)
+	{
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return formatter.format(new Date());
+	} 
+
 
 	public String getDateTomorrow()
 	{
