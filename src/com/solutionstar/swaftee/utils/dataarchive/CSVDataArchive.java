@@ -40,6 +40,11 @@ public class CSVDataArchive extends DelimitedDataArchiveBase implements DataArch
 	{    
 		saveDataCreateNewFile(filename, DELIMITER); 
 	}
-
+	
+	public void saveData(String filename, boolean forceNumbersAsString) throws Exception 
+	{    
+		saveDataCreateNewFile(filename, DELIMITER); 
+	}
+	
 }
 

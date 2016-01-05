@@ -40,6 +40,12 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 
 	}
 	
+	public void saveData(String filename, boolean forceNumbersAsString) throws Exception {
+		log.info("Attempting save data to filename: " + filename);
+
+		saveData(new XSSFWorkbook(), filename, forceNumbersAsString);
+
+	}
 	
 	/**
 	 * Retrieve data from the given excel file

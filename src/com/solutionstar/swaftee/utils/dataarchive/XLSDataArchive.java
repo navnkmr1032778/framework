@@ -39,6 +39,13 @@ public class XLSDataArchive extends SpreadsheetDataArchiveBase implements DataAr
 
 	}
 	
+	public void saveData(String filename, boolean forceNumbersAsString) throws Exception {
+		log.info("Attempting save data to filename: " + filename);
+
+		saveData(new HSSFWorkbook(), filename, forceNumbersAsString);
+
+	}
+	
 	/**
 	 * Retrieve data from the given excel file
 	 * 

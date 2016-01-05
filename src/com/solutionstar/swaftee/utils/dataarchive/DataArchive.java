@@ -29,6 +29,8 @@ public interface DataArchive {
      */
     public void saveData(String filename) throws Exception;
     
+    public void saveData(String filename, boolean forceNumbersAsString) throws Exception;
+    
     /**
      * Clear/remove all data collected.
      * 
