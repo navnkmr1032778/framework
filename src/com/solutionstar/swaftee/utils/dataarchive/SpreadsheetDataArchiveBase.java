@@ -38,6 +38,11 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 	 */
 	public void saveData(Workbook workbook, String filename) throws Exception
 	{
+		saveData(workbook, filename, false);
+	}
+	
+	public void saveData(Workbook workbook, String filename, boolean forceNumbersAsString) throws Exception
+	{
 
 		CommonUtils utils = new CommonUtils();
 		CreationHelper createHelper = workbook.getCreationHelper();
@@ -51,6 +56,11 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 			for (int j = 0; j < data.length; j++)
 			{
 				log.debug("For row: " + i + ", creating column: " + j + " with data: " + data[j]);
+				if(forceNumbersAsString)
+				{
+					row.createCell(j).setCellValue(createHelper.createRichTextString(data[j]));
+					continue;
+				}
 				if (utils.isNumeric(data[j]))
 				{
 					row.createCell(j, 0).setCellValue(createHelper.createRichTextString(data[j]));
@@ -65,7 +75,6 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		FileOutputStream fileOut = new FileOutputStream(filename);
 		workbook.write(fileOut);
 		fileOut.close();
-
 	}
 
 	private List<String> getRowData(Row row) throws Exception
