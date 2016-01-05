@@ -604,6 +604,11 @@ public class CommonUtils {
 
 	public void writeDataToExcel(String filename, List<HashMap<String, String>> data, String[] header) throws Exception
 	{
+		writeDataToExcel(filename, data, header, false);
+	}
+	
+	public void writeDataToExcel(String filename, List<HashMap<String, String>> data, String[] header, boolean forceNumbersAsString) throws Exception
+	{
 		DataArchive dataArchive = new XLSXDataArchive();
 		dataArchive.addData(header);
 		for(HashMap<String, String> map : data)
@@ -615,6 +620,6 @@ public class CommonUtils {
 			}
 			dataArchive.addData(row);
 		}
-		dataArchive.saveData(filename);
+		dataArchive.saveData(filename, forceNumbersAsString);
 	}
 }
