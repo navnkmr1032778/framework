@@ -318,12 +318,19 @@ public class CommonUtils {
 		return formatter.format(d);
 	}
 
-	public String getDateToday()
+		public String getDateToday()
 	{
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		df.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return df.format(new Date());
+		return getDateToday(df);
+				
 	}
+			
+		public String getDateToday(SimpleDateFormat formatter)
+	{
+		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return formatter.format(new Date());
+	} 
+
 
 	public String getDateTomorrow()
 	{
@@ -604,6 +611,11 @@ public class CommonUtils {
 
 	public void writeDataToExcel(String filename, List<HashMap<String, String>> data, String[] header) throws Exception
 	{
+		writeDataToExcel(filename, data, header, false);
+	}
+	
+	public void writeDataToExcel(String filename, List<HashMap<String, String>> data, String[] header, boolean forceNumbersAsString) throws Exception
+	{
 		DataArchive dataArchive = new XLSXDataArchive();
 		dataArchive.addData(header);
 		for(HashMap<String, String> map : data)
@@ -615,6 +627,6 @@ public class CommonUtils {
 			}
 			dataArchive.addData(row);
 		}
-		dataArchive.saveData(filename);
+		dataArchive.saveData(filename, forceNumbersAsString);
 	}
 }
