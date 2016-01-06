@@ -19,7 +19,7 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 
 public class connectDB extends DatabaseConnection 
 {
-	static Connection con = null;
+	Connection con = null;
 	String dbClassName,dbUrl ="";
 	String dbServerName=null,hostName,port,database,userName,passwd;
 	CommonUtils utils;
