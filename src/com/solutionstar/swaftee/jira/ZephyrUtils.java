@@ -249,6 +249,14 @@ public class ZephyrUtils
 			{
 				tmp.put("description", "");
 			}
+			if (execution.containsKey("component"))
+			{
+				tmp.put("component", execution.get("component").toString());
+			}
+			else
+			{
+				tmp.put("component", "");
+			}
 			switch (execution.get("executionStatus").toString())
 			{
 			case UNEXECUTED:
