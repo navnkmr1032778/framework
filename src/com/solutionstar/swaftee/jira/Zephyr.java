@@ -21,11 +21,14 @@ public class Zephyr
 	{
 		String writeToFile = System.getProperty("writeTo");
 		boolean includeDescription = Boolean.valueOf(System.getProperty("includeDescription", "false"));
+		boolean includeComponents = Boolean.valueOf(System.getProperty("includeComponents", "false"));//-DincludeComponents=true, to include components in the result generated
 		StringBuilder output1 = new StringBuilder();
 		output1.append(
 				"<style>.PASS{color:green}.FAIL{color:red}.UNEXECUTED{color:orange}.BLOCKED{color:grey}</style><b>Test Case Status:</b><table border=1><tr><th>Jira Key</th><th>Name</th>");
 		if (includeDescription)
 			output1.append("<th>Description</th>");
+		if (includeComponents)
+			output1.append("<th>Components</th>");
 		output1.append("<th>Result</th></tr>");
 		String jiraServer = System.getProperty("jiraServer");
 
@@ -34,16 +37,32 @@ public class Zephyr
 		ZephyrUtils.initZephyr(testCycleId);
 		List<HashMap<String, String>> results = ZephyrUtils.getExecutionStatusFromCycle();
 
-		Collections.sort(results, new Comparator<HashMap<String, String>>()
+		if(includeComponents)
 		{
-			@Override
-			public int compare(HashMap<String, String> o1, HashMap<String, String> o2)
+			Collections.sort(results, new Comparator<HashMap<String, String>>()
 			{
-				int num1 = Integer.parseInt(o1.get("key").replaceAll("[^0-9]", ""));
-				int num2 = Integer.parseInt(o2.get("key").replaceAll("[^0-9]", ""));
-				return num1 - num2;
-			}
-		});
+				@Override
+				public int compare(HashMap<String, String> o1, HashMap<String, String> o2)
+				{
+					String val1 = o1.get("component");
+					String val2 = o2.get("component");
+					return val1.compareToIgnoreCase(val2);
+				}
+			});
+		}
+		else
+		{
+			Collections.sort(results, new Comparator<HashMap<String, String>>()
+			{
+				@Override
+				public int compare(HashMap<String, String> o1, HashMap<String, String> o2)
+				{
+					int num1 = Integer.parseInt(o1.get("key").replaceAll("[^0-9]", ""));
+					int num2 = Integer.parseInt(o2.get("key").replaceAll("[^0-9]", ""));
+					return num1 - num2;
+				}
+			});
+		}
 
 		for (HashMap<String, String> result : results)
 		{
@@ -52,6 +71,8 @@ public class Zephyr
 			output1.append("<td>" + result.get("name") + "</td>");
 			if (includeDescription)
 				output1.append("<td>" + result.get("description") + "</td>");
+			if (includeComponents)
+				output1.append("<td>" + result.get("component") + "</td>");
 			output1.append("<td class=" + result.get("result") + ">" + result.get("result") + "</td></tr>");
 			int count = 0;
 			if (countHash.containsKey(result.get("result")))
