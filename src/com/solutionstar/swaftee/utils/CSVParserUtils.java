@@ -381,7 +381,7 @@ public class CSVParserUtils {
 			for (String[] row : data) {
 				HashMap<String, String> rowEntries = new HashMap<String, String>();
 				if(row.length!=header.length)
-					throw new Exception("Column entry missing: Header - "+header.toString()+"::Row - "+row.toString());
+					throw new Exception("Column entry missing: Header - " + Arrays.deepToString(header) + "\nRow - " + Arrays.deepToString(row));
 				for (int i = 0; i < header.length; i++) {
 					String entry = row[i];
 					rowEntries
@@ -395,7 +395,7 @@ public class CSVParserUtils {
 					 ExceptionUtils.getFullStackTrace(e));
 		} catch (Exception e) {
 			
-			logger.error("Exception when reading " +fileName+ ExceptionUtils.getFullStackTrace(e));
+			logger.error("Exception when reading " + fileName + " \n" + ExceptionUtils.getFullStackTrace(e));
 		}
 		return list;
 	}
