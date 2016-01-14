@@ -105,42 +105,48 @@ public class CommonUtils {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
 		String curDate = dateFormat.format(date);
-		File dir=new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
-		if (!dir.exists()) 
+		File dir = new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
+		if (!dir.exists())
 		{
-			logger.info("creating directory: " + dir);
 			try
 			{
 				dir.mkdir();
-				Set<String> handles = webDriver.getWindowHandles();
-				String currentHandle = webDriver.getWindowHandle();
-				int handleCount = 0;
-				for(String handle : handles)
-				{
-					handleCount++;
-					webDriver.switchTo().window(handle);
-					try
-					{
-						Thread.sleep(500);
-					}
-					catch(Exception e)
-					{
-						logger.info(ExceptionUtils.getFullStackTrace(e));
-					}
-					screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_handle"+ handleCount +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
-				}
-				webDriver.switchTo().window(currentHandle);
-			} 
-			catch(SecurityException ex)
+				logger.info("creating directory: " + dir);
+			}
+			catch (Exception ex)
 			{
-				logger.info("exception in creating director"+ExceptionUtils.getFullStackTrace(ex));
-			}   
+				logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+			}
 		}
-		else
+
+		try
 		{
-			screenShot( WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName +"_"+curDate+"_"+System.currentTimeMillis()+".png", webDriver); 
+			Set<String> handles = webDriver.getWindowHandles();
+			String currentHandle = webDriver.getWindowHandle();
+			int handleCount = 0;
+			for (String handle : handles)
+			{
+				handleCount++;
+				webDriver.switchTo().window(handle);
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch (Exception e)
+				{
+					logger.info(ExceptionUtils.getFullStackTrace(e));
+				}
+				screenShot(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + "_handle" + handleCount + "_"
+						+ curDate + "_" + System.currentTimeMillis() + ".png", webDriver);
+			}
+			webDriver.switchTo().window(currentHandle);
+		}
+		catch (Exception ex)
+		{
+			logger.info("exception in taking Screenshot" + ExceptionUtils.getFullStackTrace(ex));
 		}
 	}
+	
 
 	public void screenShot(String fileName, WebDriver webDriver) 
 	{
