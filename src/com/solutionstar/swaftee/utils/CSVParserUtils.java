@@ -507,6 +507,52 @@ public class CSVParserUtils {
 		}
 	}
 	
+	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index,String index2,Boolean includeFileName, boolean hasIndex2) throws Exception 
+	{
+		HashMap<String, List<HashMap<String, String>>> output = new HashMap<String, List<HashMap<String, String>>>();
+		if (directoryListing == null) 
+			 return null;
+		try
+		{
+			for (File file : directoryListing) 
+		    {
+				if(file.getAbsolutePath().endsWith(".csv"))
+				{
+			    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath()))
+			    	{
+			    		if(includeFileName)
+							hsh.put("fileName",file.getAbsolutePath());
+			    		if(hasIndex2)
+			    		{
+			    			if(!output.containsKey(hsh.get(index) + "_" + hsh.get(index2)))
+			    			{
+			    				output.put(hsh.get(index) + "_" + hsh.get(index2), new ArrayList<HashMap<String, String>>());
+			    			}
+			    			output.get(hsh.get(index) + "_" + hsh.get(index2)).add(hsh);
+			    		}
+			    		else
+			    		{
+			    			if(!output.containsKey(hsh.get(index)))
+			    			{
+			    				output.put(hsh.get(index), new ArrayList<HashMap<String, String>>());
+			    			}
+			    			output.get(hsh.get(index)).add(hsh);
+			    		}
+							
+			    	}
+				}
+		    		
+			}
+			return output;
+		}
+		catch(Exception ex)
+		{
+			ex.printStackTrace();
+			if(output.size()==0) throw ex;
+			return output;
+		}
+	}
+	
 	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index, Boolean includeFileName) throws Exception 
 	{
 		return getHashfromAllFiles(directoryListing,index,"",includeFileName);
