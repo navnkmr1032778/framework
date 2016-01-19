@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
@@ -494,13 +493,13 @@ public class CommonUtils {
 	}
 
 	public String objToJson(Object obj) {
-		Gson gson = new GsonBuilder().serializeNulls().create();
+		Gson gson = new Gson();
 		String json = gson.toJson(obj);
 		return json;
 	}
 
 	public Object constructObjfromJson(String json, Class<?> classObj) {
-		Gson gson = new GsonBuilder().serializeNulls().create();
+		Gson gson = new Gson();
 		Object obj = gson.fromJson(json, classObj);
 		return obj;
 	}
