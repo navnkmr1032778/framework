@@ -10,6 +10,8 @@ public class WebDriverConstants {
 	public static String PATH_TO_BROWSER_EXECUTABLE = "/resources/drivers/";
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
 	public static String PATH_TO_BROWSER_SCREENSHOT_BASE="resources/screenshot/base";
+	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE="resources/screenshot/compare";
+	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT="resources/screenshot/compare_result";
 	public static String PATH_TO_TEST_DATA_FILE = "/resources/testdata/";
 	public static String WINDOWS_PATH_TO_TEST_DATA_DIR = "\\resources\\testdata\\";
 	public static String GMAIL_IMAP_HOST = "imap.gmail.com";

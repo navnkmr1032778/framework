@@ -344,14 +344,16 @@ public class AppPage extends TestListenerAdapter
 	}
 	public void takeScreenShot() 
 	{
+		logger.info("take screenshot ");
 		waitForPageLoadComplete();
 		waitForAJaxCompletion();
 		String fileName=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
-		if(baseDriverHelper.getIsDryRun()==true && baseDriverHelper.getBaseDirLocation()!=null)
+		boolean isDryRun=baseDriverHelper.getIsDryRun();
+		if(isDryRun)
 		{
 			fileName=baseDriverHelper.getBaseDirLocation();
 		}
-		else if(baseDriverHelper.getCompareImages()==true && baseDriverHelper.getCurrentDirLocation()!=null)
+		else if(baseDriverHelper.getCompareImages() )
 		{
 			fileName=baseDriverHelper.getCurrentDirLocation();
 		}
@@ -359,7 +361,19 @@ public class AppPage extends TestListenerAdapter
 		try 
 		{
 			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			FileUtils.copyFile(scrFile, new File(fileName+stackTraceElements[2].getMethodName()+".png"));	//Files.move(src,dest);
+			String className=stackTraceElements[2].getFileName().replace(".java", "");
+			String methodName=stackTraceElements[2].getMethodName();
+			fileName=fileName+"/"+className+"/"+methodName;
+			if(isDryRun)
+			{
+				fileName=fileName+".png";
+			}
+			else
+			{
+				fileName=fileName+Thread.currentThread().getId()+".png";
+			}
+			logger.info("screenshot file name: "+fileName);
+			FileUtils.copyFile(scrFile, new File(fileName));	//Files.move(src,dest);
 		} 
 		catch (IOException e) 
 		{
