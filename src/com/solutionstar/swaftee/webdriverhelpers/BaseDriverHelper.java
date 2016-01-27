@@ -17,6 +17,7 @@ import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 import net.lightbody.bmp.core.har.Har;
 import net.lightbody.bmp.proxy.ProxyServer;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
@@ -610,7 +611,7 @@ public class BaseDriverHelper {
 	{
 		try
 		{
-			return Boolean.valueOf(System.getProperty("compareImages","false").toLowerCase(Locale.ENGLISH));
+			return Boolean.valueOf(System.getProperty("compareImages","true").toLowerCase(Locale.ENGLISH));
 		}
 		catch(NullPointerException exp)
 		{
@@ -625,12 +626,14 @@ public class BaseDriverHelper {
 	
 	public String getBaseDirLocation()
 	{
-		return System.getProperty("baseDirectoryLocation").toLowerCase(Locale.ENGLISH);
+		return System.getProperty("baseDirectoryLocation",WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE).
+				toLowerCase(Locale.ENGLISH);
 	}
 
 	public String getCurrentDirLocation()
 	{
-		return System.getProperty("currentDirectoryLocation").toLowerCase(Locale.ENGLISH);
+		return System.getProperty("currentDirectoryLocation",WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE).
+				toLowerCase(Locale.ENGLISH);
 	}
 	
 }
