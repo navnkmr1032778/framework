@@ -623,7 +623,7 @@ public class BaseDriverHelper {
 		logger.info(System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH));
 		return System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH);
 	}
-	
+
 	public String getEmulationDeviceName()
 	{
 		return System.getProperty("emulationDeviceName","noEmul");//default "windows"
