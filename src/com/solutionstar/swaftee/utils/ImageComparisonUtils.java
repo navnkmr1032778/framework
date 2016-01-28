@@ -7,23 +7,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.concurrent.RecursiveAction;
 
-import org.apache.commons.io.FileUtils;
+import org.testng.asserts.SoftAssert;
 import org.im4java.core.CompareCmd;
 import org.im4java.core.CompositeCmd;
 import org.im4java.core.IM4JavaException;
 import org.im4java.core.IMOperation;
 import org.im4java.process.ProcessStarter;
 import org.im4java.process.StandardStream;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
-public class ImageComparisonUtils {
-	
+public class ImageComparisonUtils  {
+
 	public Map<String,Map<String,List<String>>> compareFilesMap;
 	public Map<String,List<String>> baseFilesMap;
 	public Map<String,Map<String,List<String>>> resultMap;// method names -> methods
@@ -33,20 +32,22 @@ public class ImageComparisonUtils {
 	String baseDirLocation;
 	String currentDirLocation;
 	String path;
+	SoftAssert sa;
 	
-	public ImageComparisonUtils(String folderName)
+	public ImageComparisonUtils(String className)
 	{
-		this.folderName=folderName;
-		this.compareFilesMap=new HashMap<String,Map<String,List<String>>>();
-		this.baseFilesMap=new HashMap<String,List<String>>();
-		this.resultMap=new HashMap<String,Map<String,List<String>>>();
+		this.folderName=className;
+		this.compareFilesMap=new TreeMap<String,Map<String,List<String>>>();
+		this.baseFilesMap=new TreeMap<String,List<String>>();
+		this.resultMap=new TreeMap<String,Map<String,List<String>>>();
 		helper=new BaseDriverHelper();
 		utils=new CommonUtils();
-		this.baseDirLocation=helper.getBaseDirLocation()+"/"+folderName;
+		this.baseDirLocation=helper.getBaseDirLocation()+"/"+className;
 		this.currentDirLocation=helper.getCurrentDirLocation();
 		path=utils.getCurrentWorkingDirectory();
 		getAllCompareFilesByMethodNameAsMap();
 		getAllBaseFilesByMethodNameAsMap();
+		sa=new SoftAssert();
 		System.out.println("finish ");
 	}
 	
@@ -58,7 +59,7 @@ public class ImageComparisonUtils {
 		
 		for(int instance=0;instance<compareFoldersWithClassNames.length;instance++)
 		{
-			methodMap=new HashMap<String,List<String>>();
+			methodMap=new TreeMap<String,List<String>>();
 			String comparePathWithClassName=currentDirLocation+"/"+compareFoldersWithClassNames[instance];
 			String[] compareFoldersWithMethodNames=getListOfSubDirectories(comparePathWithClassName);
 			for(int methods=0;methods<compareFoldersWithMethodNames.length;methods++)
@@ -108,54 +109,6 @@ public class ImageComparisonUtils {
 			}
 		}		
 	}
-	
-	public void compareImagesByFileName(String fileName)
-	{
-		/*if(compareFilesMap.containsKey(fileName))
-		{
-			path=path+"/";
-			String baseFile=path+baseDirLocation+"/"+fileName;
-			List<String> files=compareFilesMap.get(fileName);
-			for(String actualImg:files)
-			{
-				String actualFile=path+currentDirLocation+"/"+actualImg;
-				String compareImgUrl=path+WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT+"/"+folderName;
-				File compareResDir=new File(compareImgUrl);
-				if(!compareResDir.exists())
-				{
-					compareResDir.mkdirs();
-				}
-				compareImgUrl+="/"+actualImg;
-				String result=compareImages(baseFile, actualFile, compareImgUrl);
-				dissolveImages(baseFile,actualFile,compareImgUrl);
-				File f=new File(compareImgUrl);
-				
-				if(f.exists())
-				{
-					result=actualFile+","+compareImgUrl+","+result;
-				}
-				else
-				{
-					result=actualFile+",imageNotFound,"+result;
-				}
-				if(resultMap.containsKey(baseFile))
-				{
-					//if(result!=null && result.equalsIgnoreCase("null"))
-					resultMap.get(baseFile).add(result);
-				}
-				else
-				{
-					List<String> res=new ArrayList<String>();
-					res.add(result);
-					resultMap.put(baseFile, res);
-				}
-			}
-		}
-		else
-		{
-			System.out.println("file name is not found: "+fileName);
-		}*/
-	}
 	/***
 	 * 
 	 * @param key  -> base image file path
@@ -179,7 +132,7 @@ public class ImageComparisonUtils {
 		}
 		else
 		{
-			Map<String,List<String>> resMap=new HashMap<String,List<String>>();
+			Map<String,List<String>> resMap=new TreeMap<String,List<String>>();
 			List<String> res=new ArrayList<String>();
 			res.add(val);
 			resMap.put(key, res);
@@ -207,6 +160,7 @@ public class ImageComparisonUtils {
 			compareFile=path+"/"+compareFile;
 			storeTo=path+"/"+storeTo;
 			result=compareImages(baseFile, compareFile, storeTo);
+			sa.assertEquals(result, "0",compareFile+" differs from base file "+baseFile+" by "+result+" pixels");
 			dissolveImages(baseFile,compareFile,storeTo);
 			File f=new File(storeTo);
 
@@ -222,7 +176,7 @@ public class ImageComparisonUtils {
 		addToResultMap(baseFile, result,baseMethodFolderName);
 	}
 	
-	public void compareImagesByFolderName(List<String> compareFiles,List<String> baseFiles,HashMap<String,String> filePath)
+	public void compareImagesByFolderName(List<String> compareFiles,List<String> baseFiles,Map<String,String> filePath)
 	{
 		String storePath=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("baseMethodFolder");
 		File storeFile=new File(storePath);
@@ -273,7 +227,7 @@ public class ImageComparisonUtils {
 	public void compareAllImages()
 	{
 		Iterator baseEntries = baseFilesMap.entrySet().iterator();
-		HashMap<String,String> filePath=new HashMap<String,String>();
+		Map<String,String> filePath=new TreeMap<String,String>();
 		while (baseEntries.hasNext())
 		{
 			Entry baseEntry = (Entry) baseEntries.next();
@@ -320,7 +274,8 @@ public class ImageComparisonUtils {
 		
 	      
 			try {
-				return compare.run(cmpOp);
+				compare.run(cmpOp);
+				return "";
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -363,6 +318,7 @@ public class ImageComparisonUtils {
 		      
 		try 
 		{
+			
 			return compare.run(cmpOp);
 		}
 		catch (Exception e)
@@ -451,7 +407,7 @@ public class ImageComparisonUtils {
 				  + "function sendToServlet(radioName)"
 				  + "{"
 				  + "var dataToUpdate={};"
-				  + "$('input[type=\"radio\"]:checked').each(function(i,e)"
+				  + "$('td input[type=\"radio\"]:checked').each(function(i,e)"
 				  + "{"
 				  + "dataToUpdate[$(e).attr('name')]=$(e).val();"
 				  + "});"
@@ -486,10 +442,10 @@ public class ImageComparisonUtils {
 				int i=1;
 		while (i<=compareFilesMap.size()) 
 		{
-			output1.append("<th>Compare_Folder_"+i+"</th>");
+			output1.append("<th>Compare_Folder_"+i+"<div><input type='radio' name='all' value='all"+i+"' data-toggle='unchecked'></div></th>");
 			++i;
 		}
-		output1.append("<th>Update Base Image<th></tr><tbody>");
+		output1.append("<th><button onClick='sendToServlet()' >UPDATE BASE IMAGE SCRIPT</button><th></tr><tbody>");
 		
 		Iterator entries = resultMap.entrySet().iterator();
 		while (entries.hasNext()) 
@@ -516,12 +472,11 @@ public class ImageComparisonUtils {
 					String res[]=value.split(",");
 					String actual=res[1].replace(resultFolder, compareFolder);
 					output1.append("<td><img src=\""+res[1]+"\"  class=\"fancybox\" height=\"200\" width=\"200\" title=\""+actual+"\"/>"
-							+ "<div><input type='radio' name='"+ key2 + "' value='"+actual+"'></div></td>");
+							+ "<div><input type='radio' name='"+ key2 + "' value='"+actual+"' data-toggle='unchecked'></div></td>");
 				}
 				output1.append("</tr>");
 			}
 		}
-		output1.append("<tr colspan="+(i-1)+"><td><button onClick='sendToServlet()' >UPDATE BASE IMAGE SCRIPT</button></td></tr>");
 		output1.append("</tbody></table></div><br />");
 		output1.append("</body></html>");
 		
@@ -535,6 +490,25 @@ public class ImageComparisonUtils {
 		{
 			e.printStackTrace();
 		}
-	}
 
+		sa.assertAll();
+	}
+	
+	class ImageDifference extends RecursiveAction
+	{
+		List<String> compareFiles;
+		int threshold;
+		public ImageDifference(List<String> compareFiles)
+		{
+			this.compareFiles=compareFiles;
+			threshold=1;
+		}
+
+		@Override
+		protected void compute() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 }
