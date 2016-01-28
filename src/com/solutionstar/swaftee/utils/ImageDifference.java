@@ -181,27 +181,16 @@ public class ImageDifference extends RecursiveAction
 		}
 	}
 
-	public static long compareImageList(List<String> imageList) {
-		/*File file = new File(srcFile);
-
-	        System.out.println("File size is " + file.length());
-	        System.out.println("Threshold is " + sThreshold);
-		 */
-		int processors = Runtime.getRuntime().availableProcessors();
+	public static void compareImageList(List<String> imageList) {
+		
+		/*int processors = Runtime.getRuntime().availableProcessors();
 		System.out.println(Integer.toString(processors) + " processor"
-				+ (processors != 1 ? "s are " : " is ") + "available");
+				+ (processors != 1 ? "s are " : " is ") + "available");*/
 
 		ImageDifference ce = new ImageDifference(imageList);
 
 		ForkJoinPool pool = new ForkJoinPool();
-
-		long startTime = System.currentTimeMillis();
 		pool.invoke(ce);
-		long endTime = System.currentTimeMillis();
-
-		System.out.println("File copied in " + (endTime - startTime)
-				+ " milliseconds.");
-		return endTime - startTime;
 	}
 
 	@Override

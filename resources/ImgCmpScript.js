@@ -56,6 +56,35 @@ $(function($){
         	}
         		});
         
+        function onAjaxReturn(data,status,xhr)
+		  {
+		  	alert('images updated');
+		  }
+		  function onAjaxFail(xhr, status, error)
+		  {
+		  	alert('failed in updating images');
+		  }
+		 $('button').click(function sendToServlet()
+		  {
+			  var dataToUpdate={};
+			  $('td input[type=\"radio\"]:checked').each(function(i,e)
+					  {
+				  dataToUpdate[$(e).attr('name')]=$(e).val();
+					  });
+			  var stringifyData=JSON.stringify(dataToUpdate);
+			  console.log(stringifyData);
+			  $.ajax({
+				  'url':'http://localhost:8080/project/example',
+				  'dataType':'json',
+				  'data':{
+					  'rawData':stringifyData
+				  },
+				  'method':'POST',
+				  'success':onAjaxReturn,
+				  'error':onAjaxFail
+			  });
+		  });
+        
     });
     $.noConflict();
     
