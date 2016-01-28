@@ -49,12 +49,10 @@ public class ImageComparisonUtils  {
 		path=utils.getCurrentWorkingDirectory();
 		getAllCompareFilesByMethodNameAsMap();
 		getAllBaseFilesByMethodNameAsMap();
-		System.out.println("finish ");
 	}
 	
 	public void getAllCompareFilesByMethodNameAsMap()
 	{
-		System.out.println("get compare files ");
 		String[] compareFoldersWithClassNames=getListOfSubDirectories(currentDirLocation,folderName);
 		Map<String,List<String>> methodMap = null;
 		
@@ -298,48 +296,16 @@ public class ImageComparisonUtils  {
 				  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"+
 				  "<link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css\">"+
 				  "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js\"></script>"+
-				  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\""+swafteePath+"/swaftee/resources/mystyle.css\" />"+
+				  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\""+swafteePath+"/swaftee/resources/ImgCmpCss.css\" />"+
 				  "<link rel=\"stylesheet\" type=\"text/css\" media=\"screen\" href=\"http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css\" />"
-				  + "<script>"
-				  + "function onAjaxReturn(data,status,xhr)"
-				  + "{"
-				  + "	alert('on success:'+data);"
-				  + "}"
-				  + "function onAjaxFail(xhr, status, error)"
-				  + "{"
-				  + "	alert('on fail:' + status);"
-				  + "}"
-				  + "function sendToServlet(radioName)"
-				  + "{"
-				  + "var dataToUpdate={};"
-				  + "$('td input[type=\"radio\"]:checked').each(function(i,e)"
-				  + "{"
-				  + "dataToUpdate[$(e).attr('name')]=$(e).val();"
-				  + "});"
-				  + "var stringifyData=JSON.stringify(dataToUpdate);"
-				  + "console.log(stringifyData);"
-				  + "$.ajax({"
-				  + "	'url':'http://localhost:8080/project/example',"
-				  + "	'dataType':'json',"
-				  + "	'data':{"
-				  + "		'rawData':stringifyData"
-				  + "	},"
-				  + "	'method':'POST',"
-				  + "	'success':onAjaxReturn,"
-				  + "	'error':onAjaxFail"
-				  + ""
-				  + "});"
-				  + "}"
-				  + "</script>"+
-				"</head>"+
+				+"</head>"+
 				"<body>"
 				+ "<script type=\"text/javascript\" src=\"http://code.jquery.com/jquery-1.11.0.min.js\"></script>"
 				+ "<script type=\"text/javascript\" src=\"http://code.jquery.com/jquery-migrate-1.2.1.min.js\"></script>"
 				+ "<script type=\"text/javascript\" src=\"http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js\"></script>"
-				+ "<script type=\"text/javascript\" src=\""+swafteePath+"/swaftee/resources/myscript.js\"></script>";
+				+ "<script type=\"text/javascript\" src=\""+swafteePath+"/swaftee/resources/ImgCmpScript.js\"></script>";
 		output1.append(start);
 		output1.append("<b>Image Comparison Test Status: "+folderName+"</b>");
-		output1.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"D:/AUTOMATION/xomeAuction/xome-tests/resources/mystyle.css\">");
 		/*String style="<style> img:hover { position:relative; top:-25px; left:-35px; width:1000px; height:auto; display:block; z-index:999; </style>";
 		output1.append(style);*/
 		output1.append( "<div class=\"table-responsive\"><table class=\"table\"><tr><th>Base Image</th>");
@@ -350,7 +316,7 @@ public class ImageComparisonUtils  {
 			output1.append("<th>Compare_Folder_"+i+"<div><input type='radio' name='all' value='all"+i+"' data-toggle='unchecked'></div></th>");
 			++i;
 		}
-		output1.append("<th><button onClick='sendToServlet()' >UPDATE BASE IMAGE SCRIPT</button><th></tr><tbody>");
+		output1.append("<th><button>UPDATE BASE IMAGE SCRIPT</button><th></tr><tbody>");
 		
 		Iterator entries = resultMap.entrySet().iterator();
 		while (entries.hasNext()) 
@@ -368,16 +334,12 @@ public class ImageComparisonUtils  {
 				String key2 = (String)Entry.getKey();
 				List<String> result2 =(List<String>) Entry.getValue();
 				output1.append("<tr><td><img src=\""+key2+"\"  class=\"fancybox\" height=\"200\" width=\"200\" title=\""+key2+"\"/></td>");
-				if(result2.size()<3)
-				{
-					System.out.println("less");
-				}
+				
 				for(String value:result2)
 				{ 
 					String res[]=value.split(",");
 					String actual=res[1].replace(resultFolder, compareFolder);
 					String borderStyle="style=\"border:5px solid green\"";
-					System.out.println(res[2]);
 					if(!res[2].equals("0"))
 					{
 						borderStyle="style=\"border:5px solid red\"";
