@@ -114,17 +114,18 @@ public class ImageComparisonUtils  {
 	
 	public void getCompareImagesListByFile(String compareFile,String baseFile,String storeTo,String baseMethodFolderName)
 	{
-		String result;
+		//String result;
 		if(baseFile.length()==0)
 		{
-			baseFile="null";
 			compareFile=path+"/"+compareFile;
-			result=compareFile+",no comparison,"+"no base image found";
+			//result=compareFile+",no comparison,"+"no base image found";
+			imageList.add(","+compareFile+",,"+baseMethodFolderName);
 		}
 		else if(compareFile.length()==0)
 		{
 			baseFile=path+"/"+baseFile;
-			result="null,no comparison,no compare image found";
+			//result="null,no comparison,no compare image found";
+			imageList.add(baseFile+",,,"+baseMethodFolderName);
 		}
 		else
 		{
