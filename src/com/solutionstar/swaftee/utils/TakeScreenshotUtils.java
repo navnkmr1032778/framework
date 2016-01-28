@@ -12,14 +12,14 @@ import org.openqa.selenium.WebDriver;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
-public class takeScreenshotUtils {
+public class TakeScreenshotUtils {
 
 	BaseDriverHelper helper;
 	String folderName,fileName;
 	boolean isDryRun;
 	List<String> methodFolderNames;
 	
-	public takeScreenshotUtils()
+	public TakeScreenshotUtils()
 	{
 		synchronized(this)
 		{
@@ -68,7 +68,7 @@ public class takeScreenshotUtils {
 	 * 
 	 * @param index -> interger (index of screenshot within a method)
 	 * name -> "nodata"
-	 * screenshot will be saved as methodName_index inside folder with name methodName_nodata
+	 * screenshot will be saved as methodName_index inside folder with name methodName
 	 */
 
 	public void takeScreenShot(WebDriver driver,int index) 
