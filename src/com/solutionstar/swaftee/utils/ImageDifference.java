@@ -126,11 +126,14 @@ public class ImageDifference extends RecursiveAction
 		String compareFile=imagePaths[1];
 		String storeTo=imagePaths[2];
 		String baseMethodFolderName=imagePaths[3];
-		String result=compareImages(baseFile,compareFile,storeTo);
-		result=result.replaceAll("[^0-9.e+]", "");
-		dissolveImages(baseFile,compareFile,storeTo);
+		String result="-1";
+		if(!(storeTo.length()==0))
+		{
+			result=compareImages(baseFile,compareFile,storeTo);
+			result=result.replaceAll("[^0-9.e+]", "");
+			dissolveImages(baseFile,compareFile,storeTo);
+		}
 		sa.assertEquals(result, "0",compareFile+" differs from base file "+baseFile+" by "+result+" pixels");
-		dissolveImages(baseFile,compareFile,storeTo);
 		File f=new File(storeTo);
 
 		if(f.exists())
