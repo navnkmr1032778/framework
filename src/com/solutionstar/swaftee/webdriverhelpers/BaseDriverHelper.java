@@ -595,45 +595,8 @@ public class BaseDriverHelper {
 		return System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH);
 	}
 	
-	public boolean getIsDryRun()
-	{
-		try
-		{
-			return Boolean.valueOf(System.getProperty("isDryRun","false").toLowerCase(Locale.ENGLISH));
-		}
-		catch(NullPointerException exp)
-		{
-			return false;
-		}
-	}
-	
-	public boolean getCompareImages()
-	{
-		try
-		{
-			return Boolean.valueOf(System.getProperty("compareImages","true").toLowerCase(Locale.ENGLISH));
-		}
-		catch(NullPointerException exp)
-		{
-			return false;
-		}
-	}
-	
 	public String getEmulationDeviceName()
 	{
 		return System.getProperty("emulationDeviceName","windows");//default "windows"
 	}
-	
-	public String getBaseDirLocation()
-	{
-		return System.getProperty("baseDirectoryLocation",WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE).
-				toLowerCase(Locale.ENGLISH);
-	}
-
-	public String getCurrentDirLocation()
-	{
-		return System.getProperty("currentDirectoryLocation",WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE).
-				toLowerCase(Locale.ENGLISH);
-	}
-	
 }
