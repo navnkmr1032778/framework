@@ -2,9 +2,7 @@ package com.solutionstar.swaftee.webdriverbase;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,9 +12,6 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -24,10 +19,8 @@ import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -341,112 +334,6 @@ public class AppPage extends TestListenerAdapter
 	{
 		String query = "var eleList = document.getElementsByName('"+elementName+"'); eleList[0].value = ''";
 		getJavaScriptExecutor().executeScript(query);
-	}
-	public void takeScreenShot() 
-	{
-		logger.info("take screenshot ");
-		waitForPageLoadComplete();
-		waitForAJaxCompletion();
-		String fileName=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
-		boolean isDryRun=baseDriverHelper.getIsDryRun();
-		if(isDryRun)
-		{
-			fileName=baseDriverHelper.getBaseDirLocation();
-		}
-		else if(baseDriverHelper.getCompareImages() )
-		{
-			fileName=baseDriverHelper.getCurrentDirLocation();
-		}
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		try 
-		{
-			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			String className=stackTraceElements[2].getFileName().replace(".java", "");
-			String methodName=stackTraceElements[2].getMethodName();
-			fileName=fileName+"/"+className+"/"+methodName;
-			if(isDryRun)
-			{
-				fileName=fileName+".png";
-			}
-			else
-			{
-				fileName=fileName+Thread.currentThread().getId()+".png";
-			}
-			logger.info("screenshot file name: "+fileName);
-			FileUtils.copyFile(scrFile, new File(fileName));	//Files.move(src,dest);
-		} 
-		catch (IOException e) 
-		{
-			logger.info("Error While taking Screen Shot");
-			e.printStackTrace();
-		}
-	}
-
-	public void takeScreenShot(String fileName) 
-	{
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		try 
-		{
-			FileUtils.copyFile(scrFile, new File(fileName));
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			logger.error("Error While taking Screen Shot");
-		}
-	}
-
-	public void takeScreenShot(String fileName, WebElement element) 
-	{
-		try 
-		{
-			scrolltoElement(element);
-			File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-			BufferedImage  fullImg = ImageIO.read(scrFile);
-
-			Point point = element.getLocation();
-			int eleWidth = element.getSize().getWidth();
-			int eleHeight = element.getSize().getHeight();
-
-			if(fullImg.getHeight()>point.getY() && fullImg.getWidth()>point.getX())
-			{
-				BufferedImage eleScreenshot= fullImg.getSubimage(point.getX(), point.getY(), eleWidth, eleHeight);
-				ImageIO.write(eleScreenshot, "png", scrFile);
-				FileUtils.copyFile(scrFile, new File(fileName));
-			}
-			else
-			{
-				logger.info("web element size is greate than image");
-			}
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-			logger.error("Error While taking Screen Shot");
-		}
-	}
-
-	public void takeScreenShot(WebElement element)
-	{
-		try 
-		{
-			String fileName= WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
-			BaseDriverHelper baseDriverHelper=new BaseDriverHelper();
-			if(baseDriverHelper.getIsDryRun()==true && baseDriverHelper.getBaseDirLocation()!=null)
-			{
-				fileName=baseDriverHelper.getBaseDirLocation();
-			}
-			else if(baseDriverHelper.getCompareImages()==true && baseDriverHelper.getCurrentDirLocation()!=null)
-			{
-				fileName=baseDriverHelper.getCurrentDirLocation();
-			}
-			takeScreenShot(fileName,element);
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-			logger.error("Error While taking Screen Shot");
-		}
 	}
 
 	public void selectDropdown(WebElement element, String by, String value) 
