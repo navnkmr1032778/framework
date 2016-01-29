@@ -1,54 +1,42 @@
-package com.solutionstar.swaftee.utils;
+package com.solutionstar.swaftee.utils.ImageComparison;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
 import java.util.regex.Pattern;
 
-import org.testng.asserts.SoftAssert;
-import org.im4java.core.CompareCmd;
-import org.im4java.core.CompositeCmd;
-import org.im4java.core.IM4JavaException;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ProcessStarter;
-import org.im4java.process.StandardStream;
-
 import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+import com.solutionstar.swaftee.utils.CommonUtils;
 
-public class ImageComparisonUtils  {
-
+public class ImageComparisonUtils implements ImageComparison
+{
 	public Map<String,Map<String,List<String>>> compareFilesMap;
 	public Map<String,List<String>> baseFilesMap;
 	// method names -> methods
 	public List<String> imageList;
 	String folderName;
-	BaseDriverHelper helper;
 	CommonUtils utils;
 	String baseDirLocation;
 	String currentDirLocation;
 	String path;
 	
-	public ImageComparisonUtils(String className)
+	public ImageComparisonUtils(String className,String baseDirLocation,String currentDirLocation)
 	{
 		this.folderName=className;
 		this.compareFilesMap=new TreeMap<String,Map<String,List<String>>>();
 		this.baseFilesMap=new TreeMap<String,List<String>>();
 		this.imageList=new ArrayList<String>();
-		helper=new BaseDriverHelper();
 		utils=new CommonUtils();
-		this.baseDirLocation=helper.getBaseDirLocation()+"/"+className;
-		this.currentDirLocation=helper.getCurrentDirLocation();
+		this.baseDirLocation=baseDirLocation+"/"+className;
+		this.currentDirLocation=currentDirLocation;
 		path=utils.getCurrentWorkingDirectory();
-		getAllCompareFilesByMethodNameAsMap();
-		getAllBaseFilesByMethodNameAsMap();
 	}
 	
 	public void getAllCompareFilesByMethodNameAsMap()
@@ -110,7 +98,7 @@ public class ImageComparisonUtils  {
 	}
 	
 	
-	public void getCompareImagesListByFile(String compareFile,String baseFile,String storeTo,String baseMethodFolderName)
+	public void addToCompareImagesListByFile(String compareFile,String baseFile,String storeTo,String baseMethodFolderName)
 	{
 		//String result;
 		if(baseFile.length()==0)
@@ -131,24 +119,10 @@ public class ImageComparisonUtils  {
 			compareFile=path+"/"+compareFile;
 			storeTo=path+"/"+storeTo;
 			imageList.add(baseFile+","+compareFile+","+storeTo+","+baseMethodFolderName);
-			//result=compareImages(baseFile, compareFile, storeTo);
-			/*sa.assertEquals(result, "0",compareFile+" differs from base file "+baseFile+" by "+result+" pixels");
-			dissolveImages(baseFile,compareFile,storeTo);
-			File f=new File(storeTo);
-
-			if(f.exists())
-			{
-				result=compareFile+","+storeTo+","+result;
-			}
-			else
-			{
-				result=compareFile+","+storeTo+","+"error in difference generation";
-			}*/
 		}
-		//addToResultMap(baseFile, result,baseMethodFolderName);
 	}
 	
-	public void getCompareImagesListByFolderName(List<String> compareFiles,List<String> baseFiles,Map<String,String> filePath)
+	public void addToCompareImagesListByFolderName(List<String> compareFiles,List<String> baseFiles,Map<String,String> filePath)
 	{
 		String storePath=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("baseMethodFolder");
 		File storeFile=new File(storePath);
@@ -165,7 +139,7 @@ public class ImageComparisonUtils  {
 			String compImage=compareFiles.get(compareIndex);
 			if(baseFiles.contains(compImage))
 			{
-				getCompareImagesListByFile(comparePath+"/"+compImage, basePath+"/"+compImage,storePath+"/"+compImage,basePath);
+				addToCompareImagesListByFile(comparePath+"/"+compImage, basePath+"/"+compImage,storePath+"/"+compImage,basePath);
 				compareFiles.remove(0);
 				baseFiles.remove(compImage);
 			}
@@ -177,20 +151,20 @@ public class ImageComparisonUtils  {
 				compImage=(compImage.substring(0, delStartIndex)+compImage.substring(delEndIndex, compImage.length()));
 				if(baseFiles.contains(compImage))
 				{
-					getCompareImagesListByFile(comparePath+"/"+compActualImage, basePath+"/"+compImage,storePath+"/"+compActualImage,basePath);
+					addToCompareImagesListByFile(comparePath+"/"+compActualImage, basePath+"/"+compImage,storePath+"/"+compActualImage,basePath);
 					compareFiles.remove(0);
 					baseFiles.remove(compImage);
 				}
 				else
 				{
-					getCompareImagesListByFile(comparePath+"/"+compActualImage,"","",basePath);
+					addToCompareImagesListByFile(comparePath+"/"+compActualImage,"","",basePath);
 					compareFiles.remove(0);
 				}
 			}
 		}
 		while(baseFiles.size()>0)
 		{
-			getCompareImagesListByFile("",basePath+"/"+baseFiles.get(0),"",basePath);
+			addToCompareImagesListByFile("",basePath+"/"+baseFiles.get(0),"",basePath);
 			baseFiles.remove(0);
 		}
 	}
@@ -219,7 +193,7 @@ public class ImageComparisonUtils  {
 				@SuppressWarnings("unchecked")
 				Map<String,List<String>> compareVal=(Map<String,List<String>>)compareEntry.getValue();
 				filePath.put("compareClassFolder", compareKey);
-				getCompareImagesListByFolderName(compareVal.get(baseKey),baseImages,filePath);
+				addToCompareImagesListByFolderName(compareVal.get(baseKey),baseImages,filePath);
 			}
 		}
 	}
@@ -227,8 +201,8 @@ public class ImageComparisonUtils  {
 	public void compareAllImages()
 	{
 		getImageCompareList();
-		ImageDifference.compareImageList(imageList);
-		generateHTMLReport(ImageDifference.resultMap);
+		ImageCompareHelper.compareImageList(imageList);
+		generateHTMLReport(ImageCompareHelper.resultMap);
 	}
 	
 	/**
@@ -264,6 +238,13 @@ public class ImageComparisonUtils  {
 		});
 	return files;
 	}
+	
+	/**
+	 * gets sub folders from given path with given folderName
+	 * @param path
+	 * @param folderName
+	 * @return
+	 */
 	
 	public String[] getListOfSubDirectories(String path,String folderName)
 	{
@@ -324,6 +305,7 @@ public class ImageComparisonUtils  {
 			@SuppressWarnings("rawtypes")
 			Entry thisEntry = (Entry) entries.next();
 			String key = (String)thisEntry.getKey();
+			@SuppressWarnings("unchecked")
 			Map<String,List<String>> result1 =(Map<String,List<String>>) thisEntry.getValue();
 			@SuppressWarnings("unchecked")
 			Iterator entries2 = result1.entrySet().iterator();
@@ -340,9 +322,17 @@ public class ImageComparisonUtils  {
 					String res[]=value.split(",");
 					String actual=res[1].replace(resultFolder, compareFolder);
 					String borderStyle="style=\"border:5px solid green\"";
-					if(!res[2].equals("0"))
+					if(res[2].toLowerCase().contains("error in difference generation"))
 					{
 						borderStyle="style=\"border:5px solid red\"";
+					}
+					else
+					{
+						Double resVal=Double.parseDouble(res[2]);
+						if(resVal.compareTo(ImageCompareHelper.DEFAULT_THRESHOLD)!=-1)
+						{
+							borderStyle="style=\"border:5px solid red\"";
+						}
 					}
 					output1.append("<td><img src=\""+res[1]+"\"  class=\"fancybox\" height=\"200\" width=\"200\" "+borderStyle+" title=\""+actual+"\"/>"
 							+ "<div><input type='radio' name='"+ key2 + "' value='"+actual+"' data-toggle='unchecked'>"+res[2]+"</div></td>");
@@ -364,6 +354,6 @@ public class ImageComparisonUtils  {
 			e.printStackTrace();
 		}
 
-		ImageDifference.sa.assertAll();
+		ImageCompareHelper.sa.assertAll();
 	}
 }

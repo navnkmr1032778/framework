@@ -1,4 +1,4 @@
-package com.solutionstar.swaftee.utils;
+package com.solutionstar.swaftee.utils.ImageComparison;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -25,17 +25,18 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 
 @SuppressWarnings("serial")
-public class ImageDifference extends RecursiveAction
+public class ImageCompareHelper extends RecursiveAction
 {
+	public static final Double DEFAULT_THRESHOLD=(double) 1350000;
 	public static SoftAssert sa=new SoftAssert();
 	public static Map<String,Map<String,List<String>>> resultMap=Collections.synchronizedMap(new TreeMap<String,Map<String,List<String>>>());
 	List<String> compareFiles;
 	int threshold=1;
-	public ImageDifference()
+	public ImageCompareHelper()
 	{
 
 	}
-	public ImageDifference(List<String> compareFiles)
+	public ImageCompareHelper(List<String> compareFiles)
 	{
 		this.compareFiles=compareFiles;
 	}
@@ -133,7 +134,17 @@ public class ImageDifference extends RecursiveAction
 			result=result.replaceAll("[^0-9.e+]", "");
 			dissolveImages(baseFile,compareFile,storeTo);
 		}
-		sa.assertEquals(result, "0",compareFile+" differs from base file "+baseFile+" by "+result+" pixels");
+		Double res;
+		try
+		{
+			res=Double.parseDouble(result);
+			sa.assertEquals(res.compareTo(DEFAULT_THRESHOLD),-1,compareFile+" differs from base file "+baseFile+" by "+result+" pixels");
+			result=res.toString();
+		}
+		catch(Exception ex)
+		{
+			sa.assertFalse(true,"error in generating the comparison file");
+		}
 		File f=new File(storeTo);
 
 		if(f.exists())
@@ -182,12 +193,12 @@ public class ImageDifference extends RecursiveAction
 	}
 
 	public static void compareImageList(List<String> imageList) {
-		
+
 		/*int processors = Runtime.getRuntime().availableProcessors();
 		System.out.println(Integer.toString(processors) + " processor"
 				+ (processors != 1 ? "s are " : " is ") + "available");*/
 
-		ImageDifference ce = new ImageDifference(imageList);
+		ImageCompareHelper ce = new ImageCompareHelper(imageList);
 
 		ForkJoinPool pool = new ForkJoinPool();
 		pool.invoke(ce);
@@ -202,8 +213,8 @@ public class ImageDifference extends RecursiveAction
 
 		int split = compareFiles.size() / 2;
 
-		invokeAll(new ImageDifference(compareFiles.subList(0, split)),
-				new ImageDifference(compareFiles.subList(split, compareFiles.size())));
+		invokeAll(new ImageCompareHelper(compareFiles.subList(0, split)),
+				new ImageCompareHelper(compareFiles.subList(split, compareFiles.size())));
 
 	}
 }
