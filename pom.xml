@@ -223,7 +223,7 @@
 		</repository>
 		<repository>
 			<id>sqljdbc</id>
-			<url>http://asfqa2.cloudapp.net/grapher/resources/OtherContent/</url>
+			<url>http://jira-gadgets.xome.com/grapher/resources/OtherContent/</url>
 		</repository>
 	</repositories>
 	<distributionManagement>
