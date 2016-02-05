@@ -76,6 +76,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		FileOutputStream fileOut = new FileOutputStream(filename);
 		workbook.write(fileOut);
 		fileOut.close();
+		clearData();
 	}
 
 	private List<String> getRowData(Row row) throws Exception
