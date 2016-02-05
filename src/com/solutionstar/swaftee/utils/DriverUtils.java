@@ -41,7 +41,7 @@ public class DriverUtils
 			File destDir = new File(dirName);
 			if (!destDir.exists()) 
 				destDir.mkdir();
-			
+			osName=osName.toLowerCase();
 			saveFileFromUrlWithJavaIO(
 			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName.toLowerCase()));
 			unZipIt(dirName + "\\"+ DriverName +".zip",dirName);

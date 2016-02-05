@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -57,6 +58,26 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	public List<HashMap<String, String>> retrieveData(String filename) throws Exception
 	{
 		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)));
+	}
+
+
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception
+	{
+		 writeDataToFile(new XSSFWorkbook(), filename, data);
+	}
+
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception {
+		writeDataToFile(new XSSFWorkbook(), filename, data,header);
+	}
+
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header,
+			boolean forceNumbersAsString) throws Exception {
+		writeDataToFile(new XSSFWorkbook(), filename, data,header,forceNumbersAsString);
+		
 	}
 
 }

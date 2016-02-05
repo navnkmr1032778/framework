@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -119,6 +120,38 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		}
 		workbook.close();
 		return outputData;
+	}
+	
+	public void writeDataToFile(Workbook workbook,String filename, List<HashMap<String, String>> data) throws Exception
+	{
+		if (data.size() == 0)
+		{
+			return;
+		}
+
+		HashMap<String, String> map = data.get(0);
+		Set<String> header = map.keySet();
+		writeDataToFile(workbook,filename, data, header.toArray(new String[header.size()]));
+	}
+
+	public void writeDataToFile(Workbook workbook,String filename, List<HashMap<String, String>> data, String[] header) throws Exception
+	{
+		writeDataToFile(workbook,filename, data, header, false);
+	}
+
+	public void writeDataToFile(Workbook workbook,String filename, List<HashMap<String, String>> data, String[] header, boolean forceNumbersAsString) throws Exception
+	{
+		addData(header);
+		for(HashMap<String, String> map : data)
+		{
+			String[] row = new String[header.length];
+			for(int i = 0; i < header.length; i++)
+			{
+				row[i] = map.get(header[i]);
+			}
+			addData(row);
+		}
+		saveData(workbook,filename, forceNumbersAsString);
 	}
 
 }
