@@ -61,34 +61,23 @@ public class XLSDataArchive extends SpreadsheetDataArchiveBase implements DataAr
 
 	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception
 	{
-		if (data.size() == 0)
-		{
-			return;
-		}
-
-		HashMap<String, String> map = data.get(0);
-		Set<String> header = map.keySet();
-		writeDataToFile(filename, data, header.toArray(new String[header.size()]));
+		 writeDataToFile(new HSSFWorkbook(), filename, data);
 	}
 
-	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception
-	{
-		writeDataToFile(filename, data, header, false);
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception {
+		writeDataToFile(new HSSFWorkbook(), filename, data,header);
 	}
 
-	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header, boolean forceNumbersAsString) throws Exception
-	{
-		addData(header);
-		for(HashMap<String, String> map : data)
-		{
-			String[] row = new String[header.length];
-			for(int i = 0; i < header.length; i++)
-			{
-				row[i] = map.get(header[i]);
-			}
-			addData(row);
-		}
-		saveData(filename, forceNumbersAsString);
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header,
+			boolean forceNumbersAsString) throws Exception {
+		writeDataToFile(new HSSFWorkbook(), filename, data,header,forceNumbersAsString);
+		
 	}
+
+	
 }
 

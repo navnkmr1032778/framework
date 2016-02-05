@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
@@ -60,24 +61,22 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	}
 
 
-	@Override
-	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception
+	{
+		 writeDataToFile(new XSSFWorkbook(), filename, data);
 	}
 
 
 	@Override
 	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception {
-		// TODO Auto-generated method stub
-		
+		writeDataToFile(new XSSFWorkbook(), filename, data,header);
 	}
 
 
 	@Override
 	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header,
 			boolean forceNumbersAsString) throws Exception {
-		// TODO Auto-generated method stub
+		writeDataToFile(new XSSFWorkbook(), filename, data,header,forceNumbersAsString);
 		
 	}
 
