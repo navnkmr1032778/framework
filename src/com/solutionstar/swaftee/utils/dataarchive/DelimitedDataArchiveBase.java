@@ -49,6 +49,7 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 		}
 
 		writer.close();
+		clearData();
 
 		writer = null;
 
