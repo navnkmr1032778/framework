@@ -1,7 +1,5 @@
 package com.solutionstar.swaftee.constants;
 
-import io.appium.java_client.remote.MobileBrowserType;
-
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -59,6 +59,28 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)));
 	}
 
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header,
+			boolean forceNumbersAsString) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 
 

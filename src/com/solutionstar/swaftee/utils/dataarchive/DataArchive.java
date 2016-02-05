@@ -40,5 +40,10 @@ public interface DataArchive {
     
     public List<HashMap<String, String>> retrieveData(String filename) throws Exception;
     
+    public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception;
+    
+    public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header) throws Exception;
+    
+	public void writeDataToFile(String filename, List<HashMap<String, String>> data, String[] header, boolean forceNumbersAsString) throws Exception;
 }
 
