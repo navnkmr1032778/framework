@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -23,14 +24,16 @@ public class connectDB extends DatabaseConnection
 	String dbClassName,dbUrl ="";
 	String dbServerName=null,hostName,port,database,userName,passwd;
 	CommonUtils utils;
+	String env="";
 
 
 	public connectDB()
 	{
+		env=getEnvironment();
 		CommonProperties props = CommonProperties.getInstance();
 		utils = new CommonUtils();
 		try {
-			props.load("./conf/databaseconfiguration.properties");
+			props.load(DB_CONF_FILE.get(env));
 			dbServerName = props.get("db_server_name");
 			hostName = props.get("db_host_name");
 			port = props.get("db_port");
@@ -67,6 +70,10 @@ public class connectDB extends DatabaseConnection
 		try{
 			Class.forName(dbClassName);
 
+			if(port.length()==0)
+			{
+				port=DEFAULT_PORTS.get(dbServerName);
+			}
 			dbUrl=constructConnectionString(hostName,port,database);
 
 			con = DriverManager.getConnection(dbUrl, 
@@ -290,6 +297,11 @@ public class connectDB extends DatabaseConnection
 			ex.printStackTrace();
 		}
 		return null;
+	}
+	
+	public String getEnvironment()
+	{
+		return  System.getProperty("testenv","test1").toLowerCase(Locale.ENGLISH);
 	}
 
 }

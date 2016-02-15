@@ -1530,4 +1530,14 @@ public class AppPage extends TestListenerAdapter
 		scrolltoElement(element);
 		getJavaScriptExecutor().executeScript("arguments[0].setAttribute(\"style\", \"border: 5px solid red;\");", element);
 	}
+
+	public void unHighlighter(WebElement element)
+	{
+		try {
+			// if there already is a highlighted element, unhighlight it
+			getJavaScriptExecutor().executeScript("arguments[0].setAttribute('style', arguments[1]);",element, "");
+		} catch (StaleElementReferenceException ignored) {
+			// the page got reloaded, the element isn't there
+		}
+	}
 }
