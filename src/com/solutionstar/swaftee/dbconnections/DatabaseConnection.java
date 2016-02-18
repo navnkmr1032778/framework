@@ -28,15 +28,6 @@ public abstract class DatabaseConnection {
 	  DB_CLASS_NAMES = Collections.unmodifiableMap(tmp);
 	}
 	
-	public static final Map<String, String> DB_CONF_FILE;
-	static {
-	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("stage", "./conf/db/databaseconfiguration_stage.properties");
-	  tmp.put("test1", "./conf/db/databaseconfiguration_test1.properties");
-	  tmp.put("test2", "./conf/db/databaseconfiguration_test2.properties");
-	  DB_CONF_FILE = Collections.unmodifiableMap(tmp);
-	}
-	
 	abstract Connection establishConnection(String hostName, String port, String database, String userName, String passwd) throws MyCoreExceptions;
 	
 	abstract Connection establishConnection(String hostName, String database, String userName, String passwd) throws MyCoreExceptions;

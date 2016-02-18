@@ -27,13 +27,13 @@ public class connectDB extends DatabaseConnection
 	String env="";
 
 
-	public connectDB()
+	public connectDB(String dbConfigurationFile)
 	{
 		env=getEnvironment();
 		CommonProperties props = CommonProperties.getInstance();
 		utils = new CommonUtils();
 		try {
-			props.load(DB_CONF_FILE.get(env));
+			props.load(dbConfigurationFile);
 			dbServerName = props.get("db_server_name");
 			hostName = props.get("db_host_name");
 			port = props.get("db_port");
@@ -55,7 +55,7 @@ public class connectDB extends DatabaseConnection
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
 			break;
 		case "postgresql":
-			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database+";" ;
+			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
 			break;
 		default:
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
@@ -68,7 +68,7 @@ public class connectDB extends DatabaseConnection
 	public Connection establishConnection() throws MyCoreExceptions
 	{
 		try{
-			Class.forName(dbClassName);
+			Class.forName(dbClassName).newInstance();
 
 			if(port.length()==0)
 			{
