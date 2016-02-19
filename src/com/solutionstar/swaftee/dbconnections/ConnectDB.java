@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -18,7 +17,7 @@ import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
-public class connectDB extends DatabaseConnection 
+public class ConnectDB extends DatabaseConnection 
 {
 	Connection con = null;
 	String dbClassName,dbUrl ="";
@@ -27,9 +26,8 @@ public class connectDB extends DatabaseConnection
 	String env="";
 
 
-	public connectDB(String dbConfigurationFile)
+	public ConnectDB(String dbConfigurationFile)
 	{
-		env=getEnvironment();
 		CommonProperties props = CommonProperties.getInstance();
 		utils = new CommonUtils();
 		try {
@@ -297,10 +295,4 @@ public class connectDB extends DatabaseConnection
 		}
 		return null;
 	}
-	
-	public String getEnvironment()
-	{
-		return  System.getProperty("testenv","test1").toLowerCase(Locale.ENGLISH);
-	}
-
 }
