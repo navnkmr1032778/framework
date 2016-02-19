@@ -17,20 +17,21 @@ import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
-public class connectDB extends DatabaseConnection 
+public class ConnectDB extends DatabaseConnection 
 {
 	Connection con = null;
 	String dbClassName,dbUrl ="";
 	String dbServerName=null,hostName,port,database,userName,passwd;
 	CommonUtils utils;
+	String env="";
 
 
-	public connectDB()
+	public ConnectDB(String dbConfigurationFile)
 	{
 		CommonProperties props = CommonProperties.getInstance();
 		utils = new CommonUtils();
 		try {
-			props.load("./conf/databaseconfiguration.properties");
+			props.load(dbConfigurationFile);
 			dbServerName = props.get("db_server_name");
 			hostName = props.get("db_host_name");
 			port = props.get("db_port");
@@ -52,7 +53,7 @@ public class connectDB extends DatabaseConnection
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
 			break;
 		case "postgresql":
-			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database+";" ;
+			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
 			break;
 		default:
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
@@ -66,7 +67,10 @@ public class connectDB extends DatabaseConnection
 	{
 		try{
 			Class.forName(dbClassName);
-
+			if(port.length()==0)
+			{
+				port=DEFAULT_PORTS.get(dbServerName);
+			}
 			dbUrl=constructConnectionString(hostName,port,database);
 
 			con = DriverManager.getConnection(dbUrl, 
@@ -291,5 +295,4 @@ public class connectDB extends DatabaseConnection
 		}
 		return null;
 	}
-
 }
