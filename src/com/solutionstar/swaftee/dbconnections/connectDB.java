@@ -68,8 +68,7 @@ public class connectDB extends DatabaseConnection
 	public Connection establishConnection() throws MyCoreExceptions
 	{
 		try{
-			Class.forName(dbClassName).newInstance();
-
+			Class.forName(dbClassName);
 			if(port.length()==0)
 			{
 				port=DEFAULT_PORTS.get(dbServerName);
