@@ -878,6 +878,12 @@ public class AppPage extends TestListenerAdapter {
 		return res;
 	}
 
+	public WebElement waitForElementToAppear(By locator) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(locator));
+		return driver.findElement(locator);
+	}
+
 	public void waitForElementToDisappear(By locator) {
 		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
