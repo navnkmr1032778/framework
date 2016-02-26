@@ -1096,6 +1096,22 @@ public class AppPage extends TestListenerAdapter {
 		return text;
 	}
 
+
+	//same as getTextForElementIfPresent
+	//but works for a list of webelements
+	public List<String> getTextListForElements(By locator) {
+		List<String> textList = new ArrayList<String>();
+		try {
+			List<WebElement> wlmList = this.driver.findElements(locator);
+			for (WebElement wlm : wlmList) {
+				textList.add(wlm.getText());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return textList;
+	}
+
 	public Object executeScript(String script) {
 		return ((JavascriptExecutor) this.driver).executeScript(script);
 	}
