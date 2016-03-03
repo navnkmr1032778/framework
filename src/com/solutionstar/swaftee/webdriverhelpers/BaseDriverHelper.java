@@ -1,6 +1,7 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileBrowserType;
 
 import java.io.File;
@@ -102,11 +103,9 @@ public class BaseDriverHelper {
 			logger.info("fetching mobile driver");
 			String mobilePlatform=getMobilePlatform();
 			String mobileName=getMobileName();
-			browserName=getMobileBrowserName(browserName);
+			browserName=getMobileBrowserName(getMobileBrowserToRun());
 			String platformVersion=getMobilePlatformVersion();
-
 			cap = createMobileDriverCapabilities(mobilePlatform,platformVersion,mobileName,browserName);
-
 			if(cap==null)
 				throw new MyCoreExceptions("Capabilities return as Null");
 			driver = setMobileWebDriver(cap,mobilePlatform);
@@ -137,7 +136,7 @@ public class BaseDriverHelper {
 		}
 		else if(mobilePlatform.equalsIgnoreCase("ios"))
 		{
-
+			driver = new IOSDriver(new URL("http://127.0.0.1:4723/wd/hub"), cap);
 		}
 		return driver;
 	}
@@ -230,6 +229,7 @@ public class BaseDriverHelper {
 
 	private DesiredCapabilities createMobileDriverCapabilities(String mobilePlatform,String platformVersion,String mobileName,String browserName)
 	{
+		logger.info("setting mobile driver capabilities");
 		DesiredCapabilities cap=null;
 		try
 		{
@@ -557,7 +557,7 @@ public class BaseDriverHelper {
 
 	public String getMobileBrowserToRun()
 	{
-		logger.info(System.getProperty("mobilebrowser").toLowerCase(Locale.ENGLISH));
+		logger.info("Mobile Browser name - "+System.getProperty("mobilebrowser","chrome").toLowerCase(Locale.ENGLISH));
 		return System.getProperty("mobilebrowser","chrome").toLowerCase(Locale.ENGLISH);
 	}
 
