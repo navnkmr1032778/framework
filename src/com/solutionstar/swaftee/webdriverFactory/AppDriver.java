@@ -277,7 +277,7 @@ public class AppDriver extends TestListenerAdapter {
 			if (!(testResult.getThrowable() instanceof NoSuchWindowException || testResult
 					.getThrowable() instanceof NoSuchFrameException))
 			{
-				processResults(testResult, true);
+				processResults(testResult, Boolean.valueOf(System.getProperty("takeScreenShot", "false")));
 			}
 			if (jiraUpdate())
 			{
@@ -366,10 +366,11 @@ public class AppDriver extends TestListenerAdapter {
 
 	private void processResults(ITestResult testResult,boolean takeScreenShot) throws MyCoreExceptions
 	{
+		 boolean captureJsErrors = Boolean.valueOf(System.getProperty("captureJsErrors", "false"));
 		 Map<String,WebDriver> drivers = getDriverfromResult(testResult);
 		 for(String driverType : drivers.keySet())
 		 {
-			   baseDriverHelper.ExtractJSLogs(drivers.get(driverType),driverType);
+			   if(captureJsErrors) baseDriverHelper.ExtractJSLogs(drivers.get(driverType),driverType);
 			   if(takeScreenShot)  utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
 		 }
 	}
