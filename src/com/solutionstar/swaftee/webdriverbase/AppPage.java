@@ -1530,4 +1530,14 @@ public class AppPage extends TestListenerAdapter
 		scrolltoElement(element);
 		getJavaScriptExecutor().executeScript("arguments[0].setAttribute(\"style\", \"border: 5px solid red;\");", element);
 	}
+	
+	public void waitImplicitly()
+	{
+		driver.manage().timeouts().implicitlyWait(WebDriverConstants.WAIT_HALF_MIN, TimeUnit.SECONDS);
+	}
+	
+	public void waitImplicitly(int timeOutInSeconds)
+	{
+		driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS);
+	}
 }
