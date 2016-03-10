@@ -1533,7 +1533,7 @@ public class AppPage extends TestListenerAdapter
 	
 	public void waitImplicitly()
 	{
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(WebDriverConstants.WAIT_HALF_MIN, TimeUnit.SECONDS);
 	}
 	
 	public void waitImplicitly(int timeOutInSeconds)
