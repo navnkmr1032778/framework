@@ -983,6 +983,10 @@ public class AppPage extends TestListenerAdapter
 	{
 		return element.getAttribute(attributeLocator);
 	}
+	
+	public String getAttribute(By byLocator, String attributeLocator) {
+		return this.driver.findElement(byLocator).getAttribute(attributeLocator);
+	}
 
 	public void enterInput(WebElement element, String value) 
 	{
@@ -1022,6 +1026,12 @@ public class AppPage extends TestListenerAdapter
 		logger.info("check validity: "+res);
 		return res;
 	}
+
+	public WebElement waitForElementToAppear(By locator) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(locator));
+		return driver.findElement(locator);
+	}
 	
 	public void waitForElementToDisappear(By locator) 
 	{	
@@ -1041,6 +1051,20 @@ public class AppPage extends TestListenerAdapter
 		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
 		if(isElementPresent(e))
 			wait.until(invisibilityOfElementLocated(e));
+	}
+	
+	public boolean waitForElementToDisappearSimpleWait(String xpath, int timeOutInSeconds) {
+		try {
+			while (isElementPresentAndDisplayed(this.driver.findElement(By.xpath(xpath))) && timeOutInSeconds > 0)
+				try {
+					Thread.sleep(1000);
+					timeOutInSeconds--;
+				} catch (InterruptedException e1) {
+					break;
+				}
+		} catch (org.openqa.selenium.NoSuchElementException nse) {
+			return false;
+		} return true;
 	}
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
@@ -1257,6 +1281,21 @@ public class AppPage extends TestListenerAdapter
 		}
 		return text;
 	}
+	
+	//same as getTextForElementIfPresent
+	//but works for a list of webelements
+	public List<String> getTextListForElements(By locator) {
+		List<String> textList = new ArrayList<String>();
+		List<WebElement> wlmList = this.driver.findElements(locator);
+		for (WebElement wlm : wlmList) {
+			try{
+				textList.add(wlm.getText());
+			}catch(Exception e){
+				textList.add("");
+			}
+		}
+		return textList;
+	}
 
 	public Object executeScript(String script)
 	{
@@ -1410,6 +1449,10 @@ public class AppPage extends TestListenerAdapter
 	public void assertTitle(String s) 
 	{
 		Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
+	}
+
+	public boolean isObjectExists(WebElement element) {
+		return (element != null);
 	}
 
 	public long getIndexofWebElementMatchingString(List<WebElement> list, String match)
