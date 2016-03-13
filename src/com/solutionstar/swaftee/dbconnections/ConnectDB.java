@@ -282,7 +282,7 @@ public class ConnectDB extends DatabaseConnection
 			{
 				for(int j=1;j<=numberOfColumns;j++)
 				{
-					resultList.add(rs.getString(j).toLowerCase().trim());
+					resultList.add(rs.getString(j).trim());
 				}
 			}
 			rs.close();
