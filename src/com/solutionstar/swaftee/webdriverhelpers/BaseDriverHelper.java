@@ -45,6 +45,7 @@ import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.utils.OSCheck;
 import com.solutionstar.swaftee.webdriverFactory.AppDriver;
 
 public class BaseDriverHelper {
@@ -94,7 +95,7 @@ public class BaseDriverHelper {
 		{   
 			driver = setRemoteWebDriver(cap);
 		}
-		else if((!ismobile()) || (ismobile() && !getEmulationDeviceName().equals("windows")))
+		else if((!ismobile()) || (ismobile() && !getGridPlatform().equals("windows")))
 		{
 			driver = setWebDriver(cap);
 		}
@@ -214,13 +215,7 @@ public class BaseDriverHelper {
 			Method setCapabilities = setBrowserCapabilities.getClass().getMethod(WebDriverConstants.DRIVER_METHOD.get(browserName),DesiredCapabilities.class);
 			cap = (DesiredCapabilities) setCapabilities.invoke(setBrowserCapabilities, cap);
 			String platform = getGridPlatform();
-			if(platform.equals("windows"))
-				cap.setPlatform(Platform.WINDOWS);
-			else if(platform.equals("mac"))
-				cap.setPlatform(Platform.MAC);
-			else if(platform.equals("android"))
-				cap.setPlatform(Platform.ANDROID);
-
+			cap.setPlatform(Platform.valueOf(platform));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -573,7 +568,41 @@ public class BaseDriverHelper {
 
 	public String getGridPlatform()
 	{
-		return System.getProperty("gridplatform", "windows").toLowerCase(Locale.ENGLISH);
+		String platform = System.getProperty("gridplatform");
+		if(platform == null)
+		{
+			switch(OSCheck.getOperatingSystemType())
+			{
+			case MacOS:
+				platform = "MAC";
+				break;
+			case Linux:
+				platform = "LINUX";
+				break;
+			case Other:
+				platform = "ANY";
+				break;
+			case Windows:
+				platform = "WINDOWS";
+				break;
+			default:
+				platform = "ANY";
+				break;
+			}
+		}
+		else if(platform.equals("windows"))
+		{
+			platform = "WINDOWS";
+		}
+		else if(platform.equals("mac"))
+		{
+			platform = "MAC";
+		}
+		else if(platform.equals("android"))
+		{
+			platform = "ANDROID";
+		}
+		return platform;
 	}
 
 	public String getMobilePlatform()

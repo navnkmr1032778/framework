@@ -34,19 +34,34 @@ public class DriverUtils
       return instance;
     }
 	   
-	public void downloadFile(String DriverName,String osName)
+	public void downloadFile(String DriverName,OSCheck.OSType osType)
 	{
 		String dirName = utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE;		 
 		try {
 			File destDir = new File(dirName);
 			if (!destDir.exists()) 
 				destDir.mkdir();
-			osName=osName.toLowerCase();
-			saveFileFromUrlWithJavaIO(
-			dirName + "\\"+ DriverName +".zip",WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName.toLowerCase()));
-			unZipIt(dirName + "\\"+ DriverName +".zip",dirName);
-			File file = new File(dirName + "\\"+ DriverName +".zip");
-			file.delete(); 
+			String osName = null;
+			switch(osType)
+			{
+			case Linux:
+				osName = "linux";
+				break;
+			case MacOS:
+				osName = "mac";
+				break;
+			case Other:
+			case Windows:
+			default:
+				osName = "windows";
+				break;
+			
+			}
+			saveFileFromUrlWithJavaIO(dirName + DriverName + ".zip",
+					WebDriverConstants.getDiverDownloadMapping(osName).get(DriverName.toLowerCase()));
+			unZipIt(dirName + DriverName +".zip",dirName);
+			File file = new File(dirName + DriverName +".zip");
+			file.delete();
 		} 
 		catch (Exception e) 
 		{

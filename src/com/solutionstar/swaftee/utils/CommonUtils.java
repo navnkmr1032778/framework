@@ -80,14 +80,18 @@ public class CommonUtils {
 			{
 				for(int i = 0; i < listOfFiles.length; i++)
 				{
-					if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac
+					if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac 
+					{
+						listOfFiles[i].setExecutable(true);
 						return listOfFiles[i];
+					}
+						
 				}
 			}
 			if(!driverFilefound)
 			{
 				logger.info("No driver file found under drivers folder. Trying to download driver executable file");				 
-				DriverUtils.getInstance().downloadFile(fileName, System.getProperty("os.name"));
+				DriverUtils.getInstance().downloadFile(fileName, OSCheck.getOperatingSystemType());
 				driverFilefound = true;
 				return getBrowserExecutable(path,fileName);
 			}	
