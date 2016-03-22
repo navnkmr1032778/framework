@@ -230,6 +230,20 @@ public class ConnectDB extends DatabaseConnection
 			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getFullStackTrace(ex));
 		}
 	}
+	
+	public void executeInsertQuery(String query) throws MyCoreExceptions
+	{
+		try
+		{
+			Statement stmt = con.createStatement();
+			stmt.executeUpdate(query);			
+			stmt.close();			
+		}
+		catch(Exception ex)
+		{
+			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getFullStackTrace(ex));
+		}
+	}
 
 	private HashMap<String, String> constructStringArray(ResultSet row, ResultSetMetaData rsmd, int numberOfColumns)
 	{
