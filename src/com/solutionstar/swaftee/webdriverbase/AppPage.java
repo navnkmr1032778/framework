@@ -1053,6 +1053,14 @@ public class AppPage extends TestListenerAdapter
 			wait.until(invisibilityOfElementLocated(e));
 	}
 	
+	public void waitForElementToDisappear(String xpath,int timeOut)
+	{
+		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
+		WebElement e = this.driver.findElement(By.xpath(xpath));
+		if(isElementPresentAndDisplayed(e))
+			wait.until(invisibilityOfElementLocated(e));
+	}
+	
 	public boolean waitForElementToDisappearSimpleWait(String xpath, int timeOutInSeconds) {
 		try {
 			while (isElementPresentAndDisplayed(this.driver.findElement(By.xpath(xpath))) && timeOutInSeconds > 0)
@@ -1451,9 +1459,6 @@ public class AppPage extends TestListenerAdapter
 		Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
 	}
 
-	public boolean isObjectExists(WebElement element) {
-		return (element != null);
-	}
 
 	public long getIndexofWebElementMatchingString(List<WebElement> list, String match)
 	{
