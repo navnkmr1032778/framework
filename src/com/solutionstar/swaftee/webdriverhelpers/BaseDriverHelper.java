@@ -95,7 +95,7 @@ public class BaseDriverHelper {
 		{   
 			driver = setRemoteWebDriver(cap);
 		}
-		else if((!ismobile()) || (ismobile() && !getGridPlatform().equals("windows")))
+		else if(!ismobile()|| (ismobile() && !getEmulationDeviceName().equals("noEmul")))
 		{
 			driver = setWebDriver(cap);
 		}
@@ -649,7 +649,7 @@ public class BaseDriverHelper {
 	
 	public String getEmulationDeviceName()
 	{
-		return System.getProperty("emulationDeviceName","windows");//default "windows"
+		return System.getProperty("emulationDeviceName","noEmul");//default "windows"
 	}
 	
 	public String getBaseDirLocation()

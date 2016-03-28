@@ -69,8 +69,8 @@ public class SetBrowserCapabilities {
 				options.addArguments("--window-size=" + windowSize);
 			}
 			
-			String emulDeviceName = System.getProperty("emulationDeviceName","windows");
-			if(!emulDeviceName.equals("windows"))
+			String emulDeviceName = System.getProperty("emulationDeviceName","noEmul");
+			if(!emulDeviceName.equals("noEmul"))
 			{
 				Map<String, String> mobileEmulation = new HashMap<String, String>();
 				mobileEmulation.put("deviceName", emulDeviceName);
