@@ -75,7 +75,7 @@ public class AppPage extends TestListenerAdapter
 		//android does not supports maximizeWindow;
 		if(windowSize.equals("") && !baseDriverHelper.ismobile())
 			maximizeWindow();
-		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("windows"))
+		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
 			mobileEmulationExecution=true;
 	}
 

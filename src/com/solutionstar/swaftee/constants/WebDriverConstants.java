@@ -71,11 +71,21 @@ public class WebDriverConstants {
 		
 	  MAC_DRIVERS = Collections.unmodifiableMap(tmp);
 	}
+	
+	public static final Map<String, String> LINUX_DRIVERS;
+	static {
+	  Map<String, String> tmp = new LinkedHashMap<String, String>();
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip");
+		
+	  LINUX_DRIVERS = Collections.unmodifiableMap(tmp);
+	}
 
 	public static Map<String, String> getDiverDownloadMapping(String osName) 
 	{
 		if(osName.contains("mac"))
 			return MAC_DRIVERS;
+		else if(osName.contains("linux"))
+			return LINUX_DRIVERS;
 		else
 			return WINDOWS_DRIVERS;
 	}
