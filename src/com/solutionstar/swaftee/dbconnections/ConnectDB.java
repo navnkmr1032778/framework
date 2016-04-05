@@ -25,7 +25,6 @@ public class ConnectDB extends DatabaseConnection
 	CommonUtils utils;
 	String env="";
 
-
 	public ConnectDB(String dbConfigurationFile)
 	{
 		CommonProperties props = CommonProperties.getInstance();
@@ -42,6 +41,11 @@ public class ConnectDB extends DatabaseConnection
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ConnectDB(Connection con)
+	{
+		this.con = con;
 	}
 	
 	public String constructConnectionString(String hostName,String port,String database)
