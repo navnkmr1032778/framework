@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,6 +43,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.ImageComparison.ImageCompareHelper;
 
 public class CommonUtils {
 
@@ -603,5 +606,14 @@ public class CommonUtils {
 			String password, String sourceLocation, Date startTime) {
 		return listFilesInSFTPLocation(hostname, port,username,
 				password,sourceLocation, startTime,"csv");
+	}
+	
+	public String getSwafteeAbsolutePath() throws UnsupportedEncodingException
+	{
+		String path = ImageCompareHelper.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String decodedPath = URLDecoder.decode(path, "UTF-8");
+		decodedPath=decodedPath.substring(1, decodedPath.length());
+		decodedPath=decodedPath.replace("target/classes/", "").trim();
+		return decodedPath;
 	}
 }

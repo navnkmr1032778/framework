@@ -39,7 +39,7 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		synchronized(this)
 		{
 			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			this.folderName=stackTraceElements[4].getFileName().replace(".java", "");
+			this.folderName=stackTraceElements[3].getFileName().replace(".java", "");
 			if(!isDryRun)
 			{
 				this.folderName=this.folderName+"_"+System.nanoTime();
@@ -67,10 +67,6 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 	{
 		synchronized(this)
 		{
-			if(!isClassFolderCreated)
-			{
-				createClassFolder();
-			}
 			File methodFolder=new File(name);
 			if(methodFolder.exists())
 			{
@@ -91,6 +87,10 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 	{
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		String methodName=stackTraceElements[2].getMethodName();
+		if(!isClassFolderCreated)
+		{
+			createClassFolder();
+		}
 		String methodFolderName=fileName+"/"+methodName;
 		String file;
 		synchronized(this)
@@ -119,6 +119,10 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 	{
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		String methodName=stackTraceElements[2].getMethodName()+"_"+appendName;
+		if(!isClassFolderCreated)
+		{
+			createClassFolder();
+		}
 		String methodFolderName=fileName+"/"+methodName;
 		synchronized(this)
 		{
@@ -136,6 +140,10 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 	{
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		String methodName=stackTraceElements[2].getMethodName();
+		if(!isClassFolderCreated)
+		{
+			createClassFolder();
+		}
 		String methodFolderName=fileName+"/"+methodName;
 		String file;
 		synchronized(this)
@@ -156,6 +164,10 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 	{
 		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
 		String methodName=stackTraceElements[2].getMethodName()+"_"+appendName;
+		if(!isClassFolderCreated)
+		{
+			createClassFolder();
+		}
 		String methodFolderName=fileName+"/"+methodName;
 		synchronized(this)
 		{

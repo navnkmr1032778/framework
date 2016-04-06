@@ -1,15 +1,14 @@
 package com.solutionstar.swaftee.utils.ImageComparison;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
@@ -22,6 +21,7 @@ import org.im4java.process.StandardStream;
 import org.testng.asserts.SoftAssert;
 
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.CommonUtils;
 
 
 @SuppressWarnings("serial")
@@ -29,6 +29,7 @@ public class ImageCompareHelper extends RecursiveAction
 {
 	public static final Double DEFAULT_THRESHOLD=(double) 1350000;
 	public static SoftAssert sa=new SoftAssert();
+	public static CommonUtils utils=new CommonUtils();
 	public static Map<String,Map<String,List<String>>> resultMap=Collections.synchronizedMap(new TreeMap<String,Map<String,List<String>>>());
 	List<String> compareFiles;
 	int threshold=1;
@@ -47,10 +48,12 @@ public class ImageCompareHelper extends RecursiveAction
 	 * @param actual image url
 	 * @param difference image url to be stored
 	 * @return returns number of pixel difference between expected and actual images
+	 * @throws UnsupportedEncodingException 
 	 */
-	public String compareImages (String exp,String cur,String diff)
+	public String compareImages (String exp,String cur,String diff) throws UnsupportedEncodingException
 	{
-		String myPath="D:\\ImageMagick-6.9.3-Q16";
+		
+		String myPath=utils.getSwafteeAbsolutePath()+WebDriverConstants.IMAGE_MAGICK_FOLDER_PATH;
 		ProcessStarter.setGlobalSearchPath(myPath);
 		CompareCmd compare = new CompareCmd();
 		compare.setSearchPath(myPath);
@@ -120,7 +123,7 @@ public class ImageCompareHelper extends RecursiveAction
 		return diff;
 	}
 
-	public void compareImagesAndStoreResult(String imagePath)
+	public void compareImagesAndStoreResult(String imagePath) throws UnsupportedEncodingException
 	{
 		String imagePaths[]=imagePath.split(",");
 		String baseFile=imagePaths[0];
@@ -207,7 +210,12 @@ public class ImageCompareHelper extends RecursiveAction
 	@Override
 	protected void compute() {
 		if (compareFiles.size() == threshold) {
-			compareImagesAndStoreResult(compareFiles.get(0));
+			try {
+				compareImagesAndStoreResult(compareFiles.get(0));
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return;
 		}
 
