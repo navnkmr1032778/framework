@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.utils.FileDownloader;
 
 public class ImageComparisonUtils implements ImageComparison
 {
@@ -200,9 +202,36 @@ public class ImageComparisonUtils implements ImageComparison
 	
 	public void compareAllImages()
 	{
+		try {
+			downloadImageMagick();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		getImageCompareList();
 		ImageCompareHelper.compareImageList(imageList);
 		generateHTMLReport(ImageCompareHelper.resultMap);
+	}
+	
+	/**
+	 * download image magick if not found in location
+	 * @throws IOException 
+	 * @throws MalformedURLException 
+	 */
+	
+	@SuppressWarnings("static-access")
+	public void downloadImageMagick() throws MalformedURLException, IOException
+	{
+		FileDownloader fileDownloader=new FileDownloader();
+		String swafteePath=utils.getSwafteeAbsolutePath();
+		String zipPath=swafteePath+WebDriverConstants.IMAGE_MAGICK_ZIP_PATH;
+		String imageMagickPath=swafteePath+WebDriverConstants.IMAGE_MAGICK_FOLDER_PATH;
+		if(!new File(imageMagickPath).exists())
+		{
+			fileDownloader.saveFileFromUrlWithJavaIO(zipPath,WebDriverConstants.IMAGE_MAGICK_URL);
+			fileDownloader.unZipIt(zipPath,imageMagickPath);
+		}
 	}
 	
 	/**

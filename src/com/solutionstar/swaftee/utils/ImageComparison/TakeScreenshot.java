@@ -34,13 +34,11 @@ public interface TakeScreenshot {
 	
 	public void takeScreenShot(WebDriver driver ,WebElement elem,int index,String appendName) ;
 	
-	public void captureScreenShot(WebDriver driver,String fileName) ;
+	void captureScreenShot(WebDriver driver,String fileName) ;
 	
 	public void scrollElementToUserView(WebDriver driver,WebElement elem);
 	
-	public void captureScreenShot(WebDriver driver, WebElement element,String fileName) ;
-	
-	
+	void captureScreenShot(WebDriver driver, WebElement element,String fileName) ;
 	
 	public boolean getIsDryRun();
 	

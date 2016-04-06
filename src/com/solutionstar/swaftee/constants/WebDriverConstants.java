@@ -33,6 +33,9 @@ public class WebDriverConstants {
 	public static final String DEFAULT_BROWSER_OS = "windows";
 	public static String IE_BROWSER = "ie";
 	public static String PROPERTIES_FILE_PATH = "./conf/seleniumconfiguration.properties";
+	public static final String IMAGE_MAGICK_URL="http://jira-gadgets.xome.com/grapher/resources/OtherContent/ImageMagick.zip";
+	public static final String IMAGE_MAGICK_ZIP_PATH="3rdParty/ImageMagick.zip";
+	public static final String IMAGE_MAGICK_FOLDER_PATH="3rdParty/ImageMagick";
 	
 	public enum OperatingSystem{
 		WINDOWS, MAC
