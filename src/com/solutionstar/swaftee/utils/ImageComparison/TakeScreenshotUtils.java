@@ -3,8 +3,8 @@ package com.solutionstar.swaftee.utils.ImageComparison;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.math.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -17,10 +17,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class TakeScreenshotUtils implements TakeScreenshot{
 
-	String folderName,fileName;
+	String fileFolderName;
 	String baseDirectoryLocation,currentDirectoryLocation;
 	boolean isDryRun,isClassFolderCreated=false,isCompareImages;
 	List<String> methodFolderNames;
@@ -34,33 +35,77 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		methodFolderNames=new ArrayList<String>();
 	}
 	
+	/**
+	 * creates class folder and device_browser folder
+	 */
+	
 	public void createClassFolder()
 	{
 		synchronized(this)
 		{
 			StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-			this.folderName=stackTraceElements[3].getFileName().replace(".java", "");
+			String folderName=stackTraceElements[3].getFileName().replace(".java", "");
 			if(!isDryRun)
 			{
-				this.folderName=this.folderName+"_"+System.nanoTime();
+				folderName=folderName+"_"+System.nanoTime();
 			}
-			this.fileName=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
+			this.fileFolderName=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
 			if(isDryRun)
 			{
-				fileName=getBaseDirLocation();
+				fileFolderName=getBaseDirLocation();
 			}
 			else if(getCompareImages() )
 			{
-				fileName=getCurrentDirLocation();
+				fileFolderName=getCurrentDirLocation();
 			}
-			fileName=fileName+"/"+folderName;
-			File dir=new File(fileName);
+			fileFolderName=fileFolderName+"/"+folderName;
+			File dir=new File(fileFolderName);
 			if(!dir.exists())
 			{
 				dir.mkdirs();
 			}
-			isClassFolderCreated=true;
 		}
+		createDeviceBrowserFolder();
+		isClassFolderCreated=true;
+	}
+	
+	/**
+	 * appends devicename_browsername to this.folderName
+	 * (this.fileFolderName+="/devicename_browsername")
+		-Dmobilename="device_name" -DemulDeviceName="noEmul"
+	 */
+	public void createDeviceBrowserFolder()
+	{
+		String deviceFolderName=getDeviceBrowserName();
+		fileFolderName+="/"+deviceFolderName;
+		File dir=new File(fileFolderName);
+		if(!dir.exists())
+		{
+			dir.mkdirs();
+		}
+	}
+	
+	/**
+	 * get device name and browser name
+	 * @return (devicename_browsername)
+	 */
+	public String getDeviceBrowserName()
+	{
+		String deviceFolderName=null;
+		BaseDriverHelper helper=new BaseDriverHelper();
+		if(helper.ismobile())
+		{
+			String mobileDeviceName=helper.getMobileName();
+			String emulDeviceName=helper.getEmulationDeviceName();
+			deviceFolderName=(!mobileDeviceName.equals("noDevice"))?mobileDeviceName:
+				((!emulDeviceName.equals("noEmul"))?emulDeviceName:"noDevice");
+		}
+		else
+		{
+			deviceFolderName = helper.getGridPlatform();
+		}
+		deviceFolderName+="_"+helper.getBrowserToRun();
+		return deviceFolderName;
 	}
 	
 	public void createMethodFolder(String name)
@@ -91,7 +136,7 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		{
 			createClassFolder();
 		}
-		String methodFolderName=fileName+"/"+methodName;
+		String methodFolderName=fileFolderName+"/"+methodName;
 		String file;
 		synchronized(this)
 		{
@@ -123,7 +168,7 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		{
 			createClassFolder();
 		}
-		String methodFolderName=fileName+"/"+methodName;
+		String methodFolderName=fileFolderName+"/"+methodName;
 		synchronized(this)
 		{
 			if(!methodFolderNames.contains(methodFolderName))
@@ -144,7 +189,7 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		{
 			createClassFolder();
 		}
-		String methodFolderName=fileName+"/"+methodName;
+		String methodFolderName=fileFolderName+"/"+methodName;
 		String file;
 		synchronized(this)
 		{
@@ -168,7 +213,7 @@ public class TakeScreenshotUtils implements TakeScreenshot{
 		{
 			createClassFolder();
 		}
-		String methodFolderName=fileName+"/"+methodName;
+		String methodFolderName=fileFolderName+"/"+methodName;
 		synchronized(this)
 		{
 			if(!methodFolderNames.contains(methodFolderName))

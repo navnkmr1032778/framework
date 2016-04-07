@@ -81,10 +81,7 @@ public class ImageCompareHelper extends RecursiveAction
 		}
 		catch (Exception e)
 		{
-			if(!e.getMessage().equals("java.lang.NullPointerException"))
-			{
-				e.printStackTrace();
-			}
+			e.printStackTrace();
 		}
 		return null; 
 	}
@@ -109,15 +106,12 @@ public class ImageCompareHelper extends RecursiveAction
 		// This stores the difference
 		cmpOp.addImage(diff);
 
-
-		try {
+		try 
+		{
 			compare.run(cmpOp);
 			return "";
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IM4JavaException e) {
+		} catch (Exception e) 
+		{
 			e.printStackTrace();
 		}
 		return diff;
@@ -172,7 +166,6 @@ public class ImageCompareHelper extends RecursiveAction
 		{
 			if(resultMap.containsKey(baseMethodFolderName))
 			{
-				//if(result!=null && result.equalsIgnoreCase("null"))
 				if(resultMap.get(baseMethodFolderName).containsKey(key))
 				{
 					resultMap.get(baseMethodFolderName).get(key).add(val);
@@ -195,12 +188,8 @@ public class ImageCompareHelper extends RecursiveAction
 		}
 	}
 
-	public static void compareImageList(List<String> imageList) {
-
-		/*int processors = Runtime.getRuntime().availableProcessors();
-		System.out.println(Integer.toString(processors) + " processor"
-				+ (processors != 1 ? "s are " : " is ") + "available");*/
-
+	public static void compareImageList(List<String> imageList)
+	{
 		ImageCompareHelper ce = new ImageCompareHelper(imageList);
 
 		ForkJoinPool pool = new ForkJoinPool();

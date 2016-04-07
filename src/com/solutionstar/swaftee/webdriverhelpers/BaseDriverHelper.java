@@ -1,32 +1,19 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
-import io.appium.java_client.remote.MobileBrowserType;
-
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
-import net.lightbody.bmp.core.har.Har;
-import net.lightbody.bmp.proxy.ProxyServer;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Platform;
-import org.openqa.selenium.Point;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.logging.LogEntries;
@@ -48,6 +35,13 @@ import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.OSCheck;
 import com.solutionstar.swaftee.webdriverFactory.AppDriver;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.remote.MobileBrowserType;
+import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
+import net.lightbody.bmp.core.har.Har;
+import net.lightbody.bmp.proxy.ProxyServer;
 
 public class BaseDriverHelper {
 
@@ -105,7 +99,7 @@ public class BaseDriverHelper {
 			logger.info("fetching mobile driver");
 			String mobilePlatform=getMobilePlatform();
 			String mobileName=getMobileName();
-			browserName=getMobileBrowserName(getMobileBrowserToRun());
+			browserName=getMobileBrowserName(browserName);
 			String platformVersion=getMobilePlatformVersion();
 			cap = createMobileDriverCapabilities(mobilePlatform,platformVersion,mobileName,browserName);
 			if(cap==null)
@@ -432,6 +426,7 @@ public class BaseDriverHelper {
 		this.secondaryDriver = (WebDriver) obj;
 	}
 
+	@SuppressWarnings("unused")
 	private void printCapabilities(Capabilities capabilities)
 	{
 		Map<String, ?> map = capabilities.asMap();
@@ -495,6 +490,7 @@ public class BaseDriverHelper {
 		ExtractDriverJSErrors(driver,getBrowserName(driverType));
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private void ExtractDriverJSErrors(WebDriver driver, String browserName) 
 	{
 		if(browserName.equalsIgnoreCase("ie")) {
@@ -549,12 +545,6 @@ public class BaseDriverHelper {
 	{
 		return Boolean.valueOf(System.getProperty("ismobile","false").toLowerCase(Locale.ENGLISH));
 
-	}
-
-	public String getMobileBrowserToRun()
-	{
-		logger.info("Mobile Browser name - "+System.getProperty("mobilebrowser","chrome").toLowerCase(Locale.ENGLISH));
-		return System.getProperty("mobilebrowser","chrome").toLowerCase(Locale.ENGLISH);
 	}
 
 	public String getBrowserToRun()
@@ -614,7 +604,7 @@ public class BaseDriverHelper {
 
 	public String getMobileName()
 	{
-		logger.info(System.getProperty("mobilename"));
+		logger.info(System.getProperty("mobilename","noDevice"));
 		return System.getProperty("mobilename");
 	}
 

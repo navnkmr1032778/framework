@@ -67,7 +67,7 @@ $(function($){
 		 $('button').click(function sendToServlet()
 		  {
 			  var dataToUpdate={};
-			  $('td input[type=\"radio\"]:checked').each(function(i,e)
+			  $('td input[type="radio"]:checked').each(function(i,e)
 					  {
 				  dataToUpdate[$(e).attr('name')]=$(e).val();
 					  });

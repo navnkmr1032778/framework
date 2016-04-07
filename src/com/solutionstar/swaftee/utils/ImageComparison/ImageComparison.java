@@ -14,17 +14,17 @@ public interface ImageComparison
 	 *   
 	 */
 	
-	public void getAllCompareFilesByMethodNameAsMap();
+	public Map<String,Map<String,List<String>>> getAllCompareFilesByMethodNameAsMap();
 	
 	/***
-	 * gets all files and folders from compare->(given class name) folder
+	 * gets all files and folders from compare->(given class name/Device_browser) folder
 	 * stores the file and folder names in the structure:baseFilesMap
 	 * Map  	String			List<String>
 	 *    	methodName--->	Screenshots File Name
-	 *   
+	 * returns the map<method_name_folder,<base_image,List<compare_images>>
 	 */
 	
-	public void getAllBaseFilesByMethodNameAsMap();
+	public Map<String,List<String>> getAllBaseFilesByMethodNameAsMap();
 	
 	/**
 	 * concatenates all the params with , separation and add it to ImageList

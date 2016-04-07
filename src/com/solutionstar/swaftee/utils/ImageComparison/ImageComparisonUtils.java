@@ -19,11 +19,11 @@ import com.solutionstar.swaftee.utils.FileDownloader;
 
 public class ImageComparisonUtils implements ImageComparison
 {
-	public Map<String,Map<String,List<String>>> compareFilesMap;
-	public Map<String,List<String>> baseFilesMap;
+	public Map<String,Map<String,Map<String,List<String>>>> compareFilesMap;
+	public Map<String,Map<String,List<String>>> baseFilesMap;
 	// method names -> methods
 	public List<String> imageList;
-	String folderName;
+	String folderName,className;
 	CommonUtils utils;
 	String baseDirLocation;
 	String currentDirLocation;
@@ -31,9 +31,9 @@ public class ImageComparisonUtils implements ImageComparison
 	
 	public ImageComparisonUtils(String className,String baseDirLocation,String currentDirLocation)
 	{
-		this.folderName=className;
-		this.compareFilesMap=new TreeMap<String,Map<String,List<String>>>();
-		this.baseFilesMap=new TreeMap<String,List<String>>();
+		this.className=this.folderName=className;
+		this.compareFilesMap=new TreeMap<String,Map<String,Map<String,List<String>>>>();
+		this.baseFilesMap=new TreeMap<String,Map<String,List<String>>>();
 		this.imageList=new ArrayList<String>();
 		utils=new CommonUtils();
 		this.baseDirLocation=baseDirLocation+"/"+className;
@@ -41,9 +41,25 @@ public class ImageComparisonUtils implements ImageComparison
 		path=utils.getCurrentWorkingDirectory();
 	}
 	
-	public void getAllCompareFilesByMethodNameAsMap()
+	public void getCompareFilesByDeviceName()
 	{
-		String[] compareFoldersWithClassNames=getListOfSubDirectories(currentDirLocation,folderName);
+		String[] compareClassFolders=getListOfSubDirectories(currentDirLocation,folderName);
+		
+		for(int instance=0;instance<compareClassFolders.length;instance++)
+		{
+			String classDir=currentDirLocation;
+			folderName=compareClassFolders[instance];
+			currentDirLocation=currentDirLocation+"/"+folderName;
+			Map<String,Map<String,List<String>>> deviceFoldersMapList=getAllCompareFilesByMethodNameAsMap();
+			compareFilesMap.put(compareClassFolders[instance],deviceFoldersMapList);
+			currentDirLocation=classDir;
+		}
+	}
+	
+	public Map<String,Map<String,List<String>>> getAllCompareFilesByMethodNameAsMap()
+	{
+		Map<String,Map<String,List<String>>> methodFilesMap=new TreeMap<String,Map<String,List<String>>>();
+		String[] compareFoldersWithClassNames=getListOfSubDirectories(currentDirLocation);
 		Map<String,List<String>> methodMap = null;
 		
 		for(int instance=0;instance<compareFoldersWithClassNames.length;instance++)
@@ -70,12 +86,30 @@ public class ImageComparisonUtils implements ImageComparison
 					}
 				}
 			}	
-			compareFilesMap.put(compareFoldersWithClassNames[instance],methodMap);
-		}	
+			methodFilesMap.put(compareFoldersWithClassNames[instance],methodMap);
+		}
+		return methodFilesMap;
 	}
 	
-	public void getAllBaseFilesByMethodNameAsMap()
+	public void getBaseFilesByDeviceName()
 	{
+		String[] DeviceFoldersInsideClassFolder=getListOfSubDirectories(baseDirLocation);
+		Map<String,List<String>> deviceMap = null;
+		
+		for(int instance=0;instance<DeviceFoldersInsideClassFolder.length;instance++)
+		{
+			deviceMap=new TreeMap<String,List<String>>();
+			String dirLocation=baseDirLocation;
+			baseDirLocation=baseDirLocation+"/"+DeviceFoldersInsideClassFolder[instance];
+			Map<String,List<String>> deviceFilesMap=getAllBaseFilesByMethodNameAsMap();
+			baseFilesMap.put(DeviceFoldersInsideClassFolder[instance],deviceFilesMap);
+			baseDirLocation=dirLocation;
+		}
+	}
+	
+	public Map<String,List<String>> getAllBaseFilesByMethodNameAsMap()
+	{
+		Map<String,List<String>> baseMethodFiles=new TreeMap<String,List<String>>();
 		String basePathWithClassName=baseDirLocation;
 		String[] baseFoldersWithMethodNames=getListOfSubDirectories(basePathWithClassName);
 		for(int methods=0;methods<baseFoldersWithMethodNames.length;methods++)
@@ -85,18 +119,19 @@ public class ImageComparisonUtils implements ImageComparison
 
 			for(int image=0;image<screenshotFiles.length;image++)
 			{
-				if(baseFilesMap.containsKey(baseFoldersWithMethodNames[methods]))
+				if(baseMethodFiles.containsKey(baseFoldersWithMethodNames[methods]))
 				{
-					baseFilesMap.get(baseFoldersWithMethodNames[methods]).add(screenshotFiles[image]);
+					baseMethodFiles.get(baseFoldersWithMethodNames[methods]).add(screenshotFiles[image]);
 				}
 				else
 				{
 					List<String> fileList=new ArrayList<String>();
 					fileList.add(screenshotFiles[image]);
-					baseFilesMap.put(baseFoldersWithMethodNames[methods], fileList);
+					baseMethodFiles.put(baseFoldersWithMethodNames[methods], fileList);
 				}
 			}
-		}		
+		}
+		return baseMethodFiles;
 	}
 	
 	
@@ -126,14 +161,14 @@ public class ImageComparisonUtils implements ImageComparison
 	
 	public void addToCompareImagesListByFolderName(List<String> compareFiles,List<String> baseFiles,Map<String,String> filePath)
 	{
-		String storePath=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("baseMethodFolder");
+		String storePath=WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("deviceFolder")+"/"+filePath.get("baseMethodFolder");
 		File storeFile=new File(storePath);
 		if(!storeFile.exists())
 		{
 			storeFile.mkdirs();
 		}
-		String comparePath=currentDirLocation+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("baseMethodFolder");
-		String basePath=baseDirLocation+"/"+filePath.get("baseMethodFolder");
+		String comparePath=currentDirLocation+"/"+filePath.get("compareClassFolder")+"/"+filePath.get("deviceFolder")+"/"+filePath.get("baseMethodFolder");
+		String basePath=baseDirLocation+"/"+filePath.get("deviceFolder")+"/"+filePath.get("baseMethodFolder");
 		
 		int compareIndex=0;
 		while(compareFiles.size()>0 && baseFiles.size()>0)
@@ -171,35 +206,39 @@ public class ImageComparisonUtils implements ImageComparison
 		}
 	}
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void getImageCompareList()
 	{
-		Iterator baseEntries = baseFilesMap.entrySet().iterator();
-		Map<String,String> filePath=new TreeMap<String,String>();
-		while (baseEntries.hasNext())
+		Iterator compareClassIter = compareFilesMap.entrySet().iterator();
+		while(compareClassIter.hasNext())
 		{
-			Entry baseEntry = (Entry) baseEntries.next();
-			String baseKey = (String)baseEntry.getKey();
-			@SuppressWarnings("unchecked")
-			List<String> baseVal=(List<String>)baseEntry.getValue();
-			filePath.put("baseMethodFolder", baseKey);
-
-			Iterator compareEntries = compareFilesMap.entrySet().iterator();
-
-			while (compareEntries.hasNext())
+			Entry compareClassEntry = (Entry) compareClassIter.next();
+			Map<String,String> filePath=new TreeMap<String,String>();
+			String compareClassKey=(String)compareClassEntry.getKey();
+			Map<String,Map<String,List<String>>> compareClassVal=(Map<String,Map<String,List<String>>>)compareClassEntry.getValue();
+			filePath.put("compareClassFolder",compareClassKey);
+			Iterator baseDeviceIter = baseFilesMap.entrySet().iterator();
+			while(baseDeviceIter.hasNext())
 			{
-				Entry compareEntry = (Entry) compareEntries.next();
-				List<String> baseImages=new ArrayList<String>();
-				baseImages.addAll(baseVal);
-				String compareKey=(String) compareEntry.getKey();//imageComparisonTest_355769689846711
-				@SuppressWarnings("unchecked")
-				Map<String,List<String>> compareVal=(Map<String,List<String>>)compareEntry.getValue();
-				filePath.put("compareClassFolder", compareKey);
-				addToCompareImagesListByFolderName(compareVal.get(baseKey),baseImages,filePath);
+				Entry baseDeviceEntry = (Entry) baseDeviceIter.next();
+				String baseDeviceKey = (String)baseDeviceEntry.getKey();
+				filePath.put("deviceFolder", baseDeviceKey);
+				Iterator baseMethodIter = (Iterator)((Map<String,List<String>>)(baseDeviceEntry.getValue())).entrySet().iterator();
+				while (baseMethodIter.hasNext())
+				{
+					Entry baseMethodEntry = (Entry) baseMethodIter.next();
+					String baseMethodKey = (String)baseMethodEntry.getKey();
+					List<String> baseMethodValue = (List<String>)baseMethodEntry.getValue();
+					List<String> baseImages=new ArrayList<String>();
+					baseImages.addAll(baseMethodValue);
+					filePath.put("baseMethodFolder", baseMethodKey);
+					addToCompareImagesListByFolderName(compareClassVal.get(baseDeviceKey).get(baseMethodKey), baseImages,filePath);
+				}
 			}
+			//while()
 		}
 	}
-	
+
 	public void compareAllImages()
 	{
 		try {
@@ -315,7 +354,7 @@ public class ImageComparisonUtils implements ImageComparison
 				+ "<script type=\"text/javascript\" src=\"http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js\"></script>"
 				+ "<script type=\"text/javascript\" src=\""+swafteePath+"/swaftee/resources/ImgCmpScript.js\"></script>";
 		output1.append(start);
-		output1.append("<b>Image Comparison Test Status: "+folderName+"</b>");
+		output1.append("<b>Image Comparison Test Status: "+className+"</b>");
 		/*String style="<style> img:hover { position:relative; top:-25px; left:-35px; width:1000px; height:auto; display:block; z-index:999; </style>";
 		output1.append(style);*/
 		output1.append( "<div class=\"table-responsive\"><table class=\"table\"><tr><th>Base Image</th>");
