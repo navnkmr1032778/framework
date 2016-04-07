@@ -23,6 +23,7 @@ public class WebDriverConstants {
 	public static int WAIT_ONE_MIN = 60;
 	public static int WAIT_HALF_MIN = 30;
 	public static int WAIT_TWO_MIN = 120;
+	public static int WAIT_TEN_SECS_IN_MILLI = 10000;
 	public static int MAX_TIMEOUT_PAGE_LOAD = 120;
 	public static int EMAIL_PULL_LIMIT = 120;
 	
