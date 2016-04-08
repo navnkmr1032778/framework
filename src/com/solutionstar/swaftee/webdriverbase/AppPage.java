@@ -569,6 +569,20 @@ public class AppPage extends TestListenerAdapter
 		Dimension di = new Dimension(width, hight);
 		driver.manage().window().setSize(di);
 	}
+	
+	/***
+	 * This Method will get the current screen resolution and set that resolution to browser window
+	 */
+	public void maximizeWindowToFullScreen()
+	{
+		Toolkit toolkit = Toolkit.getDefaultToolkit();  
+		int Width = (int) toolkit.getScreenSize().getWidth();  
+		int Height = (int) toolkit.getScreenSize().getHeight();  
+		Dimension screenResolution = new Dimension(Width, Height);  
+		logger.info("Setting the screen resolution as Hight = " + Height + " and Width = "+ Width);
+		driver.manage().window().setSize(screenResolution);  
+
+	}
 
 	public void dragAndDropElements(WebElement dragElem, WebElement dropElem) throws InterruptedException 
 	{
