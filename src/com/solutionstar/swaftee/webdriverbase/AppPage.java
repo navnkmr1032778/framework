@@ -579,7 +579,7 @@ public class AppPage extends TestListenerAdapter
 		int Width = (int) toolkit.getScreenSize().getWidth();  
 		int Height = (int) toolkit.getScreenSize().getHeight();  
 		Dimension screenResolution = new Dimension(Width, Height);  
-		logger.info("Setting the screen resolution as Hight = " + Height + " and Width = "+ Width);
+		logger.info("Setting the screen resolution as Height = " + Height + " and Width = "+ Width);
 		driver.manage().window().setSize(screenResolution);  
 
 	}
@@ -1510,6 +1510,11 @@ public class AppPage extends TestListenerAdapter
 	{
 		this.driver.get(url);
 		waitForAJaxCompletion();
+	}
+	
+	public void gotoURLInNewWindow(String url)
+	{
+		getJavaScriptExecutor().executeScript("window.open('"+url+"','_blank');");
 	}
 
 	public boolean hasEditableFields(WebElement element) {
