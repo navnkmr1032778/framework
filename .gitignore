@@ -4,3 +4,8 @@ test-output/
 External Jars/
 .DS_Store
 .exe
+3rdParty/
+3rdParty/*
+.classpath
+.settings/*
+.project

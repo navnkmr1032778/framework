@@ -241,13 +241,13 @@ public class ImageComparisonUtils implements ImageComparison
 
 	public void compareAllImages()
 	{
-		try {
-			downloadImageMagick();
+		/*try {
+			//downloadImageMagick();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		getImageCompareList();
 		ImageCompareHelper.compareImageList(imageList);
 		generateHTMLReport(ImageCompareHelper.resultMap);
@@ -264,10 +264,14 @@ public class ImageComparisonUtils implements ImageComparison
 	{
 		FileDownloader fileDownloader=new FileDownloader();
 		String swafteePath=utils.getSwafteeAbsolutePath();
+		String parentPath=swafteePath+WebDriverConstants.IMAGE_MAGICK_PARENT_FILE;
 		String zipPath=swafteePath+WebDriverConstants.IMAGE_MAGICK_ZIP_PATH;
 		String imageMagickPath=swafteePath+WebDriverConstants.IMAGE_MAGICK_FOLDER_PATH;
 		if(!new File(imageMagickPath).exists())
 		{
+			File parentFile=new File(parentPath);
+			if(!parentFile.exists())
+				parentFile.mkdirs();
 			fileDownloader.saveFileFromUrlWithJavaIO(zipPath,WebDriverConstants.IMAGE_MAGICK_URL);
 			fileDownloader.unZipIt(zipPath,imageMagickPath);
 		}

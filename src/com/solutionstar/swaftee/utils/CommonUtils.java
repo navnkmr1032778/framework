@@ -79,7 +79,7 @@ public class CommonUtils {
 		try{
 			File fileDirectory = new File(path);
 			File[] listOfFiles = fileDirectory.listFiles();
-			if(listOfFiles.length != 0)
+			if(listOfFiles!=null && listOfFiles.length != 0)
 			{
 				for(int i = 0; i < listOfFiles.length; i++)
 				{

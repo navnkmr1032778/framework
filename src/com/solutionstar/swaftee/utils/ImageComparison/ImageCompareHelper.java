@@ -53,10 +53,10 @@ public class ImageCompareHelper extends RecursiveAction
 	public String compareImages (String exp,String cur,String diff) throws UnsupportedEncodingException
 	{
 		
-		String myPath=utils.getSwafteeAbsolutePath()+WebDriverConstants.IMAGE_MAGICK_FOLDER_PATH;
-		ProcessStarter.setGlobalSearchPath(myPath);
+		String myPath=utils.getSwafteeAbsolutePath()+WebDriverConstants.IMAGE_MAGICK_FOLDER_PATH+"/ImageMagick-6.9.3-Q16";
+		ProcessStarter.setGlobalSearchPath("C:/Program Files/ImageMagick-6.9.3-Q16");
 		CompareCmd compare = new CompareCmd();
-		compare.setSearchPath(myPath);
+		compare.setSearchPath("C:/Program Files/ImageMagick-6.9.3-Q16");
 
 		compare.setErrorConsumer(StandardStream.STDERR);
 		IMOperation cmpOp = new IMOperation();
