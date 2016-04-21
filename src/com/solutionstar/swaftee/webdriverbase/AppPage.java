@@ -1061,19 +1061,6 @@ public class AppPage extends TestListenerAdapter
 			wait.until(invisibilityOfElementLocated(e));
 	}
 	
-	public boolean waitForElementToDisappearSimpleWait(String xpath, int timeOutInSeconds) {
-		try {
-			while (isElementPresentAndDisplayed(this.driver.findElement(By.xpath(xpath))) && timeOutInSeconds > 0)
-				try {
-					Thread.sleep(1000);
-					timeOutInSeconds--;
-				} catch (InterruptedException e1) {
-					break;
-				}
-		} catch (org.openqa.selenium.NoSuchElementException nse) {
-			return false;
-		} return true;
-	}
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
 		return new ExpectedCondition<Boolean>() {
@@ -1294,8 +1281,8 @@ public class AppPage extends TestListenerAdapter
 	//but works for a list of webelements
 	public List<String> getTextListForElements(By locator) {
 		List<String> textList = new ArrayList<String>();
-		List<WebElement> wlmList = this.driver.findElements(locator);
-		for (WebElement wlm : wlmList) {
+		List<WebElement> wElmList = this.driver.findElements(locator);
+		for (WebElement wlm : wElmList) {
 			try{
 				textList.add(wlm.getText());
 			}catch(Exception e){

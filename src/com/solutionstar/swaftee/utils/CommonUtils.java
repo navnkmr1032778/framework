@@ -608,7 +608,7 @@ public class CommonUtils {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> docToList(String filePath) {
+	public List<String> textFileToList(String filePath) {
 		List<String> lines = null;
 		try {
 			lines = FileUtils.readLines(new File(getTestDataFullDirPath(filePath)));
