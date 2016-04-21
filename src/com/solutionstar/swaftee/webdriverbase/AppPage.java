@@ -1559,6 +1559,7 @@ public class AppPage extends TestListenerAdapter
 	{
 		driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS);
 	}
+	
 	public void scrollElementToUserView(WebElement elem)
 	{
 		getJavaScriptExecutor().executeScript("window.scrollTo(" + (elem.getLocation().x-500) + "," +(elem.getLocation().y-500) + ");");
@@ -1568,6 +1569,4 @@ public class AppPage extends TestListenerAdapter
 	{
 		getJavaScriptExecutor().executeScript("$(arguments[0],arguments[1])[0].scrollIntoView(false)",elem,container);
 	}
-
-
 }
