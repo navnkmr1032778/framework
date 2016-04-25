@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
+import org.testng.Reporter;
 import org.testng.SkipException;
 import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterClass;
@@ -402,8 +403,11 @@ public class AppDriver extends TestListenerAdapter {
 	protected String[] getJiraTestCases(ITestResult testResult)
 	{
 		Annotation a = testResult.getMethod().getConstructorOrMethod().getMethod().getAnnotation(Jira.class);
+		String val=(String) testResult.getAttribute("JiraIds");
 		if(a!=null)
 			return ((Jira) a).TC();
+		else if(val!=null)
+			return val.split(",");
 		else
 			return null;
 	}
@@ -630,5 +634,11 @@ public class AppDriver extends TestListenerAdapter {
 			classMap.put(className, methodList);
 		}
 		return classMap;
-	}	
+	}
+	
+	public void setJiraTestCaseId(String ids)
+	{
+		ITestResult tr = Reporter.getCurrentTestResult();
+		tr.setAttribute("JiraIds", ids);
+	}
  }
