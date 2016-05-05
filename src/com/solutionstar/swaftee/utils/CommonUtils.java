@@ -75,6 +75,11 @@ public class CommonUtils {
 	{
 		try{
 			File fileDirectory = new File(path);
+			if (!fileDirectory.exists())
+			{
+				fileDirectory.mkdirs();
+			}
+			
 			File[] listOfFiles = fileDirectory.listFiles();
 			if(listOfFiles.length != 0)
 			{
