@@ -324,6 +324,11 @@ public class AppPage extends TestListenerAdapter
 		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, text);
 	}
 	
+	/**
+	 * Will raise an javascript event as if the mouse is hovering over the given web element
+	 * 
+	 * @param element The webelement on which hover has to be made
+	 */
 	public void hoverOverElementUsingJS(WebElement element)
 	{
 		String js = "var eventObj=document.createEvent('MouseEvent');eventObj.initMouseEvent('mouseover', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);arguments[0].dispatchEvent(eventObj);"; 
@@ -466,6 +471,12 @@ public class AppPage extends TestListenerAdapter
 		} 
 	}
 	
+	/**
+	 * Selects an option from silver light drop down.
+	 * @param element The dropdown combo box element present in the UI
+	 * @param value The value needs to be selected
+	 * @throws Exception
+	 */
 	public void selectSilverLightDropDown(WebElement element, String value) throws Exception
 	{
 		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
@@ -483,6 +494,13 @@ public class AppPage extends TestListenerAdapter
 		throw new Exception("Value not found exception");
 	}
 	
+	/**
+	 * Passed an combo box web element, returns all the options web element from it. The trick is to get the id of the element and 
+	 * create the required id which holds all the options and get the elements from them
+	 * 
+	 * @param element The combo box web element
+	 * @return
+	 */
 	private List<WebElement> _getAllOptionsFromSilverLightDropDown(WebElement element)
 	{
 		String inputId = element.getAttribute("id");
@@ -495,6 +513,12 @@ public class AppPage extends TestListenerAdapter
 		return options;
 	}
 	
+	/**
+	 * Passed an combo box web element, returns the inner text of all the options in them. Internally uses _getAllOptionsFromSilverLightDropDown
+	 * 
+	 * @param element The combo box web element
+	 * @return
+	 */
 	public List<String> getAllOptionsFromSilverLightDropDown(WebElement element)
 	{
 		List<String> optionText = new ArrayList<String>();
@@ -1291,6 +1315,10 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	/**
+	 * Will induce a wait till all ajax requests are completed. This works based on the monkey patch. If the
+	 * monkey patch is not in place, it will apply the monkey patch first and returns without any wait. 
+	 */
 	public void waitForAJaxCompletion()
 	{
 		try
@@ -1327,6 +1355,11 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	/**
+	 * This method modifies the inbuilt javascripts class XMLHttpRequest to include one more variable ajaxcount.
+	 * This will be used to keep track of all the ajaxcounts sent out from the browser. The code is minified as 
+	 * the normal version is not getting executed properly in javascript executor.
+	 */
 	public void monkeyPatch()
 	{	
 /*
