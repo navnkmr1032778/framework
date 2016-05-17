@@ -997,6 +997,10 @@ public class AppPage extends TestListenerAdapter
 	{
 		return element.getAttribute(attributeLocator);
 	}
+	
+	public String getAttribute(By byLocator, String attributeLocator) {
+		return this.driver.findElement(byLocator).getAttribute(attributeLocator);
+	}
 
 	public void enterInput(WebElement element, String value) 
 	{
@@ -1036,6 +1040,12 @@ public class AppPage extends TestListenerAdapter
 		logger.info("check validity: "+res);
 		return res;
 	}
+
+	public WebElement waitForElementToAppear(By locator) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(locator));
+		return driver.findElement(locator);
+	}
 	
 	public void waitForElementToDisappear(By locator) 
 	{	
@@ -1056,6 +1066,15 @@ public class AppPage extends TestListenerAdapter
 		if(isElementPresent(e))
 			wait.until(invisibilityOfElementLocated(e));
 	}
+	
+	public void waitForElementToDisappear(String xpath,int timeOut)
+	{
+		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
+		WebElement e = this.driver.findElement(By.xpath(xpath));
+		if(isElementPresentAndDisplayed(e))
+			wait.until(invisibilityOfElementLocated(e));
+	}
+	
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
 		return new ExpectedCondition<Boolean>() {
@@ -1271,6 +1290,21 @@ public class AppPage extends TestListenerAdapter
 		}
 		return text;
 	}
+	
+	//same as getTextForElementIfPresent
+	//but works for a list of webelements
+	public List<String> getTextListForElements(By locator) {
+		List<String> textList = new ArrayList<String>();
+		List<WebElement> wElmList = this.driver.findElements(locator);
+		for (WebElement wlm : wElmList) {
+			try{
+				textList.add(wlm.getText());
+			}catch(Exception e){
+				textList.add("");
+			}
+		}
+		return textList;
+	}
 
 	public Object executeScript(String script)
 	{
@@ -1425,6 +1459,7 @@ public class AppPage extends TestListenerAdapter
 	{
 		Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
 	}
+
 
 	public long getIndexofWebElementMatchingString(List<WebElement> list, String match)
 	{
