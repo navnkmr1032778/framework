@@ -20,6 +20,12 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
+/**
+ * Utils class for updating the Zephyr
+ * 
+ * @author Sgoutham
+ *
+ */
 @SuppressWarnings("unchecked")
 public class ZephyrUtils
 {
@@ -36,6 +42,14 @@ public class ZephyrUtils
 
 	static CommonUtils utils = new CommonUtils();
 
+	/**
+	 * Initializes the zephyr utils by setting the jira server, auth token from the system parameter values. The system parameters used are:
+	 * <ul>
+	 *  <li>jiraServer - The URL of jira server</li>
+	 *  <li>jiraAuth - The auth token, the username and password of jira encoded using base 64</li>
+	 * </ul>
+	 * @param testCycleId The test cycle which has to be updated
+	 */
 	public static void initZephyr(String testCycleId)
 	{
 		if (cycleId == null)
@@ -60,6 +74,26 @@ public class ZephyrUtils
 		}
 	}
 	
+	/**
+	 * This method is used to get the cycle details. The following hashmap will be returned
+	 * <pre>
+	 * {
+	 *	"versionId": -1,
+		"environment": "",
+  		"build": "",
+  		"createdBy": "gouthamraj",
+  		"name": "ShortSale - Regression Phase2",
+  		"description": "",
+  		"modifiedBy": "gouthamraj",
+  		"id": 89,
+  		"projectId": 10909
+		}
+	 * </pre>
+	 * 
+	 * 
+	 * @return Map of Sting, Object which represent the cycle details
+	 * 
+	 */
 	public static Map<String, Object> getCycleDetails()
 	{
 		Client client = ClientBuilder.newClient();
@@ -70,12 +104,21 @@ public class ZephyrUtils
 		return responseMap;
 	}
 	
+	/**
+	 * Returns the test cycle url based on the testcycleid passed.
+	 * @return the url for test cycle
+	 */
 	public static String getTestCycleURL()
 	{
 		String url = jiraServer + "/secure/enav/#?query=cycleName%20in%20(\"" + getCycleDetails().get("name").toString() + "\")";
 		return url;
 	}
 
+	/**
+	 * This method is used to add the test cases which are not as part of the current test cycle
+	 * @param testCases The array of test case ids to be added to the cycle
+	 * @return HashMap of the keys and their execution ids, which has to be used to mark them pass/fail
+	 */
 	public static HashMap<String, String> createNewTestExecution(String[] testCases)
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
@@ -143,6 +186,10 @@ public class ZephyrUtils
 
 	}
 
+	/**
+	 * Takes the latest execution details for the given test cycle id, this is used initially to get the test cases in the test cycle
+	 * @return HashMap of the latest execution details
+	 */
 	public static Map<String, Object> getInfoFromTestCycle()
 	{
 		Client client = ClientBuilder.newClient();
@@ -159,6 +206,10 @@ public class ZephyrUtils
 		return responseMap;
 	}
 	
+	/**
+	 * Returns HashMap of Issue Key and the execution number for the same
+	 * @return
+	 */
 	public static HashMap<String, String> getExecutionIdFromTestCycle()
 	{
 		HashMap<String, String> testExectionIdMap = new HashMap<String, String>();
@@ -193,6 +244,11 @@ public class ZephyrUtils
 		return testExectionIdMap;
 	}
 
+	/**
+	 * Bulk updates the all passed in execution ids with the passed in status
+	 * @param executionIds The list of exection ids that needs to be updated
+	 * @param status The status that needs to be set
+	 */
 	public static void bulkUpdateStatus(Collection<String> executionIds, String status)
 	{
 		Client client = ClientBuilder.newClient();
@@ -213,12 +269,19 @@ public class ZephyrUtils
 		client.close();
 	}
 
+	/**
+	 * This method is to reset i.e. set execution status as unexecuted for all the test cases in the test cycle
+	 */
 	public static void resetExecutionStatusForCycle()
 	{
 		HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
 		bulkUpdateStatus(testCaseExecutionMap.values(), UNEXECUTED);
 	}
 	
+	/**
+	 * This method is used to get the execution status of a cycle 
+	 * @return List of HahMap which indicating the execution status of the test cases
+	 */
 	public static List<HashMap<String, String>> getExecutionStatusFromCycle()
 	{
 
@@ -280,6 +343,9 @@ public class ZephyrUtils
 		return output;
 	}
 
+	/**
+	 * Updates the execution status in bulk in jira
+	 */
 	public static void updateExecutionStatusInJIRA()
 	{
 		try

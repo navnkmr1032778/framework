@@ -7,16 +7,41 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class handles the report generation and to reset the test cycle in Zephyr. This class uses the following system property variables:
+ * <ul>
+ * 	<li>testCycleId - The test cycle id to be considered</li>
+ *  <li>writeTo - The file name to write the html report to</li>
+ *  <li>includeDescription - To include the description provided in jira in the report</li>
+ *  <li>includeComponents - To include the components provided in jira in the report</li>
+ *  <li>jiraServer - The URL of jira</li>
+ *  <li>zephyr - The mode of operation. Valid modes - reset/generate-report</li>
+ * </ul>
+ * 
+ * @author Sgoutham
+ *    
+ */
 public class Zephyr
 {
 	public static String testCycleId = System.getProperty("testCycleId");
 
+	/**
+	 * To reset the status of all the test cases in test cycle as UNEXECUTED.
+	 * This method will be executed when the zephyr mode is set to reset
+	 */
 	public static void resetTestCycle()
 	{
 		ZephyrUtils.initZephyr(testCycleId);
 		ZephyrUtils.resetExecutionStatusForCycle();
 	}
 
+	/**
+	 * This method generates an HTML report of a given test cycle id.
+	 * This method will be executed when the zephyr mode is set to generate-report.
+	 * <br/>
+	 * This method sorts the results with Issue key in asc order 
+	 * 
+	 */
 	public static void generateHtmlReport()
 	{
 		String writeToFile = System.getProperty("writeTo");
