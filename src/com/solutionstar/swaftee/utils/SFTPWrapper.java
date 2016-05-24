@@ -12,6 +12,14 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+/**
+ * This class is a wrapper to copy files from sftp location. We can create a touch file to mark a starting point,
+ * after which the files got created needs to be copied to the destination. Currently this wrapper is created to
+ *  handle only csv files
+ * 
+ * @author Sgoutham
+ *
+ */
 public class SFTPWrapper
 {
 	private String domain = "";

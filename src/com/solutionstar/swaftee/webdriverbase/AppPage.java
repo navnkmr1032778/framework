@@ -324,9 +324,14 @@ public class AppPage extends TestListenerAdapter
 		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, text);
 	}
 	
+	/**
+	 * Will raise an javascript event as if the mouse is hovering over the given web element
+	 * 
+	 * @param element The webelement on which hover has to be made
+	 */
 	public void hoverOverElementUsingJS(WebElement element)
 	{
-		String js = "var eventObj=document.createEvent('MouseEvent');eventObj.initMouseEvent('mouseover', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, false, 0, null);arguments[0].dispatchEvent(eventObj);"; 
+		String js = "var eventObj=document.createEvent('MouseEvent');eventObj.initMouseEvent('mouseover', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);arguments[0].dispatchEvent(eventObj);"; 
 		getJavaScriptExecutor().executeScript(js,element);
 		sleep(1000);
 	}
@@ -466,6 +471,12 @@ public class AppPage extends TestListenerAdapter
 		} 
 	}
 	
+	/**
+	 * Selects an option from silver light drop down.
+	 * @param element The dropdown combo box element present in the UI
+	 * @param value The value needs to be selected
+	 * @throws Exception
+	 */
 	public void selectSilverLightDropDown(WebElement element, String value) throws Exception
 	{
 		List<WebElement> options = _getAllOptionsFromSilverLightDropDown(element);
@@ -483,6 +494,13 @@ public class AppPage extends TestListenerAdapter
 		throw new Exception("Value not found exception");
 	}
 	
+	/**
+	 * Passed an combo box web element, returns all the options web element from it. The trick is to get the id of the element and 
+	 * create the required id which holds all the options and get the elements from them
+	 * 
+	 * @param element The combo box web element
+	 * @return
+	 */
 	private List<WebElement> _getAllOptionsFromSilverLightDropDown(WebElement element)
 	{
 		String inputId = element.getAttribute("id");
@@ -495,6 +513,12 @@ public class AppPage extends TestListenerAdapter
 		return options;
 	}
 	
+	/**
+	 * Passed an combo box web element, returns the inner text of all the options in them. Internally uses _getAllOptionsFromSilverLightDropDown
+	 * 
+	 * @param element The combo box web element
+	 * @return
+	 */
 	public List<String> getAllOptionsFromSilverLightDropDown(WebElement element)
 	{
 		List<String> optionText = new ArrayList<String>();
@@ -583,7 +607,7 @@ public class AppPage extends TestListenerAdapter
 		int Width = (int) toolkit.getScreenSize().getWidth();  
 		int Height = (int) toolkit.getScreenSize().getHeight();  
 		Dimension screenResolution = new Dimension(Width, Height);  
-		logger.info("Setting the screen resolution as Hight = " + Height + " and Width = "+ Width);
+		logger.info("Setting the screen resolution as Height = " + Height + " and Width = "+ Width);
 		driver.manage().window().setSize(screenResolution);  
 
 	}
@@ -1001,6 +1025,10 @@ public class AppPage extends TestListenerAdapter
 	{
 		return element.getAttribute(attributeLocator);
 	}
+	
+	public String getAttribute(By byLocator, String attributeLocator) {
+		return this.driver.findElement(byLocator).getAttribute(attributeLocator);
+	}
 
 	public void enterInput(WebElement element, String value) 
 	{
@@ -1040,6 +1068,12 @@ public class AppPage extends TestListenerAdapter
 		logger.info("check validity: "+res);
 		return res;
 	}
+
+	public WebElement waitForElementToAppear(By locator) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(locator));
+		return driver.findElement(locator);
+	}
 	
 	public void waitForElementToDisappear(By locator) 
 	{	
@@ -1060,6 +1094,15 @@ public class AppPage extends TestListenerAdapter
 		if(isElementPresent(e))
 			wait.until(invisibilityOfElementLocated(e));
 	}
+	
+	public void waitForElementToDisappear(String xpath,int timeOut)
+	{
+		WebDriverWait wait = new WebDriverWait(this.driver,timeOut);
+		WebElement e = this.driver.findElement(By.xpath(xpath));
+		if(isElementPresentAndDisplayed(e))
+			wait.until(invisibilityOfElementLocated(e));
+	}
+	
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
 		return new ExpectedCondition<Boolean>() {
@@ -1275,6 +1318,21 @@ public class AppPage extends TestListenerAdapter
 		}
 		return text;
 	}
+	
+	//same as getTextForElementIfPresent
+	//but works for a list of webelements
+	public List<String> getTextListForElements(By locator) {
+		List<String> textList = new ArrayList<String>();
+		List<WebElement> wElmList = this.driver.findElements(locator);
+		for (WebElement wlm : wElmList) {
+			try{
+				textList.add(wlm.getText());
+			}catch(Exception e){
+				textList.add("");
+			}
+		}
+		return textList;
+	}
 
 	public Object executeScript(String script)
 	{
@@ -1295,6 +1353,10 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	/**
+	 * Will induce a wait till all ajax requests are completed. This works based on the monkey patch. If the
+	 * monkey patch is not in place, it will apply the monkey patch first and returns without any wait. 
+	 */
 	public void waitForAJaxCompletion()
 	{
 		try
@@ -1331,6 +1393,11 @@ public class AppPage extends TestListenerAdapter
 		}
 	}
 
+	/**
+	 * This method modifies the inbuilt javascripts class XMLHttpRequest to include one more variable ajaxcount.
+	 * This will be used to keep track of all the ajaxcounts sent out from the browser. The code is minified as 
+	 * the normal version is not getting executed properly in javascript executor.
+	 */
 	public void monkeyPatch()
 	{	
 /*
@@ -1430,6 +1497,7 @@ public class AppPage extends TestListenerAdapter
 		Assert.assertEquals(s, this.driver.getTitle(), "Expect HTML title '" + s + "' but got '" + this.driver.getTitle() + "'.");
 	}
 
+
 	public long getIndexofWebElementMatchingString(List<WebElement> list, String match)
 	{
 		int index = -1;
@@ -1515,6 +1583,11 @@ public class AppPage extends TestListenerAdapter
 		this.driver.get(url);
 		waitForAJaxCompletion();
 	}
+	
+	public void gotoURLInNewWindow(String url)
+	{
+		getJavaScriptExecutor().executeScript("window.open('"+url+"','_blank');");
+	}
 
 	public boolean hasEditableFields(WebElement element) {
 		boolean flag = (Boolean)(getJavaScriptExecutor().executeScript("var inputElements = arguments[0].getElementsByTagName('input');" + 
@@ -1557,5 +1630,15 @@ public class AppPage extends TestListenerAdapter
 	public void waitImplicitly(int timeOutInSeconds)
 	{
 		driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS);
+	}
+	
+	public void scrollElementToUserView(WebElement elem)
+	{
+		getJavaScriptExecutor().executeScript("window.scrollTo(" + (elem.getLocation().x-500) + "," +(elem.getLocation().y-500) + ");");
+	}
+
+	public void scrollHorizontallyTo(WebElement elem,WebElement container) 
+	{
+		getJavaScriptExecutor().executeScript("$(arguments[0],arguments[1])[0].scrollIntoView(false)",elem,container);
 	}
 }

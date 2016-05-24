@@ -46,7 +46,7 @@ public class CSVParserUtils {
 
 			CSVReader reader = new CSVReader(new FileReader(
 					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
+							+ WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR
 							+ fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 			for (String[] row : rowEntries) {
