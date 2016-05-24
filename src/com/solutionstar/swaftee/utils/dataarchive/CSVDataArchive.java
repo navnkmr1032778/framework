@@ -75,7 +75,7 @@ public class CSVDataArchive extends DelimitedDataArchiveBase implements DataArch
 			String[] row = new String[header.length];
 			for(int i = 0; i < header.length; i++)
 			{
-				row[i] = map.get(header[i]);
+				row[i] = "\"" + map.get(header[i]) + "\"";
 			}
 			addData(row);
 		}

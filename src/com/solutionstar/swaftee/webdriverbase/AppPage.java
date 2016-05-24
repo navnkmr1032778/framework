@@ -526,7 +526,11 @@ public class AppPage extends TestListenerAdapter
 				{
 			public Boolean apply(WebDriver driver) 
 			{
-				return (getJavaScriptExecutor()).executeScript("return document.readyState").equals(
+				String result = (String) getJavaScriptExecutor().executeScript("return document.readyState");
+				if(result == null)
+					return false;
+				else
+					return result.equals(
 						"complete");
 			}
 				});
