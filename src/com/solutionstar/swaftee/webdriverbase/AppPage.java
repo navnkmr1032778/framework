@@ -260,7 +260,6 @@ public class AppPage extends TestListenerAdapter
 		return;
 	}
 	
-
 	public void waitForElementToContainText(WebElement e, String text)
 	{
 		waitForElementToBeEnabled(e);
@@ -1033,6 +1032,11 @@ public class AppPage extends TestListenerAdapter
 		return driver.findElement(locator);
 	}
 	
+	public void waitForElementToAppear(WebElement e) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(e));
+	}
+	
 	public void waitForElementToDisappear(By locator) 
 	{	
 		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
@@ -1575,4 +1579,19 @@ public class AppPage extends TestListenerAdapter
 	{
 		driver.manage().timeouts().implicitlyWait(timeOutInSeconds, TimeUnit.SECONDS);
 	}
+	
+	public void selectCheckbox(WebElement element)
+	{
+		scrolltoElement(element);
+		if (!element.isSelected()) 
+			element.click();
+    }
+		
+
+	public void unselectCheckbox(WebElement element)
+	{
+		scrolltoElement(element);
+		if (element.isSelected()) 
+			element.click();
+    }		
 }
