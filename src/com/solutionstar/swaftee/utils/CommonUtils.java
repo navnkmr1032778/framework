@@ -626,7 +626,10 @@ public class CommonUtils {
 		}
 		return lines;
 	}
-
-
 	
+	public List<Map<String,Object>> convertJSONArrayToMap(String jsonString)
+    {
+        List<Map<String, Object>> retMap = new Gson().fromJson(jsonString, new TypeToken<List<HashMap<String, Object>>>() {}.getType());
+        return retMap;
+    }	
 }
