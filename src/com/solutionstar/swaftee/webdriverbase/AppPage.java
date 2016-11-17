@@ -1075,6 +1075,11 @@ public class AppPage extends TestListenerAdapter
 		return driver.findElement(locator);
 	}
 	
+	public void waitForElementToAppear(WebElement e) {
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		wait.until(ExpectedConditions.elementToBeClickable(e));
+	}
+	
 	public void waitForElementToDisappear(By locator) 
 	{	
 		WebDriverWait wait = new WebDriverWait(this.driver,WebDriverConstants.WAIT_TWO_MIN);
@@ -1641,4 +1646,18 @@ public class AppPage extends TestListenerAdapter
 	{
 		getJavaScriptExecutor().executeScript("$(arguments[0],arguments[1])[0].scrollIntoView(false)",elem,container);
 	}
+	
+	public void selectCheckbox(WebElement element)
+	{
+		scrolltoElement(element);
+		if (!element.isSelected()) 
+			element.click();
+    }
+
+	public void unselectCheckbox(WebElement element)
+	{
+		scrolltoElement(element);
+		if (element.isSelected()) 
+			element.click();
+    }		
 }
