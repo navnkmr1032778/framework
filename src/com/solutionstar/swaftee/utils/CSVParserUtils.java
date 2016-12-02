@@ -422,6 +422,7 @@ public class CSVParserUtils {
 		}
 	}
 	
+	
 	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data) {
 		try {
 			Set<String> header = data.get(0).keySet();
@@ -456,6 +457,38 @@ public class CSVParserUtils {
 			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
 		}
 	}
+	
+	public void appendListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
+		try {
+			List<String[]> dataToCSV = new ArrayList<String[]>();
+			int count = header.length;
+			String[] cells = new String[count];
+			int index = 0;	
+			
+			//Create headers only the first time
+			if(!(new File(fileName).exists())){
+				for(String heading : header) {
+					cells[index] = heading;
+					index++;
+				}
+				dataToCSV.add(cells);
+			}
+			
+			for(HashMap<String,String> map : data) {
+				cells = new String[count];
+				index = 0;
+				for(String heading : header) {
+					cells[index] = map.get(heading);
+					index++;
+				}
+				dataToCSV.add(cells);
+			}
+			appendToCSVFile(fileName, dataToCSV);
+		} catch (Exception e) {
+			logger.error("Error in appendListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
+		}
+	}
+	
 
 	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index,String index2,Boolean includeFileName) throws Exception 
 	{
