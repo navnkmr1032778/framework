@@ -441,17 +441,18 @@ public class ZephyrUtils
 		
 		Client client = ClientBuilder.newClient();
 		client.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
+		String authInfo = "Basic " + auth;
 
 		Response response = client
 				.target( ZephyrConstants.TESTCYCLE_URL+ testCycleId + "/export?versionId="
 						+ versionId + "&projectId=" + projectId)
-				.request().header(HttpHeaders.AUTHORIZATION, auth).get();
+				.request().header(HttpHeaders.AUTHORIZATION, authInfo).get();
 
 		TestCycleCSVResponse testCycleCSVResponse = new Gson().fromJson(response.readEntity(String.class),
 				TestCycleCSVResponse.class);
 		
 		// After getting the test cycle URL, Test cycle csv file will be downloaded
-		downloadCSV(testCycleCSVResponse.getUrl(), auth);
+		downloadCSV(testCycleCSVResponse.getUrl(), authInfo);
 
 	}
 
@@ -495,7 +496,8 @@ public class ZephyrUtils
 			inputStream.close();
 			
 		} else {
-			System.out.println("No file to download. Server replied HTTP code: " + responseCode);
+			logger.info("No file to download. Server replied HTTP code: " + responseCode);
+			
 		}
 		httpConn.disconnect();
 	}
