@@ -11,7 +11,7 @@ public class WebDriverConstants {
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
 	public static String PATH_TO_BROWSER_SCREENSHOT_BASE="resources/screenshot/base";
 	public static String PATH_TO_TEST_DATA_FILE = "/resources/testdata/";
-	public static String WINDOWS_PATH_TO_TEST_DATA_DIR = "\\resources\\testdata\\";
+	public static String WINDOWS_PATH_TO_TEST_DATA_DIR = "/resources/testdata/";
 	public static String GMAIL_IMAP_HOST = "imap.gmail.com";
 	public static String SOLUTIONSTAR_IMAP_HOST = "webmail.solutionstar.com";
 	public static String IMAP_PROTOCOL = "imaps";
@@ -58,7 +58,7 @@ public class WebDriverConstants {
 	public static final Map<String, String> WINDOWS_DRIVERS;
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.20/chromedriver_win32.zip");
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.28/chromedriver_win32.zip");
 	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_win32.zip");
 	  tmp.put("ie", "https://github.com/sheltonpaul89/WebDrivers/raw/master/IEDriverServer.zip");
 	  WINDOWS_DRIVERS = Collections.unmodifiableMap(tmp);
@@ -67,7 +67,7 @@ public class WebDriverConstants {
 	public static final Map<String, String> MAC_DRIVERS;
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.20/chromedriver_mac32.zip");
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.28/chromedriver_mac64.zip");
 	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_mac.zip");
 		
 	  MAC_DRIVERS = Collections.unmodifiableMap(tmp);
@@ -76,7 +76,7 @@ public class WebDriverConstants {
 	public static final Map<String, String> LINUX_DRIVERS;
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip");
+	  tmp.put("chrome", "http://chromedriver.storage.googleapis.com/2.28/chromedriver_linux64.zip");
 		
 	  LINUX_DRIVERS = Collections.unmodifiableMap(tmp);
 	}
