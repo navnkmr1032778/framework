@@ -502,6 +502,7 @@ public class AppDriver extends TestListenerAdapter {
 	***/
 	public void stopDriver() 
 	{
+		logger.info("Stopping driver..");	
 	    baseDriverHelper.stopDriver();
     }
 	
