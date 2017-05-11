@@ -324,6 +324,10 @@ public class AppPage extends TestListenerAdapter
 		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, text);
 	}
 	
+	public void clickUsingJS(WebElement element) {
+		getJavaScriptExecutor().executeScript("arguments[0].click()", element);
+	}
+	
 	/**
 	 * Will raise an javascript event as if the mouse is hovering over the given web element
 	 * 
