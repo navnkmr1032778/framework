@@ -1,6 +1,15 @@
 package com.solutionstar.swaftee.jira;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +22,14 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.glassfish.jersey.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
+import com.solutionstar.swaftee.beans.TestCycleCSVResponse;
+import com.solutionstar.swaftee.constants.ZephyrConstants;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
@@ -418,6 +431,75 @@ public class ZephyrUtils
 			}
 		}
 
+	}
+	
+	/**
+	 * file will be saved in "resources/testCycleReport" folder in project.
+	 * Create a folder in resource folder as "testCycleReport"
+	 */
+	public static void extractCSV(String versionId, String projectId, String auth, String testCycleId) throws IOException {
+		
+		Client client = ClientBuilder.newClient();
+		client.property(ClientProperties.FOLLOW_REDIRECTS, Boolean.FALSE);
+		String authInfo = "Basic " + auth;
+
+		Response response = client
+				.target( ZephyrConstants.TESTCYCLE_URL+ testCycleId + "/export?versionId="
+						+ versionId + "&projectId=" + projectId)
+				.request().header(HttpHeaders.AUTHORIZATION, authInfo).get();
+
+		TestCycleCSVResponse testCycleCSVResponse = new Gson().fromJson(response.readEntity(String.class),
+				TestCycleCSVResponse.class);
+		
+		// After getting the test cycle URL, Test cycle csv file will be downloaded
+		downloadCSV(testCycleCSVResponse.getUrl(), authInfo);
+
+	}
+
+	public static  void downloadCSV(String url, String auth) throws IOException {
+
+		URL testCycleDownloadURL = new URL(url);
+		HttpURLConnection httpConn = (HttpURLConnection) testCycleDownloadURL.openConnection();
+		httpConn.setRequestProperty(HttpHeaders.AUTHORIZATION, auth);
+		
+		int responseCode = httpConn.getResponseCode();
+
+		// always check HTTP response code first
+		if (responseCode == HttpURLConnection.HTTP_OK) 
+		{
+			DateFormat df = new SimpleDateFormat(ZephyrConstants.CAPTURE_CSV_DATE);
+			//get file name
+			String fileName = url.substring(url.lastIndexOf("=") + 1, url.length());
+			
+			//fall back for filename
+			if (fileName.isEmpty()) 
+			{
+				fileName ="Testcylereport";
+			}
+			fileName = fileName + df.format(Calendar.getInstance().getTime()) + ".csv";
+
+			// opens input stream from the HTTP connection
+			InputStream inputStream = (InputStream) httpConn.getInputStream();
+			// File will be downloaded to resource folder
+			String saveFilePath = ZephyrConstants.RESOURCE_FOLDER + File.separator + fileName;
+           
+			// opens an output stream to save into file
+			FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+
+			int bytesRead = -1;
+			byte[] buffer = new byte[4096];
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outputStream.write(buffer, 0, bytesRead);
+
+			}
+			outputStream.close();
+			inputStream.close();
+			
+		} else {
+			logger.info("No file to download. Server replied HTTP code: " + responseCode);
+			
+		}
+		httpConn.disconnect();
 	}
 
 }
