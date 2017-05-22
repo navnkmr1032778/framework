@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,6 +28,9 @@ import org.jenkinsci.testinprogress.messagesender.SocketMessageSenderFactory;
 import org.openqa.selenium.NoSuchFrameException;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -524,7 +528,17 @@ public class AppDriver extends TestListenerAdapter {
 	public void setSecondaryDriver(WebDriver driver) 
 	{
 		baseDriverHelper.setSecondaryDriver(driver);
-	 }
+	}
+	
+	public String getJSErrors(WebDriver driver)
+	{
+		LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
+		StringBuffer error = new StringBuffer();
+        for (LogEntry entry : logEntries) {
+            error.append(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+        }
+		return error.toString();
+	}
 	
 	/*
 	 * Test In Progress plugin methods
