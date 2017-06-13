@@ -213,6 +213,31 @@ public class ConnectDB extends DatabaseConnection
 		}
 		return resultHash;
 	}
+	
+	
+	public HashMap<String, String> executeQueryForHashMap(String query) throws MyCoreExceptions
+	{
+		HashMap<String, String> resultHash = null;
+		try{
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			
+			resultHash = new HashMap<String,String>();
+			while ( rs.next() ) 
+			{
+				resultHash.put(rs.getString(1), rs.getString(2));
+			}
+			rs.close();
+			stmt.close();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new MyCoreExceptions("Exception while executing the query in db connection.."+e.getLocalizedMessage());
+		}
+		return resultHash;
+	}
 
 	public String executeQueryForScalar(String query) throws MyCoreExceptions
 	{
