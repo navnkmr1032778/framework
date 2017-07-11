@@ -41,6 +41,8 @@ import org.testng.TestListenerAdapter;
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
+import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 
 public class AppPage extends TestListenerAdapter 
@@ -70,6 +72,21 @@ public class AppPage extends TestListenerAdapter
 			maximizeWindow();
 		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
 			mobileEmulationExecution=true;
+	}
+	
+	public void takeScreenShot(String fileName)
+	{
+		TakeScreenshot ts = new TakeScreenshotUtils(false, "", "", false);
+		ts.captureScreenShot(driver,fileName);
+	}
+	
+	public void takeScreenShot()
+	{
+		String fileName = WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT_BASE;
+		StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+		fileName = fileName+stackTraceElements[2].getMethodName()+".png";
+		TakeScreenshot ts = new TakeScreenshotUtils(false, "", "", false);
+		ts.captureScreenShot(driver,fileName);
 	}
 
 
