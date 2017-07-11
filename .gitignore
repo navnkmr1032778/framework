@@ -6,4 +6,8 @@ External Jars/
 .exe
 .classpath
 .settings
+3rdParty/
+3rdParty/*
+.classpath
+.settings/*
 .project

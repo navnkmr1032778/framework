@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +49,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.utils.ImageComparison.ImageCompareHelper;
 
 public class CommonUtils {
 
@@ -59,9 +62,9 @@ public class CommonUtils {
 
 
 	public String getCurrentWorkingDirectory()
-	{		
+	{
 		String workingDir = null;
-		try{			
+		try{
 			workingDir = System.getProperty("user.dir");
 		}catch(Exception e){
 			e.printStackTrace();
@@ -85,27 +88,27 @@ public class CommonUtils {
 			{
 				fileDirectory.mkdirs();
 			}
-			
+
 			File[] listOfFiles = fileDirectory.listFiles();
-			if(listOfFiles.length != 0)
+			if(listOfFiles!=null && listOfFiles.length != 0)
 			{
 				for(int i = 0; i < listOfFiles.length; i++)
 				{
-					if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac 
+					if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac
 					{
 						listOfFiles[i].setExecutable(true);
 						return listOfFiles[i];
 					}
-						
+
 				}
 			}
 			if(!driverFilefound)
 			{
-				logger.info("No driver file found under drivers folder. Trying to download driver executable file");				 
+				logger.info("No driver file found under drivers folder. Trying to download driver executable file");
 				DriverUtils.getInstance().downloadFile(fileName, OSCheck.getOperatingSystemType());
 				driverFilefound = true;
 				return getBrowserExecutable(path,fileName);
-			}	
+			}
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -159,16 +162,16 @@ public class CommonUtils {
 			logger.info("exception in taking Screenshot" + ExceptionUtils.getFullStackTrace(ex));
 		}
 	}
-	
 
-	public void screenShot(String fileName, WebDriver webDriver) 
+
+	public void screenShot(String fileName, WebDriver webDriver)
 	{
-		try 
+		try
 		{
 			File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(fileName));
-		} 
-		catch (IOException e) 
+		}
+		catch (IOException e)
 		{
 			logger.info("Error While taking Screen Shot");
 			e.printStackTrace();
@@ -182,29 +185,29 @@ public class CommonUtils {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 			Date date = new Date();
-			return sdf.format(date); 		 
+			return sdf.format(date);
 		}catch(Exception e){
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public boolean isNumeric(String s) 
+	public boolean isNumeric(String s)
 	{
 		return s.matches("[-+]?\\d*\\.?\\d+");
 	}
 
 	public int getMonthNumberByName(String monthName)
 	{
-		try 
+		try
 		{
 			Date date = new SimpleDateFormat("MMM").parse(monthName);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			int monthNumber=cal.get(Calendar.MONTH);
 			return monthNumber+1;
-		} 
-		catch (ParseException e) 
+		}
+		catch (ParseException e)
 		{
 			e.printStackTrace();
 		}
@@ -309,7 +312,7 @@ public class CommonUtils {
 			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
 			Date d1 = sdf.parse(startTime);
 			Date d2 = sdf.parse(endTime);
-			long elapsed = d2.getTime() - d1.getTime(); 
+			long elapsed = d2.getTime() - d1.getTime();
 			logger.info(""+elapsed);
 			return elapsed;
 		}
@@ -323,7 +326,7 @@ public class CommonUtils {
 	public Date getDateFromString(String dateString, SimpleDateFormat formatter)
 	{
 		Date date = null;
-		try {	 
+		try {
 			date = formatter.parse(dateString);
 
 		} catch (Exception e) {
@@ -333,7 +336,7 @@ public class CommonUtils {
 	}
 
 	public String getStringFromDate(Date d, SimpleDateFormat formatter)
-	{ 
+	{
 		return formatter.format(d);
 	}
 
@@ -341,14 +344,14 @@ public class CommonUtils {
 	{
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		return getDateToday(df);
-				
+
 	}
-			
+
 		public String getDateToday(SimpleDateFormat formatter)
 	{
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return formatter.format(new Date());
-	} 
+	}
 
 
 	public String getDateTomorrow()
@@ -405,10 +408,10 @@ public class CommonUtils {
 	}
 	/**
 	 * Copies file from SFTP
-	 * 
+	 *
 	 * Provided a username, password, source location, destination, hostname, list of files and
 	 * port copies them using sftp
-	 * 
+	 *
 	 * @param hostname
 	 *            hostname of sftp server
 	 * @param port
@@ -596,7 +599,7 @@ public class CommonUtils {
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
-				
+
 				if(startTime.before(createdDate))
 					list.add(o.getFilename());
 			}
@@ -615,7 +618,7 @@ public class CommonUtils {
 		return listFilesInSFTPLocation(hostname, port,username,
 				password,sourceLocation, startTime,"csv");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> textFileToList(String filePath) {
 		List<String> lines = null;
@@ -626,10 +629,19 @@ public class CommonUtils {
 		}
 		return lines;
 	}
-	
+
 	public List<Map<String,Object>> convertJSONArrayToMap(String jsonString)
     {
         List<Map<String, Object>> retMap = new Gson().fromJson(jsonString, new TypeToken<List<HashMap<String, Object>>>() {}.getType());
         return retMap;
-    }	
+    }
+
+	public String getSwafteeAbsolutePath() throws UnsupportedEncodingException
+	{
+		String path = ImageCompareHelper.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+		String decodedPath = URLDecoder.decode(path, "UTF-8");
+		decodedPath=decodedPath.substring(1, decodedPath.length());
+		decodedPath=decodedPath.replace("target/classes/", "").trim();
+		return decodedPath;
+	}
 }
