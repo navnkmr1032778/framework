@@ -234,7 +234,7 @@
 		</repository>
 		<repository>
 			<id>sqljdbc</id>
-			<url>http://10.29.18.160/grapher/resources/OtherContent/</url>
+			<url>http://10.29.18.160/grapher/WebContent/resources/OtherContent/</url>
 		</repository>
 		<repository>
 			<id>spring-milestones</id>
