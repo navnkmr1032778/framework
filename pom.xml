@@ -283,7 +283,7 @@
 		
 		 <repository>
 			<id>sqljdbc</id>
-			<url>https://github.com/vini46/resouces/</url>
+			<url>https://github.com/vini46/resouces/tree/master/</url>
 		</repository>
 		<repository>
 			<id>spring-milestones</id>
