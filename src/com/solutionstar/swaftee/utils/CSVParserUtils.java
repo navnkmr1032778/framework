@@ -319,6 +319,32 @@ public class CSVParserUtils {
 		}
 		return csvDataArray;	
 	}
+	
+    public Object[][] getCSVArray(String fileName, boolean header) 
+    {
+        try
+        {
+               initializeConstans();
+               if (utils == null)
+                    logger.warn("Utils obj is null");
+
+               CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName + ".csv"));
+                                                                           
+               List<String[]> rowEntries = reader.readAll();
+               if(header)
+               {
+                     rowEntries.remove(0);
+               }
+               csvDataArray = new String[rowEntries.size()][];
+               csvDataArray = rowEntries.toArray(csvDataArray);
+               reader.close();
+        }
+        catch (Exception e)
+        {
+                       e.printStackTrace();
+        }
+        return csvDataArray;
+    }
 
 	public List<String[]> getCSVStringArray(String fileName) {
 
