@@ -38,5 +38,9 @@ public class APICalls {
 	public Response deleteRequest(Object body, String endpoint) {
 		return given().headers(utils.getHeaders()).body(body).when().delete(endpoint).then().extract().response();
 	}
+	
+	public Response patchRequest(Object body, String endpoint) {
+		return given().headers(utils.getHeaders1()).body(body).when().patch(endpoint).then().extract().response();
+	}
 
 }

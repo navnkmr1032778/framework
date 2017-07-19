@@ -98,6 +98,12 @@ public class Utils {
 		return list;
 	}
 
+	// Get response as jsonString
+	public String getJsonString(Response res) {
+			String jsonString = res.getBody().asString().replaceAll("\\[|\\]", "");
+			return jsonString;
+	}
+
 	// Print response in JSON format
 	public String prettyPrintUtil(Response res) {
 		JsonPath jp = getJsonPath(res);
@@ -283,24 +289,19 @@ public class Utils {
 		return new Headers(listOfHeaders);
 	}
 
-	public void jsonString(String myJSONString)
-	{
-		try
-		{
+	public void jsonString(String myJSONString) {
+		try {
 			JSONObject object = new JSONObject(myJSONString);
 			String[] keys = JSONObject.getNames(object);
-	
-			for (String key : keys) 
-			{
+
+			for (String key : keys) {
 				System.out.println(key);
 				Object value = object.get(key);
 				System.out.println(value.toString());
 				// Determine type of value and do something with it...
 			}
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace() ;
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}
