@@ -2,9 +2,9 @@ package com.solutionstar.swaftee.restassured.apicalls;
 
 import static com.jayway.restassured.RestAssured.given;
 
-import com.jayway.restassured.response.Cookie;
+import java.io.File;
+
 import com.jayway.restassured.response.Response;
-import com.solutionstar.swaftee.restassured.*;
 import com.solutionstar.swaftee.restassured.apiconstants.APIConstants;
 import com.solutionstar.swaftee.restassured.utils.Utils;
 
@@ -36,5 +36,10 @@ public class APICalls {
 	public Response deleteRequest(Object body, String endpoint) {
 		return given().headers(utils.getHeaders()).body(body).when().delete(endpoint).then().extract().response();
 	}
+	
+	public Response postFileRequest(String endpoint, String fileName)
+    {
+        return given().multiPart("file",new File(fileName)).log().all().when().post(endpoint).then().log().all().extract().response();
+    }
 
 }
