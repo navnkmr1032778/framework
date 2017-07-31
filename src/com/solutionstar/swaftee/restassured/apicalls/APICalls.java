@@ -5,9 +5,7 @@ import static com.jayway.restassured.RestAssured.given;
 import java.io.File;
 import java.util.HashMap;
 
-import com.jayway.restassured.response.Cookie;
 import com.jayway.restassured.response.Response;
-import com.solutionstar.swaftee.restassured.*;
 import com.solutionstar.swaftee.restassured.apiconstants.APIConstants;
 import com.solutionstar.swaftee.restassured.utils.Utils;
 
