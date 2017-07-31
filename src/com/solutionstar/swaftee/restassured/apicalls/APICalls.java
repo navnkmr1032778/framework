@@ -3,11 +3,11 @@ package com.solutionstar.swaftee.restassured.apicalls;
 import static com.jayway.restassured.RestAssured.given;
 
 import java.io.File;
-import java.util.HashMap;
-
 import com.jayway.restassured.response.Response;
 import com.solutionstar.swaftee.restassured.apiconstants.APIConstants;
 import com.solutionstar.swaftee.restassured.utils.Utils;
+import java.util.HashMap;
+
 
 public class APICalls {
 	Utils utils = new Utils();
