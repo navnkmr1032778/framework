@@ -2,6 +2,7 @@ package com.solutionstar.swaftee.restassured.apicalls;
 
 import static com.jayway.restassured.RestAssured.given;
 
+import java.io.File;
 import java.util.HashMap;
 
 import com.jayway.restassured.response.Cookie;
@@ -16,7 +17,7 @@ public class APICalls {
 	public Response getRequest(String endpoint) {
 		return given().headers(utils.getHeaders()).when().get(endpoint).thenReturn();
 	}
-	
+
 	public Response getRequest(String endpoint, HashMap<String, String> param) {
 		return given().parameters(param).headers(utils.getHeaders1()).when().get(endpoint).thenReturn();
 	}
@@ -26,7 +27,7 @@ public class APICalls {
 				.when().get(endpoint).thenReturn();
 	}
 
-	public Response postRequest(Object body, String endpoint) {
+	public Response postRequest(String body, String endpoint) {
 		return given().headers(utils.getHeaders1()).body(body).when().post(endpoint).then().extract().response();
 	}
 
@@ -35,12 +36,17 @@ public class APICalls {
 
 	}
 
-	public Response deleteRequest(Object body, String endpoint) {
+	public Response deleteRequest(String body, String endpoint) {
 		return given().headers(utils.getHeaders()).body(body).when().delete(endpoint).then().extract().response();
 	}
-	
-	public Response patchRequest(Object body, String endpoint) {
+
+	public Response patchRequest(String body, String endpoint) {
 		return given().headers(utils.getHeaders1()).body(body).when().patch(endpoint).then().extract().response();
+	}
+
+	public Response postFileRequest(String fileName, String endpoint) {
+		return given().headers(utils.getHeaders1()).multiPart(new File(fileName)).log().all().when().post(endpoint)
+				.then().log().all().extract().response();
 	}
 
 }
