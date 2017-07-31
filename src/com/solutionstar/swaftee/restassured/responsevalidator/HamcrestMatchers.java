@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Every.everyItem;
+import static com.jayway.jsonpath.matchers.JsonPathMatchers.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -42,8 +43,8 @@ public class HamcrestMatchers {
 
 	}
 
-	public void containsString_Hamcrest(String actual, String expected) {
-		assertThat(actual, containsString(expected));
+	public void containsString_Hamcrest(String exceptionMsg, String actual, String expected) {
+		assertThat(exceptionMsg, actual, containsString(expected));
 
 	}
 
@@ -106,6 +107,10 @@ public class HamcrestMatchers {
 
 	}
 
+	public void compareIntegerValues(String exceptionMsg, int actual, int expected) {
+		assertThat(exceptionMsg, actual, equalTo(expected));
+	}
+
 	public void isDoubleValue(Double actual, Double integerPart, Double decimalPart) {
 		assertThat(actual, is(closeTo(integerPart, decimalPart)));
 
@@ -161,6 +166,14 @@ public class HamcrestMatchers {
 	public void emptyOrNullStringUtil(List<String> actual) {
 		for (String item : actual)
 			assertThat(item, isEmptyOrNullString());
+	}
+
+	public void containsJsonPathWithValue(String exceptionMsg, Response res, String jsonPath, int value) {
+		assertThat(exceptionMsg, utils.getJsonString(res), hasJsonPath(jsonPath, equalTo(value)));
+	}
+
+	public void containsJsonPath(String exceptionMsg, Response res, String jsonPath) {
+		assertThat(exceptionMsg, utils.getJsonString(res), hasJsonPath(jsonPath));
 	}
 
 }

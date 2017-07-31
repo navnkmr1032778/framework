@@ -64,6 +64,24 @@
 			<artifactId>opencsv</artifactId>
 			<version>3.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpcore</artifactId>
+			<version>4.4</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-remote-driver</artifactId>
@@ -99,16 +117,6 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-common</artifactId>
 			<version>2.0b1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<version>4.3.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.3.3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -269,6 +277,11 @@
 			<artifactId>json</artifactId>
 			<version>20160810</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path-assert</artifactId>
+			<version>2.2.0</version>
+		</dependency>
 
 	</dependencies>
 	<repositories>
@@ -276,12 +289,10 @@
 			<id>jenkins-releases</id>
 			<url>http://repo.jenkins-ci.org/releases/</url>
 		</repository>
-		<!-- <repository>
-			<id>sqljdbc</id>
-			<url>http://10.29.18.160/grapher/WebContent/resources/OtherContent/</url>
-		</repository> -->
-		
-		 <repository>
+		<!-- <repository> <id>sqljdbc</id> <url>http://10.29.18.160/grapher/WebContent/resources/OtherContent/</url> 
+			</repository> -->
+
+		<repository>
 			<id>sqljdbc</id>
 			<url>https://xome-test.000webhostapp.com/webContent/</url>
 		</repository>
