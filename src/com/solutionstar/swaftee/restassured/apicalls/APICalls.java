@@ -39,11 +39,6 @@ public class APICalls {
 		return given().headers(utils.getHeaders()).body(body).when().delete(endpoint).then().extract().response();
 	}
 	
-	public Response postFileRequest(String endpoint, String fileName)
-    {
-        return given().multiPart("file",new File(fileName)).log().all().when().post(endpoint).then().log().all().extract().response();
-    }
-
 	public Response patchRequest(String body, String endpoint) {
 		return given().headers(utils.getHeaders1()).body(body).when().patch(endpoint).then().extract().response();
 	}
