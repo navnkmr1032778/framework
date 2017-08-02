@@ -168,7 +168,7 @@ public class HamcrestMatchers {
 			assertThat(item, isEmptyOrNullString());
 	}
 
-	public void containsJsonPathWithValue(String exceptionMsg, Response res, String jsonPath, int value) {
+	public void containsJsonPathWithValue(String exceptionMsg, Response res, String jsonPath, Object value) {
 		assertThat(exceptionMsg, utils.getJsonString(res), hasJsonPath(jsonPath, equalTo(value)));
 	}
 
