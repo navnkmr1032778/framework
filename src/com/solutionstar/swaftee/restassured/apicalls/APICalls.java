@@ -31,12 +31,12 @@ public class APICalls {
 	}
 
 	public Response putRequest(Object body, String endpoint) {
-		return given().headers(utils.getHeaders()).body(body).when().put(endpoint).then().extract().response();
+		return given().headers(utils.getHeaders1()).body(body).when().put(endpoint).then().extract().response();
 
 	}
 
 	public Response deleteRequest(String body, String endpoint) {
-		return given().headers(utils.getHeaders()).body(body).when().delete(endpoint).then().extract().response();
+		return given().headers(utils.getHeaders1()).body(body).when().delete(endpoint).then().extract().response();
 	}
 	
 	public Response patchRequest(String body, String endpoint) {
