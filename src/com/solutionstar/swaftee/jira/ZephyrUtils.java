@@ -307,50 +307,53 @@ public class ZephyrUtils
 
 		for (LinkedTreeMap<String, Object> execution : executions)
 		{
-			HashMap<String, String> tmp = new HashMap<String, String>();
-			tmp.put("key", execution.get("issueKey").toString());
-			if (execution.containsKey("summary"))
+			if(testCaseStatus.containsKey(execution.get("issuekey")))
 			{
-				tmp.put("name", execution.get("summary").toString());
+				HashMap<String, String> tmp = new HashMap<String, String>();
+				tmp.put("key", execution.get("issueKey").toString());
+				if (execution.containsKey("summary"))
+				{
+					tmp.put("name", execution.get("summary").toString());
+				}
+				else
+				{
+					tmp.put("name", "");
+				}
+				if (execution.containsKey("issueDescription"))
+				{
+					tmp.put("description", execution.get("issueDescription").toString());
+				}
+				else
+				{
+					tmp.put("description", "");
+				}
+				if (execution.containsKey("component"))
+				{
+					tmp.put("component", execution.get("component").toString());
+				}
+				else
+				{
+					tmp.put("component", "");
+				}
+				switch (execution.get("executionStatus").toString())
+				{
+				case UNEXECUTED:
+					tmp.put("result", "UNEXECUTED");
+					break;
+				case PASS:
+					tmp.put("result", "PASS");
+					break;
+				case FAIL:
+					tmp.put("result", "FAIL");
+					break;
+				case BLOCKED:
+					tmp.put("result", "BLOCKED");
+					break;
+				default:
+					tmp.put("result", "");
+				}
+				output.add(tmp);
 			}
-			else
-			{
-				tmp.put("name", "");
-			}
-			if (execution.containsKey("issueDescription"))
-			{
-				tmp.put("description", execution.get("issueDescription").toString());
-			}
-			else
-			{
-				tmp.put("description", "");
-			}
-			if (execution.containsKey("component"))
-			{
-				tmp.put("component", execution.get("component").toString());
-			}
-			else
-			{
-				tmp.put("component", "");
-			}
-			switch (execution.get("executionStatus").toString())
-			{
-			case UNEXECUTED:
-				tmp.put("result", "UNEXECUTED");
-				break;
-			case PASS:
-				tmp.put("result", "PASS");
-				break;
-			case FAIL:
-				tmp.put("result", "FAIL");
-				break;
-			case BLOCKED:
-				tmp.put("result", "BLOCKED");
-				break;
-			default:
-				tmp.put("result", "");
-			}
-			output.add(tmp);
 		}
 
 		return output;
