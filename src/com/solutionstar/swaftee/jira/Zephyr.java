@@ -44,7 +44,7 @@ public class Zephyr
 	 */
 	public static void generateHtmlReport()
 	{
-		String writeToFile = System.getProperty("writeTo");
+		String writeToFile = System.getProperty("writeTo","jiraresult.html");
 		boolean includeDescription = Boolean.valueOf(System.getProperty("includeDescription", "false"));
 		boolean includeComponents = Boolean.valueOf(System.getProperty("includeComponents", "false"));//-DincludeComponents=true, to include components in the result generated
 		StringBuilder output1 = new StringBuilder();
