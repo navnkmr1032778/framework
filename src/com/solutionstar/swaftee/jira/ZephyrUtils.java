@@ -307,7 +307,8 @@ public class ZephyrUtils
 
 		for (LinkedTreeMap<String, Object> execution : executions)
 		{
-			if(testCaseStatus.containsKey(execution.get("issuekey")))
+			String mode = System.getProperty("zephyr");
+			if((mode!=null && mode.equals("generate-report") )|| testCaseStatus.containsKey(execution.get("issueKey")))
 			{
 				HashMap<String, String> tmp = new HashMap<String, String>();
 				tmp.put("key", execution.get("issueKey").toString());
