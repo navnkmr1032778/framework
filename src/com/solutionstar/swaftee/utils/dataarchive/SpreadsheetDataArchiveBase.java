@@ -85,15 +85,22 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		for (int i = 0; i < row.getLastCellNum(); i++)
 		{
 			Cell cell = row.getCell(i);
-			switch (cell.getCellType())
+			if (cell != null) 
 			{
-			case Cell.CELL_TYPE_NUMERIC:
-				rowData.add("" + cell.getNumericCellValue());
-				break;
-			case Cell.CELL_TYPE_STRING:
-				rowData.add(cell.getStringCellValue());
-				break;
-			case Cell.CELL_TYPE_BLANK:
+				switch (cell.getCellType()) 
+				{
+					case Cell.CELL_TYPE_NUMERIC:
+						rowData.add("" + cell.getNumericCellValue());
+						break;
+					case Cell.CELL_TYPE_STRING:
+						rowData.add(cell.getStringCellValue());
+						break;
+					case Cell.CELL_TYPE_BLANK:
+						rowData.add("");
+						break;
+				}
+			}
+			else{
 				rowData.add("");
 			}
 		}
