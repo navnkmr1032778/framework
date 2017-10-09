@@ -131,7 +131,7 @@ public class CommonUtils {
 		}
 		catch (Exception ex)
 		{
-			logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+			logger.info("Couldn't take Screenshot" + ExceptionUtils.getFullStackTrace(ex));
 		}
 	}
 
