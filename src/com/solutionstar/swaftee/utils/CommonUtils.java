@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -50,6 +52,10 @@ import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.ImageComparison.ImageCompareHelper;
+
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
 public class CommonUtils {
 
@@ -114,6 +120,19 @@ public class CommonUtils {
 			e.printStackTrace();
 		}
 		return new File("temp file");
+	}
+	
+	public void captureFullBrowswrScreenShot(String imageName, WebDriver webDriver)
+	{
+		try
+		{
+			Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(webDriver);
+			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
+		}
+		catch (Exception ex)
+		{
+			logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+		}
 	}
 
 	public void captureBrowserScreenShot(String imageName, WebDriver webDriver)
