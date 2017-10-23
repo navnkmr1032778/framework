@@ -127,6 +127,19 @@ public class CommonUtils {
 		try
 		{
 			Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(webDriver);
+			File dir = new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
+			if (!dir.exists())
+			{
+				try
+				{
+					dir.mkdir();
+					logger.info("creating directory: " + dir);
+				}
+				catch (Exception ex)
+				{
+					logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+				}
+			}
 			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
 		}
 		catch (Exception ex)
