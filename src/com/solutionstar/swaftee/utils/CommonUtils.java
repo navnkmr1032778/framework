@@ -122,7 +122,7 @@ public class CommonUtils {
 		return new File("temp file");
 	}
 	
-	public void captureFullBrowswrScreenShot(String imageName, WebDriver webDriver)
+	public void captureFullBrowserScreenShot(String imageName, WebDriver webDriver)
 	{
 		try
 		{
