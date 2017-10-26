@@ -282,7 +282,7 @@ public class AppDriver extends TestListenerAdapter {
 			if (!(testResult.getThrowable() instanceof NoSuchWindowException || testResult
 					.getThrowable() instanceof NoSuchFrameException))
 			{
-				processResults(testResult, Boolean.valueOf(System.getProperty("takeScreenShot", "false")));
+				processResults(testResult, Boolean.valueOf(System.getProperty("takeScreenShot", "true")));
 			}
 			if (jiraUpdate())
 			{
