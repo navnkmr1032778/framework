@@ -376,8 +376,17 @@ public class AppDriver extends TestListenerAdapter {
 		 for(String driverType : drivers.keySet())
 		 {
 			   if(captureJsErrors) baseDriverHelper.ExtractJSLogs(drivers.get(driverType),driverType);
-			   if(takeScreenShot)  utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
+			  
+			   long threadId = Thread.currentThread().getId();
+			   if(takeScreenShot) 
+			   {
+				   utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
+				   utils.captureFullBrowserScreenShot("FullSS_"+testResult.getName()+"_thread"+threadId, drivers.get(driverType));
+			   }
+				
 		 }
+		 	
+		 
 	}
 	
 	public Map<String, WebDriver> getDriverfromResult(ITestResult testResult)
