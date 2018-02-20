@@ -59,6 +59,18 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	{
 		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)));
 	}
+	
+	/**
+	 * Retrieve data from the given excel file
+	 * 
+	 * @param excel filename
+	 * @return List<String> - All the rows in excel, each row as a List
+	 * @throws Exception
+	 */
+	public List<String> retrieveHeaderData(String filename) throws Exception {
+		// TODO Auto-generated method stub
+		return retrieveHeaderData(new XSSFWorkbook(new FileInputStream(filename)));
+	}
 
 
 	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception
@@ -79,6 +91,8 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 		writeDataToFile(new XSSFWorkbook(), filename, data,header,forceNumbersAsString);
 		
 	}
+
+
 
 }
 
