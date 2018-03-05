@@ -460,6 +460,9 @@ public class CSVParserUtils {
 	
 	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
 		try {
+			if(!fileName.endsWith(".csv")) {
+				fileName += ".csv";
+			}
 			List<String[]> dataToCSV = new ArrayList<String[]>();
 			int count = header.length;
 			String[] cells = new String[count];
