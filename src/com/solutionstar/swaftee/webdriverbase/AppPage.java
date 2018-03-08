@@ -992,13 +992,13 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public WebElement waitForElementToAppear(By locator) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(locator));
 		return driver.findElement(locator);
 	}
 	
 	public void waitForElementToAppear(WebElement e) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(e));
 	}
 	
