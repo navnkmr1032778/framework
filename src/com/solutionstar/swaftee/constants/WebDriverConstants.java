@@ -73,7 +73,7 @@ public class WebDriverConstants {
 	public static final Map<String, String> MAC_DRIVERS;
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("chrome", "https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip");
+	  tmp.put("chrome", "https://chromedriver.storage.googleapis.com/2.35/chromedriver_mac64.zip");
 	  tmp.put("phantomjs", "https://github.com/sheltonpaul89/WebDrivers/raw/master/phantomjs_mac.zip");
 		
 	  MAC_DRIVERS = Collections.unmodifiableMap(tmp);
