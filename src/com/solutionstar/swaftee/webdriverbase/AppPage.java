@@ -467,7 +467,7 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(10, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
 		wait.until(new ExpectedCondition<Boolean>() 
 				{
 			public Boolean apply(WebDriver driver) 
@@ -992,13 +992,13 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public WebElement waitForElementToAppear(By locator) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(locator));
 		return driver.findElement(locator);
 	}
 	
 	public void waitForElementToAppear(WebElement e) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(e));
 	}
 	
