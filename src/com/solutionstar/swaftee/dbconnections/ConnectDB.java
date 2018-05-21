@@ -37,7 +37,10 @@ public class ConnectDB extends DatabaseConnection
 			database = props.get("db_name");
 			userName = props.get("user_name");
 			passwd = props.get("password");
-			dbClassName=DB_CLASS_NAMES.get(dbServerName);
+			if(dbServerName.equalsIgnoreCase("sqlserverwithIntegratedSecurity"))
+				dbClassName=DB_CLASS_NAMES.get("sqlserver");
+			else
+				dbClassName=DB_CLASS_NAMES.get(dbServerName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -58,6 +61,9 @@ public class ConnectDB extends DatabaseConnection
 			break;
 		case "postgresql":
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
+			break;
+		case "sqlserverwithIntegratedSecurity":
+			dbUrl = "jdbc:sqlserver://" + hostName + ":" + port + ";databaseName=" + database  + ";integratedSecurity=true;";
 			break;
 		default:
 			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
