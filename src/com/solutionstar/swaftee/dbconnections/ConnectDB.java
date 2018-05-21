@@ -19,59 +19,60 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 
 public class ConnectDB extends DatabaseConnection 
 {
-	Connection con = null;
-	String dbClassName,dbUrl ="";
-	String dbServerName=null,hostName,port,database,userName,passwd;
-	CommonUtils utils;
-	String env="";
-
-	public ConnectDB(String dbConfigurationFile)
-	{
-		CommonProperties props = CommonProperties.getInstance();
-		utils = new CommonUtils();
-		try {
-			props.load(dbConfigurationFile);
-			dbServerName = props.get("db_server_name");
-			hostName = props.get("db_host_name");
-			port = props.get("db_port");
-			database = props.get("db_name");
-			userName = props.get("user_name");
-			passwd = props.get("password");
-			if(dbServerName.equalsIgnoreCase("sqlserverwithIntegratedSecurity"))
-				dbClassName=DB_CLASS_NAMES.get("sqlserver");
-			else
-				dbClassName=DB_CLASS_NAMES.get(dbServerName);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public ConnectDB(Connection con)
-	{
-		this.con = con;
-	}
-	
-	public String constructConnectionString(String hostName,String port,String database)
-	{
-		String dbUrl="";
-		switch(dbServerName)
-		{
-		case "sqlserver":
-			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
-			break;
-		case "postgresql":
-			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
-			break;
-		case "sqlserverwithIntegratedSecurity":
-			dbUrl = "jdbc:sqlserver://" + hostName + ":" + port + ";databaseName=" + database  + ";integratedSecurity=true;";
-			break;
-		default:
-			dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
-			break;
-				
-		}
-		return dbUrl;
-	}
+    Connection con = null;
+    String temp;
+    String dbClassName,dbUrl ="";
+    String dbServerName=null,hostName,port,database,userName,passwd;
+    CommonUtils utils;
+    String env="";
+ 
+    public ConnectDB(String dbConfigurationFile)
+    {
+        CommonProperties props = CommonProperties.getInstance();
+        utils = new CommonUtils();
+        try {
+            props.load(dbConfigurationFile);
+            dbServerName = props.get("db_server_name");
+            hostName = props.get("db_host_name");
+            port = props.get("db_port");
+            database = props.get("db_name");
+            userName = props.get("user_name");
+            passwd = props.get("password");
+            if(dbServerName.equalsIgnoreCase("sqlserverwithIntegratedSecurity"))
+                dbClassName=DB_CLASS_NAMES.get("sqlserver");
+            else
+                dbClassName=DB_CLASS_NAMES.get(dbServerName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public ConnectDB(Connection con)
+    {
+        this.con = con;
+    }
+    
+    public String constructConnectionString(String hostName,String port,String database)
+    {
+        String dbUrl="";
+        switch(dbServerName)
+        {
+        case "sqlserver":
+            dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
+            break;
+        case "postgresql":
+            dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
+            break;
+        case "sqlserverwithIntegratedSecurity":
+            dbUrl = "jdbc:sqlserver://" + hostName + ":" + port + ";databaseName=" + database  + ";integratedSecurity=true;";
+            break;
+        default:
+            dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
+            break;
+                
+        }
+        return dbUrl;
+    }
 	
 	public Connection establishConnection() throws MyCoreExceptions
 	{
