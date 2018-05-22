@@ -20,9 +20,8 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 public class ConnectDB extends DatabaseConnection 
 {
     Connection con = null;
-    String temp;
     String dbClassName,dbUrl ="";
-    String dbServerName=null,hostName,port,database,userName,passwd;
+    String dbServerName=null,hostName,port,database,userName,passwd,dbIntegrationSecurity;
     CommonUtils utils;
     String env="";
  
@@ -33,15 +32,13 @@ public class ConnectDB extends DatabaseConnection
         try {
             props.load(dbConfigurationFile);
             dbServerName = props.get("db_server_name");
+            dbIntegrationSecurity=props.get("db_IntegrationSecurity");
             hostName = props.get("db_host_name");
             port = props.get("db_port");
             database = props.get("db_name");
             userName = props.get("user_name");
             passwd = props.get("password");
-            if(dbServerName.equalsIgnoreCase("sqlserverwithIntegratedSecurity"))
-                dbClassName=DB_CLASS_NAMES.get("sqlserver");
-            else
-                dbClassName=DB_CLASS_NAMES.get(dbServerName);
+            dbClassName=DB_CLASS_NAMES.get(dbServerName);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -59,12 +56,13 @@ public class ConnectDB extends DatabaseConnection
         {
         case "sqlserver":
             dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
+            if(dbIntegrationSecurity.equalsIgnoreCase("true"))
+            {
+            	dbUrl = dbUrl  + "integratedSecurity=true;";
+            }           
             break;
         case "postgresql":
             dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
-            break;
-        case "sqlserverwithIntegratedSecurity":
-            dbUrl = "jdbc:sqlserver://" + hostName + ":" + port + ";databaseName=" + database  + ";integratedSecurity=true;";
             break;
         default:
             dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + ";databaseName=" + database+";" ;
