@@ -40,6 +40,7 @@ import org.testng.TestListenerAdapter;
 
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.constants.enums.AffinityRECos;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
@@ -49,6 +50,8 @@ public class AppPage extends TestListenerAdapter
 {
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	protected WebDriver driver;
+	// Used by Affinity PageObjects for distinguishing reco specific features
+	protected AffinityRECos recoID;
 	JavascriptExecutor javaScriptExecutor; 
 	public static boolean mobileEmulationExecution=false;
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
@@ -72,6 +75,27 @@ public class AppPage extends TestListenerAdapter
 			maximizeWindow();
 		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
 			mobileEmulationExecution=true;
+	}
+	
+	// TODO - Investigate using constructor chaining to reduce boilerplate, keep separate, for now.
+	/**
+	 * This constructor is specific to Affinity RECos - separate, for now
+	 * @param driver
+	 */
+	public AppPage(WebDriver driver, AffinityRECos recoID)
+	{
+		this.driver = driver;
+		waitForPageLoadComplete();
+		// This is the only difference between the constructor bodies.
+		this.recoID = recoID;
+		PageFactory.initElements(driver, this);
+		String windowSize = System.getProperty("windowSize","");
+		//android does not supports maximizeWindow;
+		if(windowSize.equals("") && !baseDriverHelper.ismobile())
+			maximizeWindow();
+		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
+			mobileEmulationExecution=true;
+	}
 	}
 	
 	public void takeScreenShot(String fileName)
