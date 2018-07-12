@@ -130,6 +130,16 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		return outputData;
 	}
 	
+	
+	public List<String> retrieveHeaderData(Workbook workbook) throws Exception
+	{
+		Sheet sheet = workbook.getSheetAt(0);
+		Row headerRow = sheet.getRow(0);
+		List<String> header = getRowData(headerRow);
+		workbook.close();
+		return header;
+	}
+	
 	public void writeDataToFile(Workbook workbook,String filename, List<HashMap<String, String>> data) throws Exception
 	{
 		if (data.size() == 0)

@@ -40,6 +40,7 @@ import org.testng.TestListenerAdapter;
 
 import com.google.common.base.Function;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.constants.enums.AffinityRECos;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
@@ -49,6 +50,8 @@ public class AppPage extends TestListenerAdapter
 {
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	protected WebDriver driver;
+	// Used by Affinity PageObjects for distinguishing reco specific features
+	protected AffinityRECos recoID;
 	JavascriptExecutor javaScriptExecutor; 
 	public static boolean mobileEmulationExecution=false;
 	BaseDriverHelper baseDriverHelper = new BaseDriverHelper();
@@ -65,6 +68,26 @@ public class AppPage extends TestListenerAdapter
 	{
 		this.driver = driver;
 		waitForPageLoadComplete();
+		PageFactory.initElements(driver, this);
+		String windowSize = System.getProperty("windowSize","");
+		//android does not supports maximizeWindow;
+		if(windowSize.equals("") && !baseDriverHelper.ismobile())
+			maximizeWindow();
+		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
+			mobileEmulationExecution=true;
+	}
+	
+	// TODO - Investigate using constructor chaining to reduce boilerplate, keep separate, for now.
+	/**
+	 * This constructor is specific to Affinity RECos - separate, for now
+	 * @param driver
+	 */
+	public AppPage(WebDriver driver, AffinityRECos recoID)
+	{
+		this.driver = driver;
+		waitForPageLoadComplete();
+		// This is the only difference between the constructor bodies.
+		this.recoID = recoID;
 		PageFactory.initElements(driver, this);
 		String windowSize = System.getProperty("windowSize","");
 		//android does not supports maximizeWindow;
@@ -467,7 +490,7 @@ public class AppPage extends TestListenerAdapter
 
 	public void waitForPageLoad(int timeout) 
 	{
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS).pollingEvery(10, TimeUnit.SECONDS).ignoring(NoSuchElementException.class,WebDriverException.class);
 		wait.until(new ExpectedCondition<Boolean>() 
 				{
 			public Boolean apply(WebDriver driver) 
@@ -992,13 +1015,13 @@ public class AppPage extends TestListenerAdapter
 	}
 
 	public WebElement waitForElementToAppear(By locator) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(locator));
 		return driver.findElement(locator);
 	}
 	
 	public void waitForElementToAppear(WebElement e) {
-		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_ONE_MIN);
+		WebDriverWait wait = new WebDriverWait(this.driver, WebDriverConstants.WAIT_TWO_MIN);
 		wait.until(ExpectedConditions.elementToBeClickable(e));
 	}
 	
