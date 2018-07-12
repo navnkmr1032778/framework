@@ -96,7 +96,6 @@ public class AppPage extends TestListenerAdapter
 		if(baseDriverHelper.ismobile() && !baseDriverHelper.getEmulationDeviceName().equals("noEmul"))
 			mobileEmulationExecution=true;
 	}
-	}
 	
 	public void takeScreenShot(String fileName)
 	{
