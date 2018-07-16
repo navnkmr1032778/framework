@@ -14,10 +14,11 @@ public class APICalls {
 	Utils utils = new Utils();
 
 	public Response getRequest(String endpoint) {
-		return given().headers(utils.getHeaders()).when().get(endpoint).thenReturn();
+		return given().headers(utils.getHeaders1()).when().get(endpoint).thenReturn();
 	}
 
 	public Response getRequest(String endpoint, HashMap<String, String> param) {
+		//return given().parameter
 		return given().parameters(param).headers(utils.getHeaders1()).when().get(endpoint).thenReturn();
 	}
 
@@ -46,6 +47,14 @@ public class APICalls {
 	public Response postFileRequest(String fileName, String endpoint) {
 		return given().headers(utils.getHeaders1()).multiPart(new File(fileName)).log().all().when().post(endpoint)
 				.then().log().all().extract().response();
+	}
+	
+	public Response postFileRequest(String fileName, String endpoint,HashMap<String,String> map)
+	{
+		return given().headers(utils.getHeaders1()).multiPart(new File(fileName)).formParameters(map).log().all().when().post(endpoint)
+				.then().log().all().extract().response();
+
+		
 	}
 
 }
