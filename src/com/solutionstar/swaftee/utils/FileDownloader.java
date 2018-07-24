@@ -73,6 +73,7 @@ public class FileDownloader {
      * @param filePath The filepath that the file will be downloaded to.
      */
     public void localDownloadPath(String filePath) {
+    		LOG.info("FILE PATH: "+filePath);
         this.localDownloadPath = filePath;
     }
  
@@ -162,6 +163,7 @@ public class FileDownloader {
      * @throws NullPointerException
      */
 	private String downloader(WebElement element, String attribute) throws IOException, NullPointerException, URISyntaxException {
+		
         String fileToDownloadLocation = element.getAttribute(attribute);
         if (fileToDownloadLocation.trim().equals("")) throw new NullPointerException("The element you have specified does not link to anything!");
  

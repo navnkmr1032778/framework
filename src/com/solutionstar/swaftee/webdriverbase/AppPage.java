@@ -75,7 +75,6 @@ public class AppPage extends TestListenerAdapter
 			mobileEmulationExecution=true;
 	}
 	
-	
 	public void takeScreenShot(String fileName)
 	{
 		TakeScreenshot ts = new TakeScreenshotUtils(false, "", "", false);
