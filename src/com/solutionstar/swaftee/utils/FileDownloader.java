@@ -165,13 +165,10 @@ public class FileDownloader {
 	private String downloader(WebElement element, String attribute) throws IOException, NullPointerException, URISyntaxException {
 		
         String fileToDownloadLocation = element.getAttribute(attribute);
-        System.out.println("FILE TO DOWNLAOD LOCATION:"+fileToDownloadLocation);
         if (fileToDownloadLocation.trim().equals("")) throw new NullPointerException("The element you have specified does not link to anything!");
  
         URL fileToDownload = new URL(fileToDownloadLocation);
-        System.out.println("FILE TO DOWNLOAD"+fileToDownload);
         File downloadedFile = new File(this.localDownloadPath);
-        System.out.println("DOWNLOADED FILE"+downloadedFile);
         if (downloadedFile.canWrite() == false) downloadedFile.setWritable(true);
  
         HttpClient client = new DefaultHttpClient();

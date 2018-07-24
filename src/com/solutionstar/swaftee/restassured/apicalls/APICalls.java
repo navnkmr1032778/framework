@@ -18,7 +18,6 @@ public class APICalls {
 	}
 
 	public Response getRequest(String endpoint, HashMap<String, String> param) {
-		//return given().parameter
 		return given().parameters(param).headers(utils.getHeaders1()).when().get(endpoint).thenReturn();
 	}
 
@@ -52,9 +51,7 @@ public class APICalls {
 	public Response postFileRequest(String fileName, String endpoint,HashMap<String,String> map)
 	{
 		return given().headers(utils.getHeaders1()).multiPart(new File(fileName)).formParameters(map).log().all().when().post(endpoint)
-				.then().log().all().extract().response();
-
-		
+				.then().log().all().extract().response();	
 	}
 
 }
