@@ -166,7 +166,7 @@ public class Zephyr
 
 	public static void main(String[] args)
 	{
-		String mode = System.getProperty("zephyr");
+		String mode = System.getProperty("zephyr","generate-report");
 		if (mode.equals("reset"))
 		{
 			resetTestCycle();
