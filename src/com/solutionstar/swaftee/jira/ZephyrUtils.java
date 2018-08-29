@@ -369,7 +369,7 @@ public class ZephyrUtils
 		{
 			// group test cases as per status
 			HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
-			logger.info("Updating test cycle with test case ids - "+testCaseExecutionMap.keySet().toString());
+			logger.info("Updating Test Cycle - "+cycleId+ " for the Test Cases - "+testCaseStatus.keySet().toString());
 			HashMap<String, Collection<String>> groupingMap = new HashMap<String, Collection<String>>();
 			for (String testCase : testCaseStatus.keySet())
 			{
