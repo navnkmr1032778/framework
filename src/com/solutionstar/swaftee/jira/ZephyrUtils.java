@@ -265,6 +265,8 @@ public class ZephyrUtils
 	public static void bulkUpdateStatus(Collection<String> executionIds, String status)
 	{
 		Client client = ClientBuilder.newClient();
+		
+		logger.info("JIRA status that needs to be set : "+status+" - list of JIRA id's : "+Arrays.toString(executionIds.toArray()));
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("status", status);

@@ -224,8 +224,9 @@ public class AppDriver extends TestListenerAdapter {
 	@Override
 	public void onStart(ITestContext context) {
 		
+		logger.info("Executing the Test in XML: "+context.getName());
 		messageSender = messageSenderFactory.getMessageSender();
-
+		
 		try {
 			messageSender.init();
 		} catch (IOException e) {
@@ -267,8 +268,10 @@ public class AppDriver extends TestListenerAdapter {
 	public void onTestStart(ITestResult result) {
 		ITestNGMethod testMethod = result.getMethod();
 		String testId = getIdForMethod(result.getTestContext(), testMethod);
-		String mthdKey = getMessageSenderNameForMethod(testMethod);
-
+		String mthdKey = getMessageSenderNameForMethod(testMethod);			
+				
+		logger.info("Starting the test : "+result.getMethod().getMethodName()+ " - "+result.getTestClass().getName());
+	
 		messageSender.testStarted(testId, mthdKey, false, getRunId(result));
 
 	}
@@ -448,7 +451,7 @@ public class AppDriver extends TestListenerAdapter {
 	
 	protected String getTestCycleId()
 	{
-		String testCycleId = System.getProperty("testCycleId");
+		String testCycleId = System.getProperty("testCycleId","1118");
 		return testCycleId;
 	}
 	
