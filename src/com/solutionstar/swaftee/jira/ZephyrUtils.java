@@ -154,7 +154,7 @@ public class ZephyrUtils
 				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
 				.post(Entity.json(utils.objToJson(hm)));
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
+		logger.info("Response Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
 		/*
 		 * Create & perform execution for all test cases
@@ -267,7 +267,7 @@ public class ZephyrUtils
 	{
 		Client client = ClientBuilder.newClient();
 		
-		logger.info("JIRA status that needs to be set : "+status+" - list of JIRA id's : "+Arrays.toString(executionIds.toArray()));
+		logger.info("JIRA status that needs to be set : "+status+" - list of execution id's : "+Arrays.toString(executionIds.toArray()));
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("status", status);

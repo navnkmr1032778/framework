@@ -1,5 +1,6 @@
 package com.solutionstar.swaftee.jira;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
@@ -106,7 +107,7 @@ public class Zephyr
 			}
 			countHash.put(result.get("result"), ++count);
 		}
-
+		output1.append("</br></br>");
 		output1.append("</table>");
 
 		// consolidated result:
@@ -154,7 +155,13 @@ public class Zephyr
 
 		try
 		{
-			FileWriter fw = new FileWriter(writeToFile);
+			File file=new File(writeToFile);
+			// if file doesn't exists, then create it
+						if (!file.exists()) {
+							file.createNewFile();
+						}
+			// true = append file
+			FileWriter fw = new FileWriter(writeToFile,true);
 			fw.write(output2.toString() + output1.toString());
 			fw.close();
 		}
