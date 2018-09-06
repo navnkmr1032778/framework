@@ -8,6 +8,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * This class handles the report generation and to reset the test cycle in Zephyr. This class uses the following system property variables:
  * <ul>
@@ -26,6 +29,7 @@ public class Zephyr
 {
 	public static String testCycleId = System.getProperty("testCycleId");
 
+	protected static Logger logger = LoggerFactory.getLogger(Zephyr.class);
 	/**
 	 * To reset the status of all the test cases in test cycle as UNEXECUTED.
 	 * This method will be executed when the zephyr mode is set to reset
@@ -107,13 +111,12 @@ public class Zephyr
 			}
 			countHash.put(result.get("result"), ++count);
 		}
-		output1.append("</br></br>");
-		output1.append("</table>");
+		output1.append("</table></br></br>");
 
 		// consolidated result:
 
 		StringBuilder output2 = new StringBuilder();
-		output2.append("Test Execution summary in <a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a><br /><b>Execution Summary:</b><br /><table border=1>");
+		output2.append("Test Execution summary in <a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a> - "+ZephyrUtils.getCycleDetails().get("name").toString() +" <br /><br /><b>Execution Summary:</b><br /><table border=1>");
 
 		if (countHash.containsKey("PASS"))
 		{
@@ -158,9 +161,10 @@ public class Zephyr
 			File file=new File(writeToFile);
 			// if file doesn't exists, then create it
 						if (!file.exists()) {
-							file.createNewFile();
+							file.createNewFile();							
 						}
 			// true = append file
+			logger.info(file.getAbsolutePath());
 			FileWriter fw = new FileWriter(writeToFile,true);
 			fw.write(output2.toString() + output1.toString());
 			fw.close();
