@@ -116,8 +116,8 @@ public class Zephyr
 		// consolidated result:
 
 		StringBuilder output2 = new StringBuilder();
-		output2.append("Test Execution summary in <a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a> - "+ZephyrUtils.getCycleDetails().get("name").toString() +" <br /><br /><b>Execution Summary:</b><br /><table border=1>");
-
+		output2.append("Test Execution summary in - "+ZephyrUtils.getCycleDetails().get("name").toString() +" <br /><br /><b>Execution Summary:</b><br /><table border=1>");
+ //<a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a> - 
 		if (countHash.containsKey("PASS"))
 		{
 			output2.append("<tr class='PASS'><td>PASS</td><td>" + countHash.get("PASS") + "</td>");
