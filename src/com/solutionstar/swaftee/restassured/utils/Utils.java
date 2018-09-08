@@ -82,7 +82,7 @@ public class Utils {
 	// Get a single value from JSON path E.g. "items[0].listingKey"
 	public String getValueFromJsonPath(Response res, String arrayPath) {
 		JsonPath jp = getJsonPath(res);
-		String value = jp.get(arrayPath);
+		String value = jp.get(arrayPath).toString();
 		return value;
 
 	}
