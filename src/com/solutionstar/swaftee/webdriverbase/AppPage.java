@@ -301,6 +301,28 @@ public class AppPage extends TestListenerAdapter
 		return;
 	}
 	
+	public void waitForElementsToBeEnabled(By locator)
+	{
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
+		wait.until(new ExpectedCondition<Boolean>() 
+		{
+			public Boolean apply(WebDriver arg0) 
+			 {
+				 if(driver.findElements(By.id("js-first-name")).size()>0)
+				 {
+					 return driver.findElement(By.id("js-first-name")).isEnabled();
+					 
+				 }
+				 else
+				 {
+					 return null;
+				 }
+				 
+			 }
+		});
+		return;
+	}
+	
 
 	public void waitForElementToContainText(WebElement e, String text)
 	{
