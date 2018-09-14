@@ -307,16 +307,16 @@
 			<url>http://repo.spring.io/libs-milestone/</url>
 		</repository>
 	</repositories>
-<!-- 	<distributionManagement> -->
+	<distributionManagement>
 
-<!-- 		<repository> -->
-<!-- 			<id>repo</id> -->
-<!-- 			<url>https://github.com/sekart91/WebDriverBase/raw/master/releases</url> -->
-<!-- 		</repository> -->
-<!-- 		<snapshotRepository> -->
-<!-- 			<id>snapshot-repo</id> -->
-<!-- 			<url>https://github.com/sekart91/WebDriverBase/raw/master/snapshot</url> -->
-<!-- 		</snapshotRepository> -->
+		<repository>
+			<id>repo</id>
+			<url>https://github.com/sekart91/WebDriverBase/raw/master/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<url>https://github.com/sekart91/WebDriverBase/raw/master/snapshot</url>
+		</snapshotRepository>
 
-<!-- 	</distributionManagement> -->
+	</distributionManagement>
 </project>
