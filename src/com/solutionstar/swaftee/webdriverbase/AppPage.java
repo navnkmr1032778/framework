@@ -8,10 +8,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
+//import java.util.NoSuchElementException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.openqa.selenium.Alert;
@@ -21,6 +20,7 @@ import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
@@ -300,30 +300,6 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
-	
-	public void waitForElementsToBeEnabled(By locator)
-	{
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
-		wait.until(new ExpectedCondition<Boolean>() 
-		{
-			public Boolean apply(WebDriver arg0) 
-			 {
-				 if(driver.findElements(By.id("js-first-name")).size()>0)
-				 {
-					 return driver.findElement(By.id("js-first-name")).isEnabled();
-					 
-				 }
-				 else
-				 {
-					 return null;
-				 }
-				 
-			 }
-		});
-		return;
-	}
-	
-
 	public void waitForElementToContainText(WebElement e, String text)
 	{
 		waitForElementToBeEnabled(e);
