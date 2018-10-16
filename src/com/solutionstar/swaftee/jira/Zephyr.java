@@ -1,11 +1,15 @@
 package com.solutionstar.swaftee.jira;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class handles the report generation and to reset the test cycle in Zephyr. This class uses the following system property variables:
@@ -25,6 +29,7 @@ public class Zephyr
 {
 	public static String testCycleId = System.getProperty("testCycleId");
 
+	protected static Logger logger = LoggerFactory.getLogger(Zephyr.class);
 	/**
 	 * To reset the status of all the test cases in test cycle as UNEXECUTED.
 	 * This method will be executed when the zephyr mode is set to reset
@@ -106,14 +111,13 @@ public class Zephyr
 			}
 			countHash.put(result.get("result"), ++count);
 		}
-
-		output1.append("</table>");
+		output1.append("</table></br></br>");
 
 		// consolidated result:
 
 		StringBuilder output2 = new StringBuilder();
-		output2.append("Test Execution summary in <a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a><br /><b>Execution Summary:</b><br /><table border=1>");
-
+		output2.append("Test Execution summary in - "+ZephyrUtils.getCycleDetails().get("name").toString() +" <br /><br /><b>Execution Summary:</b><br /><table border=1>");
+ //<a href='"+ ZephyrUtils.getTestCycleURL()  +"'>Jira</a> - 
 		if (countHash.containsKey("PASS"))
 		{
 			output2.append("<tr class='PASS'><td>PASS</td><td>" + countHash.get("PASS") + "</td>");
@@ -154,7 +158,14 @@ public class Zephyr
 
 		try
 		{
-			FileWriter fw = new FileWriter(writeToFile);
+			File file=new File(writeToFile);
+			// if file doesn't exists, then create it
+						if (!file.exists()) {
+							file.createNewFile();							
+						}
+			// true = append file
+			logger.info(file.getAbsolutePath());
+			FileWriter fw = new FileWriter(writeToFile,true);
 			fw.write(output2.toString() + output1.toString());
 			fw.close();
 		}
@@ -166,7 +177,7 @@ public class Zephyr
 
 	public static void main(String[] args)
 	{
-		String mode = System.getProperty("zephyr");
+		String mode = System.getProperty("zephyr","generate-report");
 		if (mode.equals("reset"))
 		{
 			resetTestCycle();

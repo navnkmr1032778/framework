@@ -8,19 +8,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
+//import java.util.NoSuchElementException;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -44,6 +47,8 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+
+import microsoft.exchange.webservices.data.TimeSpan;
 
 public class AppPage extends TestListenerAdapter 
 {
@@ -221,7 +226,22 @@ public class AppPage extends TestListenerAdapter
 			isElementPresent = true;
 		return isElementPresent;
 	}
-
+	
+	public ExpectedCondition<Boolean> isElementAttributeValuePresent(WebElement identifier, String attributeName, String attributeValue) {
+		return new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver driver) {
+				try {
+					if (identifier.getAttribute(attributeName).contains(attributeValue)) {
+						return true;
+					}
+				}
+				catch (NullPointerException e) {
+					return false;
+				}
+				return false;
+			}};
+		}
+	
 	public void waitForVisible(WebElement element) 
 	{
 		WebDriverWait wait =
@@ -280,8 +300,6 @@ public class AppPage extends TestListenerAdapter
 				});
 		return;
 	}
-	
-
 	public void waitForElementToContainText(WebElement e, String text)
 	{
 		waitForElementToBeEnabled(e);
@@ -1041,6 +1059,33 @@ public class AppPage extends TestListenerAdapter
 			wait.until(invisibilityOfElementLocated(e));
 	}
 	
+	/**
+	 * waitForPageTransition - lo
+	 * @param identifier - The id for the page element
+	 * @param attributeName - The attribute which will make the transition
+	 * @param attribValue1 - The attribute value that will put the page into 
+	 * a transition
+	 * @param attribValue2 - The attribute value that will indicate that the page is
+	 * now stable again
+	 * @param timeOut
+	 */
+	public void waitForPageTransition(WebElement identifier, String attributeName, String attribValue1, String attribValue2, int timeOut) {
+		WebDriverWait wait;
+		try {
+			wait = new WebDriverWait(this.driver, timeOut);
+			wait.until(isElementAttributeValuePresent(identifier, attributeName, attribValue1));
+		}
+		catch (Exception ex) {
+			if (ex instanceof ElementNotVisibleException || ex instanceof NoSuchElementException
+					|| ex instanceof TimeoutException) {
+				//TODO - fix this -> log.debug("Didn't see the expected page element, attribute or attribute value, so continue wait, for transition.");
+			}
+		}
+		finally {
+			wait = new WebDriverWait(this.driver, timeOut * 2);
+			wait.until(isElementAttributeValuePresent(identifier, attributeName, attribValue2));
+		}
+	}
 
 	public ExpectedCondition<Boolean> invisibilityOfElementLocated(final WebElement element) {
 		return new ExpectedCondition<Boolean>() {
@@ -1497,7 +1542,7 @@ public class AppPage extends TestListenerAdapter
 	 * @return boolean
 	 */
 
-	public boolean isAttribtuePresent(WebElement element, String attribute)
+	public Boolean isAttribtuePresent(WebElement element, String attribute)
 	{
 		Boolean result = false;
 		try {
