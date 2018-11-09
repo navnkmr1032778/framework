@@ -54,9 +54,9 @@ public class XLSDataArchive extends SpreadsheetDataArchiveBase implements DataAr
 	 * @return List<HashMap<String, String>> - All the rows in excel, each row as a hashmap
 	 * @throws Exception
 	 */
-	public List<HashMap<String, String>> retrieveData(String filename,int...val) throws Exception
+	public List<HashMap<String, String>> retrieveData(String filename,boolean...value) throws Exception
 	{
-		return retrieveData(new HSSFWorkbook(new FileInputStream(filename)),val);
+		return retrieveData(new HSSFWorkbook(new FileInputStream(filename)),value);
 	}
 
 	public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception

@@ -80,13 +80,13 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		clearData();
 	}
 
-	private List<String> getRowData(Row row,int...val) throws Exception
+	private List<String> getRowData(Row row,int... headerSize) throws Exception
 	{
 		List<String> rowData = new ArrayList<String>();
 		int size=0;
-		if(val.length > 0)
+		if(headerSize.length > 0)
 		{
-			size = val[0];
+			size = headerSize[0];
 		}
 		else
 		{
@@ -117,7 +117,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		return rowData;
 	}
 
-	public List<HashMap<String, String>> retrieveData(Workbook workbook,int... val) throws Exception
+	public List<HashMap<String, String>> retrieveData(Workbook workbook,boolean... value) throws Exception
 	{
 		Sheet sheet = workbook.getSheetAt(0);
 		Row headerRow = sheet.getRow(0);
@@ -127,7 +127,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		for (int i = 1; i <= totalRows; i++)
 		{
 			List<String> rowData;
-			if(val.length > 0)
+			if(value.length > 0)
 			{
 				rowData = getRowData(sheet.getRow(i),header.size());
 			}
