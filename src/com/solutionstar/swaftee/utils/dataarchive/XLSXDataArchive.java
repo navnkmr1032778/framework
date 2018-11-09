@@ -52,6 +52,7 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	 * Retrieve data from the given excel file
 	 * 
 	 * @param excel filename
+	 * @param val to decide if row size to take as headerSize or row size iteslf
 	 * @return List<HashMap<String, String>> - All the rows in excel, each row as a hashmap
 	 * @throws Exception
 	 */
@@ -64,6 +65,7 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	 * Retrieve data from the given excel file
 	 * 
 	 * @param excel filename
+	 * @param excel sheetName
 	 * @return List<HashMap<String, String>> - All the columns in excel, each column as a hashmap
 	 * @throws Exception
 	 */
