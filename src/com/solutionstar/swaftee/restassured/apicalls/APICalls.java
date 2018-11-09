@@ -29,10 +29,17 @@ public class APICalls {
 	public Response postRequest(String body, String endpoint) {
 		return given().headers(utils.getHeaders1()).body(body).when().post(endpoint).then().extract().response();
 	}
+	
+	public Response putRequest(String body, String endpoint) {
+		return given().headers(utils.getHeaders1()).body(body).when().put(endpoint).then().extract().response();
+	}
 
 	public Response putRequest(Object body, String endpoint) {
 		return given().headers(utils.getHeaders1()).body(body).when().put(endpoint).then().extract().response();
-
+	}
+	
+	public Response deleteRequest(String endpoint) {
+		return given().headers(utils.getHeaders1()).when().delete(endpoint).then().extract().response();
 	}
 
 	public Response deleteRequest(String body, String endpoint) {

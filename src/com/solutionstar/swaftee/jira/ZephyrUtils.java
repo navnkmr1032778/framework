@@ -9,6 +9,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -153,7 +154,7 @@ public class ZephyrUtils
 				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.AUTHORIZATION, "Basic " + jiraAuth)
 				.post(Entity.json(utils.objToJson(hm)));
 
-		logger.info("Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
+		logger.info("Response Status : " + String.valueOf(response.getStatus()) + " - " + response.toString());
 
 		/*
 		 * Create & perform execution for all test cases
@@ -265,6 +266,8 @@ public class ZephyrUtils
 	public static void bulkUpdateStatus(Collection<String> executionIds, String status)
 	{
 		Client client = ClientBuilder.newClient();
+		
+		logger.info("JIRA status that needs to be set : "+status+" - list of execution id's : "+Arrays.toString(executionIds.toArray()));
 
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("status", status);
@@ -369,7 +372,7 @@ public class ZephyrUtils
 		{
 			// group test cases as per status
 			HashMap<String, String> testCaseExecutionMap = getExecutionIdFromTestCycle();
-			logger.info("Updating test cycle with test case ids - "+testCaseExecutionMap.keySet().toString());
+			logger.info("Updating Test Cycle - "+cycleId+ " for the Test Cases - "+testCaseStatus.keySet().toString());
 			HashMap<String, Collection<String>> groupingMap = new HashMap<String, Collection<String>>();
 			for (String testCase : testCaseStatus.keySet())
 			{
