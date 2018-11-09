@@ -10,6 +10,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -79,10 +80,19 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		clearData();
 	}
 
-	private List<String> getRowData(Row row) throws Exception
+	private List<String> getRowData(Row row,int...val) throws Exception
 	{
 		List<String> rowData = new ArrayList<String>();
-		for (int i = 0; i < row.getLastCellNum(); i++)
+		int size=0;
+		if(val.length > 0)
+		{
+			size = val[0];
+		}
+		else
+		{
+			size = row.getLastCellNum();
+		}
+		for (int i = 0; i < size; i++)
 		{
 			Cell cell = row.getCell(i);
 			if (cell != null) 
@@ -107,7 +117,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		return rowData;
 	}
 
-	public List<HashMap<String, String>> retrieveData(Workbook workbook) throws Exception
+	public List<HashMap<String, String>> retrieveData(Workbook workbook,int... val) throws Exception
 	{
 		Sheet sheet = workbook.getSheetAt(0);
 		Row headerRow = sheet.getRow(0);
@@ -116,13 +126,88 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		int totalRows = sheet.getLastRowNum();
 		for (int i = 1; i <= totalRows; i++)
 		{
-			List<String> rowData = getRowData(sheet.getRow(i));
+			List<String> rowData;
+			if(val.length > 0)
+			{
+				rowData = getRowData(sheet.getRow(i),header.size());
+			}
+			else
+			{
+				rowData = getRowData(sheet.getRow(i));
+			}
 			int j = 0;
 			HashMap<String, String> map = new HashMap<String, String>();
 			for (String col : header)
 			{
 				map.put(col, rowData.get(j));
 				j++;
+			}
+			outputData.add(map);
+		}
+		workbook.close();
+		return outputData;
+	}
+	
+	public String getCellValue(Cell cell)
+	{
+		String cellValue="";
+		DataFormatter formatter = new DataFormatter();
+		if (cell != null) 
+		{
+			switch (cell.getCellType()) 
+			{
+				case Cell.CELL_TYPE_NUMERIC:
+					cellValue = "" + formatter.formatCellValue(cell);
+					break;
+				case Cell.CELL_TYPE_STRING:
+					cellValue = cell.getStringCellValue();
+					break;
+				case Cell.CELL_TYPE_BLANK:
+					cellValue = "";
+					break;
+			}
+		}
+		else
+		{
+			cellValue="";
+		}
+		return cellValue;
+
+	}
+	
+	public List<HashMap<String, String>> retrieveDataInverse(Workbook workbook,String... sheetName) throws Exception
+	{
+		
+		Sheet sheet;
+		if(sheetName.length>0)
+		{
+			sheet = workbook.getSheet(sheetName[0]);
+		}
+		else
+		{
+			 sheet = workbook.getSheetAt(0);
+		}
+		List<HashMap<String, String>> outputData = new ArrayList<HashMap<String, String>>();
+		int totalRows = sheet.getLastRowNum();
+		Row firstRow = sheet.getRow(0);
+		int totalColumns = firstRow.getPhysicalNumberOfCells();
+		String key="",value="";
+		for(int k = 1; k <= totalColumns; k++)
+		{
+			HashMap<String, String> map = new HashMap<String, String>();
+			for(int i = 0; i <= totalRows; i++)
+			{
+				Row row = sheet.getRow(i);
+				if(row != null)
+				{
+					Cell cell = row.getCell(0);
+					key = getCellValue(cell);
+					
+					Cell cell1 = row.getCell(k);
+					value = getCellValue(cell1);
+
+					map.put(key, value);			
+				}
 			}
 			outputData.add(map);
 		}

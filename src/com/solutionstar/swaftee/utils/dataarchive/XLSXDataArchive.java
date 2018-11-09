@@ -55,9 +55,21 @@ public class XLSXDataArchive extends SpreadsheetDataArchiveBase implements DataA
 	 * @return List<HashMap<String, String>> - All the rows in excel, each row as a hashmap
 	 * @throws Exception
 	 */
-	public List<HashMap<String, String>> retrieveData(String filename) throws Exception
+	public List<HashMap<String, String>> retrieveData(String filename,int...val) throws Exception
 	{
-		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)));
+		return retrieveData(new XSSFWorkbook(new FileInputStream(filename)),val);
+	}
+	
+	/**
+	 * Retrieve data from the given excel file
+	 * 
+	 * @param excel filename
+	 * @return List<HashMap<String, String>> - All the columns in excel, each column as a hashmap
+	 * @throws Exception
+	 */
+	public List<HashMap<String,String>> retrieveDataInverse(String filename,String... sheetName) throws Exception
+	{
+		return retrieveDataInverse(new XSSFWorkbook(new FileInputStream(filename)),sheetName);
 	}
 	
 	/**

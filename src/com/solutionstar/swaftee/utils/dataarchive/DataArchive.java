@@ -38,7 +38,7 @@ public interface DataArchive {
      */
     public void clearData() throws Exception;
     
-    public List<HashMap<String, String>> retrieveData(String filename) throws Exception;
+    public List<HashMap<String, String>> retrieveData(String filename,int... val) throws Exception;
     
     public void writeDataToFile(String filename, List<HashMap<String, String>> data) throws Exception;
     
