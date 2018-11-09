@@ -88,7 +88,7 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 
 	}
 	
-	public List<HashMap<String, String>> retrieveData(String fileName) {
+	public List<HashMap<String, String>> retrieveData(String fileName,boolean...val) {
 		return csvUtils.getDataFromCSV(fileName);
 	}
 

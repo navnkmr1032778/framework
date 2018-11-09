@@ -97,6 +97,13 @@ public class Utils {
 		List<String> list = jp.get(arrayPath);
 		return list;
 	}
+	
+	public List<HashMap<String,String>> getHashMapFromJsonPath(Response res,String arrayPath)
+	{
+		JsonPath jp = getJsonPath(res);
+		List<HashMap<String,String>> hm = jp.get(arrayPath);
+		return hm;
+	}
 
 	// Get response as jsonString
 	public String getJsonString(Response res) {
