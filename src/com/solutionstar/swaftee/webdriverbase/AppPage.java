@@ -3,6 +3,7 @@ package com.solutionstar.swaftee.webdriverbase;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -1644,5 +1645,22 @@ public class AppPage extends TestListenerAdapter
 		scrolltoElement(element);
 		if (element.isSelected()) 
 			element.click();
-    }	
+    }
+	public String ValidateLink(WebElement linkElement)
+	{	
+		String respCode=null;
+		URL url = null;
+		HttpURLConnection connection = null; 
+		try {
+			url = new URL(linkElement.getAttribute("href"));
+			connection = (HttpURLConnection) url.openConnection();
+			connection.connect();
+			respCode = Integer.toString(connection.getResponseCode());
+			connection.disconnect();
+			return respCode;
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			return respCode;
+		}
+	}
 }
