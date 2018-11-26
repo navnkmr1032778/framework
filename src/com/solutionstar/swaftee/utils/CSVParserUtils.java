@@ -1,9 +1,17 @@
 package com.solutionstar.swaftee.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,8 +29,7 @@ import com.solutionstar.swaftee.constants.WebDriverConstants;
 
 public class CSVParserUtils {
 
-	protected static Logger logger = LoggerFactory
-			.getLogger(CSVParserUtils.class.getName());
+	protected static Logger logger = LoggerFactory.getLogger(CSVParserUtils.class.getName());
 
 	public HashMap<String, String[]> csvDataHash;
 	public HashMap<String, String> csvColumnIndexHash;
@@ -44,10 +51,8 @@ public class CSVParserUtils {
 			if (utils == null)
 				logger.warn("Utils obj is null");
 
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 			for (String[] row : rowEntries) {
 				if (headerRow) {
@@ -64,19 +69,15 @@ public class CSVParserUtils {
 	}
 
 	@SuppressWarnings("resource")
-	public HashMap<String, String[]> getCSVDataHash(String fileName,
-			int columnNumber) {
+	public HashMap<String, String[]> getCSVDataHash(String fileName, int columnNumber) {
 		try {
 			initializeConstans();
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 
 			if (rowEntries.get(0).length < columnNumber)
-				throw new MyCoreExceptions(
-						"Column Number Provided is out of data range in the file given");
+				throw new MyCoreExceptions("Column Number Provided is out of data range in the file given");
 
 			for (String[] row : rowEntries) {
 				if (headerRow) {
@@ -93,22 +94,18 @@ public class CSVParserUtils {
 	}
 
 	@SuppressWarnings("resource")
-	public HashMap<String, String[]> getCSVDataHash(String fileName,
-			String columnName) {
+	public HashMap<String, String[]> getCSVDataHash(String fileName, String columnName) {
 		try {
 			initializeConstans();
 			int columnNumber = -1;
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 
 			columnNumber = Arrays.asList(rowEntries.get(0)).indexOf(columnName);
 
 			if (rowEntries.get(0).length < columnNumber)
-				throw new MyCoreExceptions(
-						"Column Number Provided is out of data range in the file given");
+				throw new MyCoreExceptions("Column Number Provided is out of data range in the file given");
 			for (String[] row : rowEntries) {
 				if (headerRow) {
 					createCSVHeaderHash(row);
@@ -124,23 +121,18 @@ public class CSVParserUtils {
 	}
 
 	@SuppressWarnings("resource")
-	public HashMap<String, String[]> getCSVDataHash(String fileName,
-			String[] keyArray) {
+	public HashMap<String, String[]> getCSVDataHash(String fileName, String[] keyArray) {
 		try {
 			initializeConstans();
 			Integer[] columnNumber = new Integer[keyArray.length];
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 
 			for (int i = 0; i < keyArray.length; i++) {
-				columnNumber[i] = Arrays.asList(rowEntries.get(0)).indexOf(
-						keyArray[i]);
+				columnNumber[i] = Arrays.asList(rowEntries.get(0)).indexOf(keyArray[i]);
 				if (rowEntries.get(0).length < columnNumber[i])
-					throw new MyCoreExceptions(
-							"Column Number Provided is out of data range in the file given");
+					throw new MyCoreExceptions("Column Number Provided is out of data range in the file given");
 			}
 
 			for (String[] row : rowEntries) {
@@ -149,13 +141,9 @@ public class CSVParserUtils {
 					headerRow = false;
 				} else {
 					String hashKey = "";
-					hashKey = row[Arrays.asList(rowEntries.get(0)).indexOf(
-							keyArray[0])];
+					hashKey = row[Arrays.asList(rowEntries.get(0)).indexOf(keyArray[0])];
 					for (int i = 1; i < keyArray.length; i++) {
-						hashKey = hashKey
-								+ "-"
-								+ row[Arrays.asList(rowEntries.get(0)).indexOf(
-										keyArray[i])];
+						hashKey = hashKey + "-" + row[Arrays.asList(rowEntries.get(0)).indexOf(keyArray[i])];
 					}
 					csvDataHash.put(hashKey, row);
 				}
@@ -167,14 +155,11 @@ public class CSVParserUtils {
 		return csvDataHash;
 	}
 
-	public HashMap<String, String[]> getCSVDataHash(String fileName,
-			Integer[] keyArray) {
+	public HashMap<String, String[]> getCSVDataHash(String fileName, Integer[] keyArray) {
 		try {
 			initializeConstans();
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 
 			for (String[] row : rowEntries) {
@@ -215,8 +200,7 @@ public class CSVParserUtils {
 			else
 				throw new MyCoreExceptions("CSV Column header hash is Null");
 		} catch (Exception e) {
-			throw new MyCoreExceptions(
-					"Exception while getting the CSV Column header hash");
+			throw new MyCoreExceptions("Exception while getting the CSV Column header hash");
 		}
 	}
 
@@ -242,8 +226,7 @@ public class CSVParserUtils {
 
 	private void printHash(HashMap<?, ?> hashmap) {
 		for (Object key : hashmap.keySet()) {
-			logger.info("Key : " + key.toString() + "- Value : "
-					+ hashmap.get(key));
+			logger.info("Key : " + key.toString() + "- Value : " + hashmap.get(key));
 		}
 	}
 
@@ -253,10 +236,8 @@ public class CSVParserUtils {
 			if (utils == null)
 				logger.warn("Utils obj is null");
 
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			List<String[]> rowEntries = reader.readAll();
 			csvDataArray = new String[rowEntries.size()][];
 			csvDataArray = rowEntries.toArray(csvDataArray);
@@ -266,85 +247,78 @@ public class CSVParserUtils {
 		}
 		return csvDataArray;
 	}
-	
-	public Object[][] getCSVArray(String fileName,int rowNum)
-	{
-		try{
-			initializeConstans();
-			 if(utils == null)
-				 logger.warn("Utils obj is null");
-			 
-			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
-			 List<String[]> rowEntries = new ArrayList<String[]>();
-			 for(int i=0;i<rowNum;i++)
-			 {
-				 rowEntries.add(reader.readNext());
-			 }
-			 csvDataArray = new String[rowEntries.size()][];
-			 csvDataArray = rowEntries.toArray(csvDataArray);
-			 reader.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return csvDataArray;	
-	}
-	
-	public Object[][] getCSVArray(String fileName,int rangeMin, int rangeMax)
-	{
-		try{
-			initializeConstans();
-			 if(utils == null)
-				 logger.warn("Utils obj is null");
-			 
-			 CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
-			 List<String[]> allRows = reader.readAll();
-			 reader.close();
-			 List<String[]> rowEntries = new ArrayList<String[]>();
-			 if(allRows.size()<=rangeMin) {
-				 logger.error("FATAL : getCSVArray - CSV has fewer elements.. Change minium range specified - "+ rangeMin + "for file "+fileName);
-			 }
-			 else
-			 {
-				 rangeMax = allRows.size()-1<rangeMax ? allRows.size()-1 : rangeMax; 
-				 for(int i=rangeMin;i<=rangeMax;i++)
-				 {
-					 rowEntries.add(allRows.get(i));
-				 }
-				 csvDataArray = new String[rowEntries.size()][];
-				 csvDataArray = rowEntries.toArray(csvDataArray);
-			 }
-			 
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		return csvDataArray;	
-	}
-	
-    public Object[][] getCSVArray(String fileName, boolean header) 
-    {
-        try
-        {
-               initializeConstans();
-               if (utils == null)
-                    logger.warn("Utils obj is null");
 
-               CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName + ".csv"));
-                                                                           
-               List<String[]> rowEntries = reader.readAll();
-               if(header)
-               {
-                     rowEntries.remove(0);
-               }
-               csvDataArray = new String[rowEntries.size()][];
-               csvDataArray = rowEntries.toArray(csvDataArray);
-               reader.close();
-        }
-        catch (Exception e)
-        {
-                       e.printStackTrace();
-        }
-        return csvDataArray;
-    }
+	public Object[][] getCSVArray(String fileName, int rowNum) {
+		try {
+			initializeConstans();
+			if (utils == null)
+				logger.warn("Utils obj is null");
+
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			List<String[]> rowEntries = new ArrayList<String[]>();
+			for (int i = 0; i < rowNum; i++) {
+				rowEntries.add(reader.readNext());
+			}
+			csvDataArray = new String[rowEntries.size()][];
+			csvDataArray = rowEntries.toArray(csvDataArray);
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return csvDataArray;
+	}
+
+	public Object[][] getCSVArray(String fileName, int rangeMin, int rangeMax) {
+		try {
+			initializeConstans();
+			if (utils == null)
+				logger.warn("Utils obj is null");
+
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+			List<String[]> allRows = reader.readAll();
+			reader.close();
+			List<String[]> rowEntries = new ArrayList<String[]>();
+			if (allRows.size() <= rangeMin) {
+				logger.error("FATAL : getCSVArray - CSV has fewer elements.. Change minium range specified - "
+						+ rangeMin + "for file " + fileName);
+			} else {
+				rangeMax = allRows.size() - 1 < rangeMax ? allRows.size() - 1 : rangeMax;
+				for (int i = rangeMin; i <= rangeMax; i++) {
+					rowEntries.add(allRows.get(i));
+				}
+				csvDataArray = new String[rowEntries.size()][];
+				csvDataArray = rowEntries.toArray(csvDataArray);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return csvDataArray;
+	}
+
+	public Object[][] getCSVArray(String fileName, boolean header) {
+		try {
+			initializeConstans();
+			if (utils == null)
+				logger.warn("Utils obj is null");
+
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
+
+			List<String[]> rowEntries = reader.readAll();
+			if (header) {
+				rowEntries.remove(0);
+			}
+			csvDataArray = new String[rowEntries.size()][];
+			csvDataArray = rowEntries.toArray(csvDataArray);
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return csvDataArray;
+	}
 
 	public List<String[]> getCSVStringArray(String fileName) {
 
@@ -354,10 +328,8 @@ public class CSVParserUtils {
 			if (utils == null)
 				logger.warn("Utils obj is null");
 
-			CSVReader reader = new CSVReader(new FileReader(
-					utils.getCurrentWorkingDirectory()
-							+ WebDriverConstants.PATH_TO_TEST_DATA_FILE
-							+ fileName + ".csv"));
+			CSVReader reader = new CSVReader(new FileReader(utils.getCurrentWorkingDirectory()
+					+ WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName + ".csv"));
 			rowEntries = reader.readAll();
 			reader.close();
 		} catch (Exception e) {
@@ -374,108 +346,109 @@ public class CSVParserUtils {
 	 * This function will return:
 	 * [{Username:'a',Password:'1'},{Username:'b',Password:'2'}]
 	 * 
-	 * @param fileName
-	 *            the file from which data will be retrieved
+	 * @param fileName the file from which data will be retrieved
 	 * @return List of hashmap
 	 */
 	public List<HashMap<String, String>> getDataFromCSV(String fileName) {
 		return getDataFromCSV(fileName, true);
 	}
-	
+
 	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks) {
-		return getDataFromCSV(fileName,sendNullForBlanks,'\\');
+		return getDataFromCSV(fileName, sendNullForBlanks, '\\');
 	}
-	
-	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks, char escapeCharacter) {
-		if(!fileName.endsWith(".csv")) {
+
+	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks,
+			char escapeCharacter) {
+		if (!fileName.endsWith(".csv")) {
 			fileName += ".csv";
 		}
-		
+
 		List<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 		if (utils == null)
 			utils = new CommonUtils();
 		try {
-			
-			if(new File(fileName).isAbsolute() == false)
-				fileName = utils.getCurrentWorkingDirectory()+ WebDriverConstants.PATH_TO_TEST_DATA_FILE+ fileName;
-			
-			CSVReader reader = new CSVReader(new FileReader(fileName),',','"',escapeCharacter);
-			List<String[]> data = reader.readAll();
-			String[] header = data.remove(0);
-			for (String[] row : data) {
-				HashMap<String, String> rowEntries = new HashMap<String, String>();
-				if(row.length!=header.length)
-					throw new Exception("Column entry missing: Header - " + Arrays.deepToString(header) + "\nRow - " + Arrays.deepToString(row));
-				for (int i = 0; i < header.length; i++) {
-					String entry = row[i];
-					rowEntries
-							.put(header[i], ((entry.equals("") && sendNullForBlanks) ? null : entry));
+
+			if (new File(fileName).isAbsolute() == false)
+				fileName = utils.getCurrentWorkingDirectory() + WebDriverConstants.PATH_TO_TEST_DATA_FILE + fileName;
+
+			Path path = Paths.get(fileName);
+
+			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
+				CSVReader reader = new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")), ',', '"',
+						escapeCharacter);
+				List<String[]> data = reader.readAll();
+				String[] header = data.remove(0);
+				for (String[] row : data) {
+					HashMap<String, String> rowEntries = new HashMap<String, String>();
+					if (row.length != header.length)
+						throw new Exception("Column entry missing: Header - " + Arrays.deepToString(header) + "\nRow - "
+								+ Arrays.deepToString(row));
+					for (int i = 0; i < header.length; i++) {
+						String entry = row[i];
+						rowEntries.put(header[i], ((entry.equals("") && sendNullForBlanks) ? null : entry));
+					}
+					list.add(rowEntries);
 				}
-				list.add(rowEntries);
+				reader.close();
 			}
-			reader.close();
 		} catch (FileNotFoundException e) {
-			logger.error("CSV file not found " +fileName+
-					 ExceptionUtils.getFullStackTrace(e));
+			logger.error("CSV file not found " + fileName + ExceptionUtils.getFullStackTrace(e));
 		} catch (Exception e) {
-			
 			logger.error("Exception when reading " + fileName + " \n" + ExceptionUtils.getFullStackTrace(e));
 		}
 		return list;
 	}
 
-	
 	public void writeToCSVFile(String fileName, List<String[]> data) {
 		try {
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(new File(fileName)));
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error while writing to " +fileName+ ExceptionUtils.getFullStackTrace(e)); 
+			logger.error("Error while writing to " + fileName + ExceptionUtils.getFullStackTrace(e));
 		}
 	}
-	
+
 	public void appendToCSVFile(String fileName, List<String[]> data) {
 		try {
-			File file=new File(fileName);
-			if(!file.getParentFile().exists())
+			File file = new File(fileName);
+			if (!file.getParentFile().exists())
 				file.getParentFile().mkdirs();
-			CSVWriter csvWriter = new CSVWriter(new FileWriter(file,true));
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error while appending to " +fileName+ ExceptionUtils.getFullStackTrace(e)); 
+			logger.error("Error while appending to " + fileName + ExceptionUtils.getFullStackTrace(e));
 		}
 	}
-	
-	
-	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data) {
+
+	public void writeListHashMapToCSV(String fileName, List<HashMap<String, String>> data) {
 		try {
 			Set<String> header = data.get(0).keySet();
 			writeListHashMapToCSV(fileName, data, header.toArray(new String[header.size()]));
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
 		}
 	}
-	
-	public void writeListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
+
+	public void writeListHashMapToCSV(String fileName, List<HashMap<String, String>> data, String[] header) {
 		try {
-			if(!fileName.endsWith(".csv")) {
+			if (!fileName.endsWith(".csv")) {
 				fileName += ".csv";
 			}
 			List<String[]> dataToCSV = new ArrayList<String[]>();
 			int count = header.length;
 			String[] cells = new String[count];
 			int index = 0;
-			for(String heading : header) {
+			for (String heading : header) {
 				cells[index] = heading;
 				index++;
 			}
 			dataToCSV.add(cells);
-			for(HashMap<String,String> map : data) {
+			for (HashMap<String, String> map : data) {
 				cells = new String[count];
 				index = 0;
-				for(String heading : header) {
+				for (String heading : header) {
 					cells[index] = map.get(heading);
 					index++;
 				}
@@ -483,30 +456,30 @@ public class CSVParserUtils {
 			}
 			writeToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
 		}
 	}
-	
-	public void appendListHashMapToCSV(String fileName, List<HashMap<String,String>> data, String[] header) {
+
+	public void appendListHashMapToCSV(String fileName, List<HashMap<String, String>> data, String[] header) {
 		try {
 			List<String[]> dataToCSV = new ArrayList<String[]>();
 			int count = header.length;
 			String[] cells = new String[count];
-			int index = 0;	
-			
-			//Create headers only the first time
-			if(!(new File(fileName).exists())){
-				for(String heading : header) {
+			int index = 0;
+
+			// Create headers only the first time
+			if (!(new File(fileName).exists())) {
+				for (String heading : header) {
 					cells[index] = heading;
 					index++;
 				}
 				dataToCSV.add(cells);
 			}
-			
-			for(HashMap<String,String> map : data) {
+
+			for (HashMap<String, String> map : data) {
 				cells = new String[count];
 				index = 0;
-				for(String heading : header) {
+				for (String heading : header) {
 					cells[index] = map.get(heading);
 					index++;
 				}
@@ -514,60 +487,50 @@ public class CSVParserUtils {
 			}
 			appendToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
-			logger.error("Error in appendListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e)); 
+			logger.error("Error in appendListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
 		}
 	}
-	
 
-	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index,String index2,Boolean includeFileName) throws Exception 
-	{
+	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing, String index,
+			String index2, Boolean includeFileName) throws Exception {
 		HashMap<String, List<HashMap<String, String>>> output = new HashMap<String, List<HashMap<String, String>>>();
-		if (directoryListing == null) 
-			 return null;
-		try
-		{
-			for (File file : directoryListing) 
-		    {
-				if(file.getAbsolutePath().endsWith(".csv"))
-				{
-			    	for(HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath(), false))
-			    	{
-			    		if(includeFileName)
-							hsh.put("fileName",file.getAbsolutePath());
-			    		if(!index2.equals(""))
-			    		{
-			    			if(!output.containsKey(hsh.get(index) + "_" + hsh.get(index2)))
-			    			{
-			    				output.put(hsh.get(index) + "_" + hsh.get(index2), new ArrayList<HashMap<String, String>>());
-			    			}
-			    			output.get(hsh.get(index) + "_" + hsh.get(index2)).add(hsh);
-			    		}
-			    		else
-			    		{
-			    			if(!output.containsKey(hsh.get(index)))
-			    			{
-			    				output.put(hsh.get(index), new ArrayList<HashMap<String, String>>());
-			    			}
-			    			output.get(hsh.get(index)).add(hsh);
-			    		}
-							
-			    	}
+		if (directoryListing == null)
+			return null;
+		try {
+			for (File file : directoryListing) {
+				if (file.getAbsolutePath().endsWith(".csv")) {
+					for (HashMap<String, String> hsh : getDataFromCSV(file.getAbsolutePath(), false)) {
+						if (includeFileName)
+							hsh.put("fileName", file.getAbsolutePath());
+						if (!index2.equals("")) {
+							if (!output.containsKey(hsh.get(index) + "_" + hsh.get(index2))) {
+								output.put(hsh.get(index) + "_" + hsh.get(index2),
+										new ArrayList<HashMap<String, String>>());
+							}
+							output.get(hsh.get(index) + "_" + hsh.get(index2)).add(hsh);
+						} else {
+							if (!output.containsKey(hsh.get(index))) {
+								output.put(hsh.get(index), new ArrayList<HashMap<String, String>>());
+							}
+							output.get(hsh.get(index)).add(hsh);
+						}
+
+					}
 				}
-		    		
+
 			}
 			return output;
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			ex.printStackTrace();
-			if(output.size()==0) throw ex;
+			if (output.size() == 0)
+				throw ex;
 			return output;
 		}
 	}
-	
-	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing,String index, Boolean includeFileName) throws Exception 
-	{
-		return getHashfromAllFiles(directoryListing,index,"",includeFileName);
+
+	public HashMap<String, List<HashMap<String, String>>> getHashfromAllFiles(File[] directoryListing, String index,
+			Boolean includeFileName) throws Exception {
+		return getHashfromAllFiles(directoryListing, index, "", includeFileName);
 	}
-	
+
 }
