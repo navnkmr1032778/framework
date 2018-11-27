@@ -3,6 +3,7 @@ package com.solutionstar.swaftee.webdriverbase;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 //import java.util.NoSuchElementException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Cookie;
@@ -1434,6 +1437,34 @@ public class AppPage extends TestListenerAdapter {
 				respCode = false;
 			}
 			connection.disconnect();
+			return respCode;
+		} catch (Exception exp) {
+			exp.printStackTrace();
+			return respCode;
+		}
+	}
+	public boolean verifyPageTitleViaHttpClient(WebElement linkElement,String pageTitle) {
+		boolean respCode = false;
+		URL url = null;
+		String actualPageTitle= null;
+		HttpURLConnection connection = null;
+		try {
+			String urltest = linkElement.getAttribute("href");
+			System.out.println(urltest);
+			url = new URL(urltest);
+			connection = (HttpURLConnection) url.openConnection();			
+			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) {
+				InputStream inStream = connection.getInputStream();
+				Document doc = Jsoup.parse(org.apache.commons.io.IOUtils.toString(inStream, connection.getContentEncoding()));
+				actualPageTitle = doc.title();
+				System.out.println(actualPageTitle);
+				if(actualPageTitle.equals(pageTitle))
+				{
+					respCode = true;
+				}
+			} else {
+				respCode = false;
+			}
 			return respCode;
 		} catch (Exception exp) {
 			exp.printStackTrace();
