@@ -51,6 +51,7 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+import org.apache.commons.io.IOUtils;
 
 import microsoft.exchange.webservices.data.TimeSpan;
 
@@ -1423,50 +1424,52 @@ public class AppPage extends TestListenerAdapter {
 			element.click();
 	}
 
-	public boolean isLinkValid(WebElement linkElement) {
+	public boolean isLinkValid(WebElement linkElement) 
+	{
 		boolean respCode = false;
 		URL url = null;
 		HttpURLConnection connection = null;
-		try {
+		try 
+		{
 			url = new URL(linkElement.getAttribute("href"));
 			connection = (HttpURLConnection) url.openConnection();
-			connection.connect();
-			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) {
+			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) 
+			{
 				respCode = true;
-			} else {
-				respCode = false;
 			}
-			connection.disconnect();
 			return respCode;
-		} catch (Exception exp) {
+		} 
+		catch (Exception exp)
+		{
 			exp.printStackTrace();
 			return respCode;
 		}
 	}
-	public boolean verifyPageTitleViaHttpClient(WebElement linkElement,String pageTitle) {
+	public boolean verifyPageTitleViaHttpClient(WebElement linkElement,String pageTitle) 
+	{
 		boolean respCode = false;
 		URL url = null;
 		String actualPageTitle= null;
 		HttpURLConnection connection = null;
-		try {
+		try 
+		{
 			String urltest = linkElement.getAttribute("href");
-			System.out.println(urltest);
 			url = new URL(urltest);
 			connection = (HttpURLConnection) url.openConnection();			
-			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) {
+			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) 
+			{
 				InputStream inStream = connection.getInputStream();
-				Document doc = Jsoup.parse(org.apache.commons.io.IOUtils.toString(inStream, connection.getContentEncoding()));
+				Document doc = Jsoup.parse(IOUtils.toString(inStream, connection.getContentEncoding()));
 				actualPageTitle = doc.title();
-				System.out.println(actualPageTitle);
 				if(actualPageTitle.equals(pageTitle))
 				{
 					respCode = true;
 				}
-			} else {
-				respCode = false;
 			}
 			return respCode;
-		} catch (Exception exp) {
+		} 
+		catch (Exception exp)
+		{
 			exp.printStackTrace();
 			return respCode;
 		}
