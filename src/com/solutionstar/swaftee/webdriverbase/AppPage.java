@@ -479,9 +479,10 @@ public class AppPage extends TestListenerAdapter {
 
 	public void maximizeWindow() {
 		try {
-		driver.manage().window().maximize();
+			driver.manage().window().maximize();
 		} catch(Exception e) {
-			
+			logger.debug("Exception while maximizing the window...");
+			logger.debug(e.getMessage());
 		}
 	}
 
