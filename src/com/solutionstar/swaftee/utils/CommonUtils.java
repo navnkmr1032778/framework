@@ -101,10 +101,11 @@ public class CommonUtils {
 							listOfFiles[i].setExecutable(true);
 							return listOfFiles[i];
 						} else if (OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
+								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux
 								&& Files.getFileExtension(listOfFiles[i].getName()) != "exe") {
 							listOfFiles[i].setExecutable(true);
 							return listOfFiles[i];
-						}
+						} 
 					}
 
 				}
