@@ -37,6 +37,7 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
@@ -90,14 +91,21 @@ public class CommonUtils {
 			}
 
 			File[] listOfFiles = fileDirectory.listFiles();
-			if(listOfFiles!=null && listOfFiles.length != 0)
-			{
-				for(int i = 0; i < listOfFiles.length; i++)
-				{
-					if(listOfFiles[i].getName().contains(fileName)) // && listOfFiles[i].canExecute()) TODO : can executable check failing in mac os, have to find a way to execute it in mac
-					{
-						listOfFiles[i].setExecutable(true);
-						return listOfFiles[i];
+			if (listOfFiles != null && listOfFiles.length != 0) {
+				for (int i = 0; i < listOfFiles.length; i++) {
+					if (listOfFiles[i].getName().contains(fileName)) {
+						//check windows driver file "chromedriver.exe" and for Mac "chromedriver"
+						//check for file extension based on OS type and to pick the correct driver file even when both drivers are available
+						if (OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows
+								&& Files.getFileExtension(listOfFiles[i].getName()) == "exe") {
+							listOfFiles[i].setExecutable(true);
+							return listOfFiles[i];
+						} else if (OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
+								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux
+								&& Files.getFileExtension(listOfFiles[i].getName()) != "exe") {
+							listOfFiles[i].setExecutable(true);
+							return listOfFiles[i];
+						} 
 					}
 
 				}
