@@ -97,12 +97,12 @@ public class CommonUtils {
 						//check windows driver file "chromedriver.exe" and for Mac "chromedriver"
 						//check for file extension based on OS type and to pick the correct driver file even when both drivers are available
 						if (OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows
-								&& Files.getFileExtension(listOfFiles[i].getName()) == "exe") {
+								&& Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
 							listOfFiles[i].setExecutable(true);
 							return listOfFiles[i];
-						} else if (OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
-								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux
-								&& Files.getFileExtension(listOfFiles[i].getName()) != "exe") {
+						} else if ((OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
+								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux)
+								&& !Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
 							listOfFiles[i].setExecutable(true);
 							return listOfFiles[i];
 						} 
