@@ -25,25 +25,6 @@ public class Utils {
 		return response.getDetailedCookie(cookieName);
 	}
 
-	public HashMap<String, String> getHeaders1() {
-
-		HashMap<String, String> headers = new HashMap<String, String>();
-		String apiKey = System.getProperty("ApiKey");
-		String contentType = System.getProperty("contentType");
-		String accept = System.getProperty("accept");
-		String apiKeyProperty = System.getProperty("apiKeyProperty");
-		if (apiKey.equalsIgnoreCase("false") == false)
-			headers.put(apiKeyProperty, apiKey);
-		if (contentType.equalsIgnoreCase("false") == false)
-			headers.put("Content-Type", contentType);
-		if (accept.equalsIgnoreCase("false") == false)
-			headers.put("Accept", accept);
-
-		System.out.println(headers);
-		return headers;
-
-	}
-
 	public void createResponseFile(String methodName, Response response) throws FileNotFoundException {
 		String res = response.asString();
 		File myFile = new File(APIConstants.PATH_TO_RESPONSE + methodName + APIConstants.JSON_EXTENSION);
@@ -128,169 +109,176 @@ public class Utils {
 	}
 
 	public Headers getHeaders() {
+		
 		List<Header> listOfHeaders = new ArrayList<>();
 
+		String apiKey = System.getProperty("ApiKey");
+		String apiKeyProperty = System.getProperty("apiKeyProperty");
+		if (apiKey != null && apiKeyProperty != null && !apiKey.equalsIgnoreCase("false"))
+			listOfHeaders.add(new Header(apiKeyProperty, apiKey));
+		
 		String accept = System.getProperty("Accept", "false");
-		if (!accept.equalsIgnoreCase("false"))
+		if (accept != null && !accept.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Accept", accept));
 
 		String acceptCharset = System.getProperty("Accept-Charset", "false");
-		if (!acceptCharset.equalsIgnoreCase("false"))
+		if (acceptCharset != null && !acceptCharset.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Accept-Charset", acceptCharset));
 
 		String acceptEncoding = System.getProperty("Accept-Encoding", "false");
-		if (!acceptEncoding.equalsIgnoreCase("false"))
+		if (acceptEncoding != null && !acceptEncoding.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Accept-Encoding", acceptEncoding));
 
 		String acceptLanguage = System.getProperty("Accept-Language", "false");
-		if (!acceptLanguage.equalsIgnoreCase("false"))
+		if (acceptLanguage != null && !acceptLanguage.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Accept-Language", acceptLanguage));
 
 		String accessControlRequestHeaders = System.getProperty("Access-Control-Request-Headers", "false");
-		if (!accessControlRequestHeaders.equalsIgnoreCase("false"))
+		if (accessControlRequestHeaders != null && !accessControlRequestHeaders.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Access-Control-Request-Headers", accessControlRequestHeaders));
+		
 		String accessControlRequestMethod = System.getProperty("Access-Control-Request-Method", "false");
-		if (!accessControlRequestMethod.equalsIgnoreCase("false"))
+		if (accessControlRequestMethod != null && !accessControlRequestMethod.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Access-Control-Request-Method", accessControlRequestMethod));
 
 		String authorization = System.getProperty("Authorization", "false");
-		if (!authorization.equalsIgnoreCase("false"))
+		if (authorization != null && !authorization.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Authorization", authorization));
 
 		String cacheControl = System.getProperty("Cache-Control", "false");
-		if (!cacheControl.equalsIgnoreCase("false"))
+		if (cacheControl != null && !cacheControl.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Cache-Control", cacheControl));
 
 		String contentMD5 = System.getProperty("Content-MD5", "false");
-		if (!contentMD5.equalsIgnoreCase("false"))
+		if (contentMD5 != null && !contentMD5.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Content-MD5", contentMD5));
 
 		String contentLength = System.getProperty("Content-Length", "false");
-		if (!contentLength.equalsIgnoreCase("false"))
+		if (contentLength != null && !contentLength.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Content-Length", contentLength));
 
 		String contentTransferEncoding = System.getProperty("Content-Transfer-Encoding", "false");
-		if (!contentTransferEncoding.equalsIgnoreCase("false"))
+		if (contentTransferEncoding != null && !contentTransferEncoding.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Content-Transfer-Encoding", contentTransferEncoding));
 
 		String contentType = System.getProperty("Content-Type", "false");
-		if (!contentType.equalsIgnoreCase("false"))
+		if (contentType != null && !contentType.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Content-Type", contentType));
 
 		String cookie = System.getProperty("Cookie", "false");
-		if (!cookie.equalsIgnoreCase("false"))
+		if (cookie != null && !cookie.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Cookie", cookie));
 
 		String cookie2 = System.getProperty("Cookie2", "false");
-		if (!cookie2.equalsIgnoreCase("false"))
+		if (cookie2 != null && !cookie2.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Cookie2", cookie2));
 
 		String date = System.getProperty("Date", "false");
-		if (!date.equalsIgnoreCase("false"))
+		if (date != null && !date.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Date", date));
 
 		String expect = System.getProperty("Expect", "false");
-		if (!expect.equalsIgnoreCase("false"))
+		if (expect != null && !expect.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Expect", expect));
 
 		String from = System.getProperty("From", "false");
-		if (!from.equalsIgnoreCase("false"))
+		if (from != null && !from.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("From", from));
 
 		String host = System.getProperty("Host", "false");
-		if (!host.equalsIgnoreCase("false"))
+		if (host != null && !host.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Host", host));
 
 		String ifMatch = System.getProperty("If-Match", "false");
-		if (!ifMatch.equalsIgnoreCase("false"))
+		if (ifMatch != null && !ifMatch.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("If-Match", ifMatch));
 
 		String ifModifiedSince = System.getProperty("If-Modified-Since", "false");
-		if (!ifModifiedSince.equalsIgnoreCase("false"))
+		if (ifModifiedSince != null && !ifModifiedSince.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("If-Modified-Since", ifModifiedSince));
 
 		String ifNoneMatch = System.getProperty("If-None-Match", "false");
-		if (!ifNoneMatch.equalsIgnoreCase("false"))
+		if (ifNoneMatch != null && !ifNoneMatch.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("If-None-Match", ifNoneMatch));
 
 		String ifRange = System.getProperty("If-Range", "false");
-		if (!ifRange.equalsIgnoreCase("false"))
+		if (ifRange != null && !ifRange.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("If-Range", ifRange));
 
 		String ifUnmodifiedSince = System.getProperty("If-Unmodified-Since", "false");
-		if (!ifUnmodifiedSince.equalsIgnoreCase("false"))
+		if (ifUnmodifiedSince != null && !ifUnmodifiedSince.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("If-Unmodified-Since", ifUnmodifiedSince));
 
 		String keepAlive = System.getProperty("Keep-Alive", "false");
-		if (!keepAlive.equalsIgnoreCase("false"))
+		if (keepAlive != null && !keepAlive.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Keep-Alive", keepAlive));
 
 		String maxForwards = System.getProperty("Max-Forwards", "false");
-		if (!maxForwards.equalsIgnoreCase("false"))
+		if (maxForwards != null && !maxForwards.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Max-Forwards", maxForwards));
 
 		String origin = System.getProperty("Origin", "false");
-		if (!origin.equalsIgnoreCase("false"))
+		if (origin != null && !origin.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Origin", origin));
 
 		String pragma = System.getProperty("Pragma", "false");
-		if (!pragma.equalsIgnoreCase("false"))
+		if (pragma != null && !pragma.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Pragma", pragma));
 
 		String proxyAuthorization = System.getProperty("Proxy-Authorization", "false");
-		if (!proxyAuthorization.equalsIgnoreCase("false"))
+		if (proxyAuthorization != null && !proxyAuthorization.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Proxy-Authorization", proxyAuthorization));
 
 		String range = System.getProperty("Range", "false");
-		if (!range.equalsIgnoreCase("false"))
+		if (range != null && !range.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Range", range));
 
 		String referer = System.getProperty("Referer", "false");
-		if (!referer.equalsIgnoreCase("false"))
+		if (referer != null && !referer.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Referer", referer));
 
 		String te = System.getProperty("TE", "false");
-		if (!te.equalsIgnoreCase("false"))
+		if (te != null && !te.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("TE", te));
 
 		String trailer = System.getProperty("Trailer", "false");
-		if (!trailer.equalsIgnoreCase("false"))
+		if (trailer != null && !trailer.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Trailer", trailer));
 
 		String transferEncoding = System.getProperty("Transfer-Encoding", "false");
-		if (!transferEncoding.equalsIgnoreCase("false"))
+		if (transferEncoding != null && !transferEncoding.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Transfer-Encoding", transferEncoding));
 
 		String upgrade = System.getProperty("Upgrade", "false");
-		if (!upgrade.equalsIgnoreCase("false"))
+		if (upgrade != null && !upgrade.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Upgrade", upgrade));
 
 		String userAgent = System.getProperty("User-Agent", "false");
-		if (!userAgent.equalsIgnoreCase("false"))
+		if (userAgent != null && !userAgent.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("User-Agent", userAgent));
 
 		String via = System.getProperty("Via", "false");
-		if (!via.equalsIgnoreCase("false"))
+		if (via != null && !via.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Via", via));
 
 		String warning = System.getProperty("Warning", "false");
-		if (!warning.equalsIgnoreCase("false"))
+		if (warning != null && !warning.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Warning", warning));
 
 		String xRequestedWith = System.getProperty("X-Requested-With", "false");
-		if (!xRequestedWith.equalsIgnoreCase("false"))
+		if (xRequestedWith != null && !xRequestedWith.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("X-Requested-With", xRequestedWith));
 
 		String XDoNotTrack = System.getProperty("X-Do-Not-Track", "false");
-		if (!XDoNotTrack.equalsIgnoreCase("false"))
+		if (XDoNotTrack != null && !XDoNotTrack.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("X-Do-Not-Track", XDoNotTrack));
 
 		String DNT = System.getProperty("DNT", "false");
-		if (!DNT.equalsIgnoreCase("false"))
+		if (DNT != null && !DNT.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("DNT", DNT));
 
 		String connection = System.getProperty("Connection", "false");
-		if (!connection.equalsIgnoreCase("false"))
+		if (connection != null && !connection.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Connection", connection));
 
 		return new Headers(listOfHeaders);
