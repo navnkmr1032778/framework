@@ -316,10 +316,7 @@
 			<url>http://repo.spring.io/libs-milestone/</url>
 		</repository>
 	</repositories>
-<<<<<<< Upstream, based on origin/master
-=======
 	<distributionManagement>
-
 		<repository>
 			<id>repo</id>
 			<url>https://mvnrepository.com/artifact/net.lightbody.bmp/browsermob-proxy</url>
@@ -328,7 +325,5 @@
 			<id>snapshot-repo</id>
 			<url>https://mvnrepository.com/artifact/net.lightbody.bmp/browsermob-proxy</url>
 		</snapshotRepository>
-
 	</distributionManagement>
->>>>>>> 37d9d12 Adding rules to ignore alpha,beta version of dependencies via rules xml updating pom with latest dependencies version wherever possible
 </project>
