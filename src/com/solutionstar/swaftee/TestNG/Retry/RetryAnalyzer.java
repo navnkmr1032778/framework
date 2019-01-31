@@ -1,10 +1,11 @@
 package com.solutionstar.swaftee.TestNG.Retry;
 
+import org.slf4j.Logger;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
 public class RetryAnalyzer implements IRetryAnalyzer {
-
+	
 	private int counter = 0;
 	private int retryLimit = 1;
 	/*
@@ -27,7 +28,6 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 			if(counter < retryLimit)
 				{
 					result.setStatus(ITestResult.SKIP);
-					System.out.println("Retrying " + result.getName() + " again and the count is " + (counter+1));
 					counter++;
 					return true;
 				}
@@ -36,7 +36,6 @@ public class RetryAnalyzer implements IRetryAnalyzer {
 				result.setStatus(ITestResult.FAILURE);
 			}
 		}
-		System.out.println("");
 		return false;
 	} 
 }
