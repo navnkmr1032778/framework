@@ -14,14 +14,16 @@ import org.openqa.selenium.Platform;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
@@ -60,15 +62,16 @@ public class BaseDriverHelper {
 			logger.info("starting server");
 			if(proxyServer !=  null)
 				return;
-			proxyServer = new ProxyServer(0); //port number equals to zero starts the server in dynamic port
+			//port number equals to zero starts the server in dynamic port
+			proxyServer = new ProxyServer(0); 
 			try {
 				proxyServer.start();
-				//	       	proxyServer.
+				/*	       	proxyServer.
 
-				// Start the server in specified host and port - TODO
-				//	      Map<String, String> options = new HashMap<String, String>();
-				//	      options.put("httpProxy", "127.0.0.1" + ":" + "3000");
-				//	      proxyServer.setOptions(options);
+				 Start the server in specified host and port - TODO
+					      Map<String, String> options = new HashMap<String, String>();
+					      options.put("httpProxy", "127.0.0.1" + ":" + "3000");
+					      proxyServer.setOptions(options);*/
 
 			} catch (Exception e) {
 				String error = "Error while starting server.. " + e.getStackTrace();
@@ -83,7 +86,10 @@ public class BaseDriverHelper {
 		if(driver != null)
 			return;
 		String browserName = getBrowserToRun();
-		DesiredCapabilities cap = createDriverCapabilities(browserName);		
+		
+		Capabilities cap = null;
+		cap = createDriverCapabilities(browserName);
+		
 		if (cap == null)
 			throw new MyCoreExceptions("Capabilities return as Null");
 		if(isGridRun())
@@ -96,19 +102,14 @@ public class BaseDriverHelper {
 		}
 		else if(ismobile())
 		{
-			logger.info("fetching mobile driver");
-			String mobilePlatform=getMobilePlatform();
-			String mobileName=getMobileName();
-			browserName=getMobileBrowserName(browserName);
-			String platformVersion=getMobilePlatformVersion();
-			cap = createMobileDriverCapabilities(mobilePlatform,platformVersion,mobileName,browserName);
+			logger.info("Initializing mobile driver");
 			if(cap==null)
 				throw new MyCoreExceptions("Capabilities return as Null");
-			driver = setMobileWebDriver(cap,mobilePlatform);
+			driver = setMobileWebDriver(cap,cap.getCapability(CapabilityType.PLATFORM_NAME).toString());
 		}
 	}
 
-	public WebDriver setWebDriver(DesiredCapabilities cap) throws Exception
+	public WebDriver setWebDriver(Capabilities cap) throws Exception
 	{
 		if(WebDriverConfig.usingProxyServer())
 			createProxy(cap);
@@ -116,7 +117,7 @@ public class BaseDriverHelper {
 		return driver;
 	}
 	
-	public WebDriver setSecondaryWebDriver(DesiredCapabilities cap) throws Exception
+	public WebDriver setSecondaryWebDriver(Capabilities cap) throws Exception
 	{
 		if(WebDriverConfig.usingProxyServer())
 			createProxy(cap);
@@ -124,7 +125,7 @@ public class BaseDriverHelper {
 		return secondaryDriver;
 	}
 
-	public WebDriver setMobileWebDriver(DesiredCapabilities cap, String mobilePlatform) throws Exception
+	public WebDriver setMobileWebDriver(Capabilities cap, String mobilePlatform) throws Exception
 	{
 		if(mobilePlatform.equalsIgnoreCase("android"))
 		{
@@ -156,7 +157,7 @@ public class BaseDriverHelper {
 		if(secondaryDriver != null)
 			return;			    
 		String browserName = getBrowserName("secondary");
-		DesiredCapabilities cap = createDriverCapabilities(browserName);		
+		Capabilities cap = createDriverCapabilities(browserName);		
 		if (cap == null)
 			throw new MyCoreExceptions("Capabilities return as Null");
 		logger.info("browserName -- "+ browserName);
@@ -164,6 +165,25 @@ public class BaseDriverHelper {
 
 	}
 
+	private void setAdditionalCapabilities(Capabilities cap, String capabilityType, Object capabilityValue) {
+		
+		switch(cap.getClass().getSimpleName()) {
+		case "ChromeOptions" :
+			ChromeOptions chromeOptions = (ChromeOptions) cap;
+			chromeOptions.setCapability(capabilityType, capabilityValue);
+			break;
+		case "FirefoxOptions" :
+			FirefoxOptions firefoxOptions = (FirefoxOptions) cap;
+			firefoxOptions.setCapability(capabilityType, capabilityValue);
+			break;
+		case "InternetExplorerOptions" :
+			InternetExplorerOptions internetExplorerOptions = (InternetExplorerOptions) cap;
+			internetExplorerOptions.setCapability(capabilityType, capabilityValue);
+			break;
+		}
+		
+		
+	}
 	private String getBrowserName(String driverTypeStr) throws MyCoreExceptions
 	{
 		String browserName = WebDriverConstants.DEFAULT_BROWSER_NAME;
@@ -184,46 +204,28 @@ public class BaseDriverHelper {
 		return browserName;
 	}
 
-	private String getMobileBrowserName(String browserStr)
-	{
-		String browserName=MobileBrowserType.BROWSER;
-		if(browserStr.equalsIgnoreCase("chrome"))
-		{
-			browserName=MobileBrowserType.CHROME;
-		}
-		else if(browserStr.equalsIgnoreCase("chromium"))
-		{
-			browserName=MobileBrowserType.CHROMIUM;
-		}
-		else if(browserStr.equalsIgnoreCase("safari"))
-		{
-			browserName=MobileBrowserType.SAFARI;
-		}
-		return browserName;
-	}
+	
 
-	private DesiredCapabilities createDriverCapabilities(String browserName)
+	private Capabilities createDriverCapabilities(String browserName)
 	{
-		DesiredCapabilities cap = null;			
+		Capabilities cap = null;			
 		try{
 			SetBrowserCapabilities setBrowserCapabilities = new SetBrowserCapabilities();
-			Method setCapabilities = setBrowserCapabilities.getClass().getMethod(WebDriverConstants.DRIVER_METHOD.get(browserName),DesiredCapabilities.class);
-			cap = (DesiredCapabilities) setCapabilities.invoke(setBrowserCapabilities, cap);
-			String platform = getGridPlatform();
-			cap.setPlatform(Platform.valueOf(platform));
+			Method setCapabilities = setBrowserCapabilities.getClass().getMethod(WebDriverConstants.DRIVER_METHOD.get(browserName), null);
+			cap = (Capabilities) setCapabilities.invoke(setBrowserCapabilities);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		return cap;
 	}
 
-	private DesiredCapabilities createMobileDriverCapabilities(String mobilePlatform,String platformVersion,String mobileName,String browserName)
+	/*private Capabilities createMobileDriverCapabilities(String mobilePlatform,String platformVersion,String mobileName,String browserName)
 	{
 		logger.info("setting mobile driver capabilities");
-		DesiredCapabilities cap=null;
+		Capabilities cap=null;
 		try
 		{
-			cap=new DesiredCapabilities();
+			cap = new DesiredCapabilities();
 			logger.info("desired capabilities for mobile "+mobilePlatform+" "+platformVersion+" "+mobileName+" "+browserName);
 			cap.setCapability("platformName", mobilePlatform);//Android
 			cap.setCapability("platformVersion", platformVersion);//5.0.1
@@ -237,19 +239,19 @@ public class BaseDriverHelper {
 			logger.info("exception raised in mobile desired capabilities");
 		}
 		return cap;
-	}
+	}*/
 
-//	public DesiredCapabilities setEmulationCapabilities(DesiredCapabilities capabilities,String emulDeviceName)
-//	{
-//		Map<String, String> mobileEmulation = new HashMap<String, String>();
-//		mobileEmulation.put("deviceName", emulDeviceName);
-//		Map<String, Object> chromeOptions = new HashMap<String, Object>();
-//		chromeOptions.put("mobileEmulation", mobileEmulation);
-//		capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-//		return capabilities;
-//	}
+	/*public DesiredCapabilities setEmulationCapabilities(DesiredCapabilities capabilities,String emulDeviceName)
+	{
+		Map<String, String> mobileEmulation = new HashMap<String, String>();
+		mobileEmulation.put("deviceName", emulDeviceName);
+		Map<String, Object> chromeOptions = new HashMap<String, Object>();
+		chromeOptions.put("mobileEmulation", mobileEmulation);
+		capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+		return capabilities;
+	}*/
 	
-	private WebDriver startBrowser(DesiredCapabilities cap)
+	private WebDriver startBrowser(Capabilities cap)
 	{  
 		WebDriver driver = null;
 		try{
@@ -278,30 +280,30 @@ public class BaseDriverHelper {
 	}
 
 
-//	private DesiredCapabilities setRemoteDriverCapabilities(String browserName) throws Exception
-//	{
-//		DesiredCapabilities capab = new DesiredCapabilities();
-//		capab.setBrowserName(browserName);
-//
-//		if(System.getProperty("webdriver.browser.version") != null)
-//			capab.setVersion(System.getProperty("webdriver.browser.version"));
-//		capab.setPlatform(getOperatingSystem());
-//
-//		return capab;
-//	}
-//
-//	private Platform getOperatingSystem() 
-//	{
-//		String os = System.getProperty("webdriver.platform.os",WebDriverConstants.DEFAULT_BROWSER_OS);
-//		switch(WebDriverConstants.OperatingSystem.valueOf(os.toUpperCase()))
-//		{
-//		case WINDOWS:
-//			return Platform.WINDOWS;
-//		case MAC:
-//			return Platform.MAC;
-//		}
-//		return null;
-//	}
+	/*private DesiredCapabilities setRemoteDriverCapabilities(String browserName) throws Exception
+	{
+		DesiredCapabilities capab = new DesiredCapabilities();
+		capab.setBrowserName(browserName);
+
+		if(System.getProperty("webdriver.browser.version") != null)
+			capab.setVersion(System.getProperty("webdriver.browser.version"));
+		capab.setPlatform(getOperatingSystem());
+
+		return capab;
+	}
+
+	private Platform getOperatingSystem() 
+	{
+		String os = System.getProperty("webdriver.platform.os",WebDriverConstants.DEFAULT_BROWSER_OS);
+		switch(WebDriverConstants.OperatingSystem.valueOf(os.toUpperCase()))
+		{
+		case WINDOWS:
+			return Platform.WINDOWS;
+		case MAC:
+			return Platform.MAC;
+		}
+		return null;
+	}*/
 
 	public void startHar(String harName)
 	{
@@ -314,22 +316,22 @@ public class BaseDriverHelper {
 		}
 	}
 
-//	private DesiredCapabilities setDriverCapabilities(String browserName) throws Exception
-//	{
-//		DesiredCapabilities cap = null;
-//		SetBrowserCapabilities setBrowserCapabilities = new SetBrowserCapabilities();
-//		browserName =  WebDriverConstants.DRIVER_METHOD.containsKey(browserName) ? browserName : "chrome";
-//
-//		Method setCapabilities = setBrowserCapabilities.getClass().getMethod(WebDriverConstants.DRIVER_METHOD.get(browserName),DesiredCapabilities.class);
-//		return (DesiredCapabilities) setCapabilities.invoke(setBrowserCapabilities, cap);
-//	}
+	/*private DesiredCapabilities setDriverCapabilities(String browserName) throws Exception
+	{
+		DesiredCapabilities cap = null;
+		SetBrowserCapabilities setBrowserCapabilities = new SetBrowserCapabilities();
+		browserName =  WebDriverConstants.DRIVER_METHOD.containsKey(browserName) ? browserName : "chrome";
 
-	private WebDriver setRemoteWebDriver(DesiredCapabilities cap) throws Exception
+		Method setCapabilities = setBrowserCapabilities.getClass().getMethod(WebDriverConstants.DRIVER_METHOD.get(browserName),DesiredCapabilities.class);
+		return (DesiredCapabilities) setCapabilities.invoke(setBrowserCapabilities, cap);
+	}*/
+
+	private WebDriver setRemoteWebDriver(Capabilities cap) throws Exception
 	{
 		RemoteWebDriver rd=new RemoteWebDriver(new URL("http://"+getGridServerWithPort()+"/wd/hub"), cap);
 		rd.setFileDetector(new LocalFileDetector());
 		return rd;
-	}   
+	} 
 
 
 	private Proxy createProxyObject() 
@@ -338,11 +340,11 @@ public class BaseDriverHelper {
 		try {
 			logger.info("-------------------------------proxy server - "+ proxyServer.getPort());
 			proxy = proxyServer.seleniumProxy();
-			//	    		proxy.setSslProxy("trustAllSSLCertificates");
-			//	    	    proxy.setHttpProxy("localhost:"+proxyServer.getPort());
-			//		        set server properties.
-			//		        proxyServer.setCaptureHeaders(true);// capture headers
-			//		        proxyServer.setCaptureContent(true);// capture content.
+    		/*proxy.setSslProxy("trustAllSSLCertificates");
+    	    proxy.setHttpProxy("localhost:"+proxyServer.getPort());
+	        set server properties.
+	        proxyServer.setCaptureHeaders(true); capture headers
+	        proxyServer.setCaptureContent(true); capture content.*/
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -350,12 +352,14 @@ public class BaseDriverHelper {
 		return proxy;
 	}
 
-	private void createProxy(DesiredCapabilities cap)
-	{
+	private void createProxy(Capabilities cap)
+	{	
 		try{
 			Proxy proxy = createProxyObject();
-			if (proxy != null)
-				cap.setCapability(CapabilityType.PROXY, proxy);
+			
+			if (proxy != null) {
+				setAdditionalCapabilities(cap, CapabilityType.PROXY, (Object) proxy);
+			} 
 			else
 				logger.info("Proxy object is null");
 
@@ -595,23 +599,11 @@ public class BaseDriverHelper {
 		}
 		return platform;
 	}
-
-	public String getMobilePlatform()
-	{
-		logger.info("platform: "+System.getProperty("mobileplatform")+" end");
-		return System.getProperty("mobileplatform");
-	}
-
+	
 	public String getMobileName()
 	{
 		logger.info(System.getProperty("mobilename","noDevice"));
 		return System.getProperty("mobilename");
-	}
-
-	public String getMobilePlatformVersion()
-	{
-		logger.info(System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH));
-		return System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH);
 	}
 	
 	public String getEmulationDeviceName()
