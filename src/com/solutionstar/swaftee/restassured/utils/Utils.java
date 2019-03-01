@@ -111,7 +111,11 @@ public class Utils {
 	public Headers getHeaders() {
 		
 		List<Header> listOfHeaders = new ArrayList<>();
-
+		
+      	String clientToken = System.getProperty("clienttoken", "false");
+		if (clientToken != null && !clientToken.equalsIgnoreCase("false"))
+			listOfHeaders.add(new Header("clienttoken", clientToken));
+      
 		String apiKey = System.getProperty("ApiKey");
 		String apiKeyProperty = System.getProperty("apiKeyProperty");
 		if (apiKey != null && apiKeyProperty != null && !apiKey.equalsIgnoreCase("false"))
