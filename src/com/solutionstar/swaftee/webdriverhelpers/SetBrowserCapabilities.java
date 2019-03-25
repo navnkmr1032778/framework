@@ -8,19 +8,26 @@ import java.util.logging.Level;
 
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ibm.icu.impl.CharTrie.FriendAgent;
+import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.CommonUtils;
+
+import io.appium.java_client.remote.MobileBrowserType;
 
 public class SetBrowserCapabilities {
 	
@@ -32,9 +39,56 @@ public class SetBrowserCapabilities {
 		return Boolean.valueOf(System.getProperty("grid","false").toLowerCase(Locale.ENGLISH));
 	}
 	
+	public boolean ismobile()
+	{
+		return Boolean.valueOf(System.getProperty("ismobile","false").toLowerCase(Locale.ENGLISH));
+
+	}
 	
-	public DesiredCapabilities setChromeDriver( DesiredCapabilities cap)
+	public String getBrowserToRun()
+	{
+		return System.getProperty("gridbrowser",System.getProperty("webdriver.browser","chrome")).toLowerCase(Locale.ENGLISH);
+	}
+	
+	public String getMobilePlatform()
+	{
+		logger.info("platform: "+System.getProperty("mobileplatform")+" end");
+		return System.getProperty("mobileplatform");
+	}
+
+	public String getMobileName()
+	{
+		logger.info(System.getProperty("mobilename","noDevice"));
+		return System.getProperty("mobilename");
+	}
+
+	public String getMobilePlatformVersion()
+	{
+		logger.info(System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH));
+		return System.getProperty("mobileplatformversion").toLowerCase(Locale.ENGLISH);
+	}
+	
+	private String getMobileBrowserName(String browserStr)
+	{
+		String browserName=MobileBrowserType.BROWSER;
+		if(browserStr.equalsIgnoreCase("chrome"))
+		{
+			browserName=MobileBrowserType.CHROME;
+		}
+		else if(browserStr.equalsIgnoreCase("chromium"))
+		{
+			browserName=MobileBrowserType.CHROMIUM;
+		}
+		else if(browserStr.equalsIgnoreCase("safari"))
+		{
+			browserName=MobileBrowserType.SAFARI;
+		}
+		return browserName;
+	}
+	
+	public ChromeOptions setChromeDriver()
    	{
+		ChromeOptions cap = new ChromeOptions();
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
    			if(workingDir == null)
@@ -55,18 +109,17 @@ public class SetBrowserCapabilities {
    	   			System.setProperty("webdriver.chrome.driver", chromeDriver.getAbsolutePath());
    			}
    			
-            cap = DesiredCapabilities.chrome();
+            cap = new ChromeOptions();
             LoggingPreferences loggingprefs = new LoggingPreferences();
             loggingprefs.enable(LogType.BROWSER, Level.ALL);
             cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
-            ChromeOptions options = new ChromeOptions();
-			options.addArguments("--disable-extensions");
-			options.addArguments("--session-override=true");
+			cap.addArguments("--disable-extensions");
+			cap.addArguments("--session-override=true");
 			String windowSize = System.getProperty("windowSize","");
 			
 			if(windowSize.matches("^\\d+,\\d+$"))
 			{
-				options.addArguments("--window-size=" + windowSize);
+				cap.addArguments("--window-size=" + windowSize);
 			}
 			
 			String emulDeviceName = System.getProperty("emulationDeviceName","noEmul");
@@ -80,31 +133,77 @@ public class SetBrowserCapabilities {
 			}
 			else
 			{
-				cap.setCapability(ChromeOptions.CAPABILITY, options);
+				cap.setCapability(ChromeOptions.CAPABILITY, cap);
 			}
-			cap.setBrowserName("chrome");
+			
+			if(ismobile()) {
+				logger.info("setting mobile driver capabilities");
+				try
+				{
+					cap = new ChromeOptions();
+					String mobilePlatform=getMobilePlatform();
+					String mobileName=getMobileName();
+					String browserName=getMobileBrowserName(getBrowserToRun());
+					String platformVersion=getMobilePlatformVersion();
+					logger.info("desired capabilities for mobile "+mobilePlatform+" "+platformVersion+" "+mobileName+" "+browserName);
+					cap.setCapability("platformName", mobilePlatform);//Android
+					cap.setCapability("platformVersion", platformVersion);//5.0.1
+					cap.setCapability("deviceName", mobileName);
+					cap.setCapability("browserName", browserName);
+
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+					logger.info("exception raised in mobile desired capabilities");
+				}
+			}
+            cap.setCapability(CapabilityType.BROWSER_NAME, "chrome");
    		}catch(Exception e){
    			e.printStackTrace();
    		}
    		return cap;
    	}
 	
-   	public DesiredCapabilities setFirefoxDriver(DesiredCapabilities cap)
+   	public FirefoxOptions setFirefoxDriver()
    	{
+   		FirefoxOptions cap = new FirefoxOptions();
    		try{
    			final FirefoxProfile profile = new FirefoxProfile();
             JavaScriptError.addExtension(profile);
-            cap = DesiredCapabilities.firefox();
             cap.setCapability(FirefoxDriver.PROFILE, profile);
-            cap.setBrowserName("firefox");
+            cap.setCapability(CapabilityType.BROWSER_NAME, "firefox");
+            if(ismobile()) {
+				logger.info("setting mobile driver capabilities");
+				try
+				{
+					cap = new FirefoxOptions();
+					String mobilePlatform=getMobilePlatform();
+					String mobileName=getMobileName();
+					String browserName=getMobileBrowserName(getBrowserToRun());
+					String platformVersion=getMobilePlatformVersion();
+					logger.info("desired capabilities for mobile "+mobilePlatform+" "+platformVersion+" "+mobileName+" "+browserName);
+					cap.setCapability("platformName", mobilePlatform);//Android
+					cap.setCapability("platformVersion", platformVersion);//5.0.1
+					cap.setCapability("deviceName", mobileName);
+					cap.setCapability("browserName", browserName);
+
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+					logger.info("exception raised in mobile desired capabilities");
+				}
+			}
    		}catch(Exception e){
    			e.printStackTrace();
    		}
    		return cap;
    	}
    	
-   	public DesiredCapabilities setIEDriver(DesiredCapabilities cap)
+   	public InternetExplorerOptions setIEDriver()
    	{
+   		InternetExplorerOptions cap = new InternetExplorerOptions();
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
    			if(workingDir == null)
@@ -124,18 +223,38 @@ public class SetBrowserCapabilities {
    	   			}
    	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
    			}
-   			
-			cap = DesiredCapabilities.internetExplorer();
 			cap.setCapability(InternetExplorerDriver.
 					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
-			cap.setBrowserName("InternetExplorer");
+            cap.setCapability(CapabilityType.BROWSER_NAME, "InternetExplorer");
+            if(ismobile()) {
+				logger.info("setting mobile driver capabilities");
+				try
+				{
+					cap = new InternetExplorerOptions();
+					String mobilePlatform=getMobilePlatform();
+					String mobileName=getMobileName();
+					String browserName=getMobileBrowserName(getBrowserToRun());
+					String platformVersion=getMobilePlatformVersion();
+					logger.info("desired capabilities for mobile "+mobilePlatform+" "+platformVersion+" "+mobileName+" "+browserName);
+					cap.setCapability("platformName", mobilePlatform);//Android
+					cap.setCapability("platformVersion", platformVersion);//5.0.1
+					cap.setCapability("deviceName", mobileName);
+					cap.setCapability("browserName", browserName);
+
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+					logger.info("exception raised in mobile desired capabilities");
+				}
+			}
    		}catch(Exception e){
    			e.printStackTrace();
    		}
    		return cap;
    	}
    	
-   	public DesiredCapabilities setPhomtomJsDriver( DesiredCapabilities cap)
+   	/*public DesiredCapabilities setPhomtomJsDriver( DesiredCapabilities cap)
    	{
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
@@ -163,5 +282,5 @@ public class SetBrowserCapabilities {
    			e.printStackTrace();
    		}
    		return cap;
-   	}
+   	}*/
 }
