@@ -299,6 +299,11 @@
 			<artifactId>jersey-hk2</artifactId>
 			<version>2.26</version>
 		</dependency>
+		<dependency>
+		    <groupId>io.github.bonigarcia</groupId>
+		    <artifactId>webdrivermanager</artifactId>
+		    <version>3.6.2</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
@@ -317,6 +322,7 @@
 			<url>http://repo.spring.io/libs-milestone/</url>
 		</repository>
 	</repositories>
+	
 	<distributionManagement>
 		<repository>
 			<id>repo</id>

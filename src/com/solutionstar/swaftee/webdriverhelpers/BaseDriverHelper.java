@@ -54,6 +54,7 @@ public class BaseDriverHelper {
 	CommonProperties props = CommonProperties.getInstance();
 
 	Logger logger = getLogger(this.getClass());
+	
 
 	public void startServer() throws InterruptedException
 	{
