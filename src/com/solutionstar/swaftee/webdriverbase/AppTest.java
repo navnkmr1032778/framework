@@ -18,19 +18,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @Listeners(AppDriver.class)
 public class AppTest extends AppDriver 
 {
-	 CommonUtils utils = new CommonUtils();
+	 
+	CommonUtils utils = new CommonUtils();
 	 @BeforeSuite(alwaysRun=true)
 	  public void beforeSuite(ITestContext ctx) {
-		  if(System.getProperty("webdriver.browser", WebDriverConstants.DEFAULT_BROWSER_NAME)=="chrome")
-		  {
-			  String workingDir = utils.getCurrentWorkingDirectory();
-			  System.setProperty("wdm.targetPath", workingDir+"/resources/drivers/");
-	   			WebDriverManager.chromedriver().clearCache();
-	   			WebDriverManager.chromedriver().clearPreferences();
-	   			WebDriverManager.chromedriver().setup();
-		  }
-		  logger.info("XML FileName : " +ctx.getCurrentXmlTest().getSuite().getFileName());
-		  logger.info("Executing the Suite : " +ctx.getSuite().getName());
+		 setDriverExecutable();
+		 logger.info("XML FileName : " +ctx.getCurrentXmlTest().getSuite().getFileName());
+		 logger.info("Executing the Suite : " +ctx.getSuite().getName());
 	  }
 
 	  @AfterSuite(alwaysRun=true)

@@ -17,6 +17,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.GeckoDriverInfo;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.logging.LogEntries;
@@ -261,7 +262,7 @@ public class BaseDriverHelper {
 			case CHROME:
 				driver = new ChromeDriver(cap);
 				break;
-			case INTERNET_EXPLORER: 
+			case INTERNET_EXPLORER:
 				driver = new InternetExplorerDriver(cap);
 				break;
 			case FIREFOX:

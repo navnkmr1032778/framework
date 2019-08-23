@@ -209,20 +209,21 @@ public class SetBrowserCapabilities {
    				return null;
    			}
    			
-   			if(!isGridRun())
-   			{
-   				File ieDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "IE");
-   	   		    
-   	   			if(ieDriver.getName().equals("tempfile"))
-   	   			{
-   	   				logger.info("Unable to find executable file");
-   	   				return null;
-   	   			}
-   	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
-   			}
+//   			if(!isGridRun())
+//   			{
+//   				File ieDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "IE");
+//   	   		    
+//   	   			if(ieDriver.getName().equals("tempfile"))
+//   	   			{
+//   	   				logger.info("Unable to find executable file");
+//   	   				return null;
+//   	   			}
+//   	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
+//   			}
 			cap.setCapability(InternetExplorerDriver.
 					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
-            cap.setCapability(CapabilityType.BROWSER_NAME, "InternetExplorer");
+			cap.setCapability("ignoreZoomSetting", true);
+            cap.setCapability(CapabilityType.BROWSER_NAME, "internet explorer");
             if(ismobile()) {
 				logger.info("setting mobile driver capabilities");
 				try

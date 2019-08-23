@@ -55,6 +55,7 @@ public class WebDriverConstants {
 	static {
 	  Map<String, String> tmp = new LinkedHashMap<String, String>();
 	  tmp.put("ie", "setIEDriver");
+	  tmp.put("internet explorer", "setIEDriver");
 	  tmp.put("firefox", "setFirefoxDriver");
 	  tmp.put("chrome", "setChromeDriver");
 	  tmp.put("phantomjs", "setPhomtomJsDriver");
