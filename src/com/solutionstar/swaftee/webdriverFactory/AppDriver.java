@@ -92,6 +92,7 @@ public class AppDriver extends TestListenerAdapter {
 		System.setProperty("wdm.targetPath", workingDir+"/resources/drivers/");
 		WebDriverManager.getInstance(browserType).clearCache();
 		WebDriverManager.getInstance(browserType).clearPreferences();
+		WebDriverManager.getInstance(browserType).arch32();
 		WebDriverManager.getInstance(browserType).setup();
 		
 	}

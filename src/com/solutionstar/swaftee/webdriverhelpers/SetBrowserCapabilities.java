@@ -222,7 +222,8 @@ public class SetBrowserCapabilities {
 //   			}
 			cap.setCapability(InternetExplorerDriver.
 					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
-			cap.setCapability("ignoreZoomSetting", true);
+			cap.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
+			cap.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
             cap.setCapability(CapabilityType.BROWSER_NAME, "internet explorer");
             if(ismobile()) {
 				logger.info("setting mobile driver capabilities");
