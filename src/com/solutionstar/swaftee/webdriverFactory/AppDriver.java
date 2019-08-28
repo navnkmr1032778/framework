@@ -87,14 +87,21 @@ public class AppDriver extends TestListenerAdapter {
 				browserType = browser;
 				break;
 			}
+			else if(System.getProperty("gridbrowser", WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase().equalsIgnoreCase("ie") 
+					|| System.getProperty("gridbrowser", WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase().equalsIgnoreCase("internetexplorer"))
+			{
+				browserType = DriverManagerType.IEXPLORER;
+				break;
+			}
 		}
 		String workingDir = utils.getCurrentWorkingDirectory();
 		System.setProperty("wdm.targetPath", workingDir+"/resources/drivers/");
-		if(System.getProperty("cleardriver", "false").toLowerCase() == "true")
+		if(System.getProperty("cleardriver", "false").equalsIgnoreCase("true"))
 		{
 			WebDriverManager.getInstance(browserType).clearCache();
 			WebDriverManager.getInstance(browserType).clearPreferences();
 		}
+		if(browserType.equals(DriverManagerType.IEXPLORER))
 		WebDriverManager.getInstance(browserType).arch32();
 		WebDriverManager.getInstance(browserType).setup();
 		
