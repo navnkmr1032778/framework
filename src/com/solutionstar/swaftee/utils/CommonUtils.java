@@ -81,48 +81,48 @@ public class CommonUtils {
 		return (getCurrentWorkingDirectory()+ path+ fileName);
 	}
 
-	public File getBrowserExecutable(String path, String fileName)
-	{
-		try{
-			File fileDirectory = new File(path);
-			if (!fileDirectory.exists())
-			{
-				fileDirectory.mkdirs();
-			}
-
-			File[] listOfFiles = fileDirectory.listFiles();
-			if (listOfFiles != null && listOfFiles.length != 0) {
-				for (int i = 0; i < listOfFiles.length; i++) {
-					if (listOfFiles[i].getName().contains(fileName)) {
-						//check windows driver file "chromedriver.exe" and for Mac "chromedriver"
-						//check for file extension based on OS type and to pick the correct driver file even when both drivers are available
-						if (OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows
-								&& Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
-							listOfFiles[i].setExecutable(true);
-							return listOfFiles[i];
-						} else if ((OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
-								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux)
-								&& !Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
-							listOfFiles[i].setExecutable(true);
-							return listOfFiles[i];
-						} 
-					}
-
-				}
-			}
-			if(!driverFilefound)
-			{
-				logger.info("No driver file found under drivers folder. Trying to download driver executable file");
-				DriverUtils.getInstance().downloadFile(fileName, OSCheck.getOperatingSystemType());
-				driverFilefound = true;
-				return getBrowserExecutable(path,fileName);
-			}
-		}catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-		return new File("temp file");
-	}
+//	public File getBrowserExecutable(String path, String fileName)
+//	{
+//		try{
+//			File fileDirectory = new File(path);
+//			if (!fileDirectory.exists())
+//			{
+//				fileDirectory.mkdirs();
+//			}
+//
+//			File[] listOfFiles = fileDirectory.listFiles();
+//			if (listOfFiles != null && listOfFiles.length != 0) {
+//				for (int i = 0; i < listOfFiles.length; i++) {
+//					if (listOfFiles[i].getName().contains(fileName)) {
+//						//check windows driver file "chromedriver.exe" and for Mac "chromedriver"
+//						//check for file extension based on OS type and to pick the correct driver file even when both drivers are available
+//						if (OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows
+//								&& Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
+//							listOfFiles[i].setExecutable(true);
+//							return listOfFiles[i];
+//						} else if ((OSCheck.getOperatingSystemType() == OSCheck.OSType.MacOS
+//								|| OSCheck.getOperatingSystemType() == OSCheck.OSType.Linux)
+//								&& !Files.getFileExtension(listOfFiles[i].getName()).equalsIgnoreCase("exe")) {
+//							listOfFiles[i].setExecutable(true);
+//							return listOfFiles[i];
+//						} 
+//					}
+//
+//				}
+//			}
+//			if(!driverFilefound)
+//			{
+//				logger.info("No driver file found under drivers folder. Trying to download driver executable file");
+//				DriverUtils.getInstance().downloadFile(fileName, OSCheck.getOperatingSystemType());
+//				driverFilefound = true;
+//				return getBrowserExecutable(path,fileName);
+//			}
+//		}catch(Exception e)
+//		{
+//			e.printStackTrace();
+//		}
+//		return new File("temp file");
+//	}
 	
 	public void captureFullBrowserScreenShot(String imageName, WebDriver webDriver)
 	{

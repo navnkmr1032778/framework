@@ -46,11 +46,15 @@ import org.testng.internal.ConstructorOrMethod;
 
 import com.opencsv.CSVReader;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
+import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.jira.Jira;
 import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+
+import io.github.bonigarcia.wdm.DriverManagerType;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 
 public class AppDriver extends TestListenerAdapter {
@@ -72,7 +76,36 @@ public class AppDriver extends TestListenerAdapter {
 	private MessageSender messageSender;
 	private IMessageSenderFactory messageSenderFactory = new SocketMessageSenderFactory();
 	private long startTime;
-	
+	private DriverManagerType browserType;
+	public void setDriverExecutable()
+	{
+		for(DriverManagerType browser:DriverManagerType.values())
+		{
+			if(browser.toString().toLowerCase()
+					.contains(System.getProperty("gridbrowser", WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase()))
+			{
+				browserType = browser;
+				break;
+			}
+			else if(System.getProperty("gridbrowser", WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase().equalsIgnoreCase("ie") 
+					|| System.getProperty("gridbrowser", WebDriverConstants.DEFAULT_BROWSER_NAME).toLowerCase().equalsIgnoreCase("internetexplorer"))
+			{
+				browserType = DriverManagerType.IEXPLORER;
+				break;
+			}
+		}
+		String workingDir = utils.getCurrentWorkingDirectory();
+		System.setProperty("wdm.targetPath", workingDir+"/resources/drivers/");
+		if(System.getProperty("cleardriver", "false").equalsIgnoreCase("true"))
+		{
+			WebDriverManager.getInstance(browserType).clearCache();
+			WebDriverManager.getInstance(browserType).clearPreferences();
+		}
+		if(browserType.equals(DriverManagerType.IEXPLORER))
+		WebDriverManager.getInstance(browserType).arch32();
+		WebDriverManager.getInstance(browserType).setup();
+		
+	}
 	
 	public WebDriver getDriver()
 	{ 

@@ -6,10 +6,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
-import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
-
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -22,12 +18,12 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.ibm.icu.impl.CharTrie.FriendAgent;
-import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
 import io.appium.java_client.remote.MobileBrowserType;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
 
 public class SetBrowserCapabilities {
 	
@@ -91,23 +87,24 @@ public class SetBrowserCapabilities {
 		ChromeOptions cap = new ChromeOptions();
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
-   			if(workingDir == null)
-   			{
-   				logger.info("Working directory is Null");
-   				return null;
-   			}
    			
-   			if(!isGridRun())
-   			{
-   				File chromeDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "chrome");
-   	   		    
-   	   			if(chromeDriver.getName().equals("tempfile"))
-   	   			{
-   	   				logger.warn("Unable to find executable file");
-   	   				return null;
-   	   			}
-   	   			System.setProperty("webdriver.chrome.driver", chromeDriver.getAbsolutePath());
-   			}
+//   			if(workingDir == null)
+//   			{
+//   				logger.info("Working directory is Null");
+//   				return null;
+//   			}
+//   			
+//   			if(!isGridRun())
+//   			{
+//   				File chromeDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "chrome");
+//   	   		    
+//   	   			if(chromeDriver.getName().equals("tempfile"))
+//   	   			{
+//   	   				logger.warn("Unable to find executable file");
+//   	   				return null;
+//   	   			}
+//   	   			System.setProperty("webdriver.chrome.driver", chromeDriver.getAbsolutePath());
+//   			}
    			
             cap = new ChromeOptions();
             LoggingPreferences loggingprefs = new LoggingPreferences();
@@ -212,20 +209,22 @@ public class SetBrowserCapabilities {
    				return null;
    			}
    			
-   			if(!isGridRun())
-   			{
-   				File ieDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "IE");
-   	   		    
-   	   			if(ieDriver.getName().equals("tempfile"))
-   	   			{
-   	   				logger.info("Unable to find executable file");
-   	   				return null;
-   	   			}
-   	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
-   			}
+//   			if(!isGridRun())
+//   			{
+//   				File ieDriver = utils.getBrowserExecutable((workingDir+WebDriverConstants.PATH_TO_BROWSER_EXECUTABLE), "IE");
+//   	   		    
+//   	   			if(ieDriver.getName().equals("tempfile"))
+//   	   			{
+//   	   				logger.info("Unable to find executable file");
+//   	   				return null;
+//   	   			}
+//   	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
+//   			}
 			cap.setCapability(InternetExplorerDriver.
 					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
-            cap.setCapability(CapabilityType.BROWSER_NAME, "InternetExplorer");
+			cap.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
+			cap.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
+            cap.setCapability(CapabilityType.BROWSER_NAME, "internet explorer");
             if(ismobile()) {
 				logger.info("setting mobile driver capabilities");
 				try
