@@ -215,18 +215,14 @@ public class SetBrowserCapabilities {
 //   	   			}
 //   	   			System.setProperty("webdriver.ie.driver", ieDriver.getAbsolutePath());
 //   			}
-			cap.setCapability(InternetExplorerDriver.
-					INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
+			cap.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
 			cap.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
 			cap.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
-			if(System.getProperty("IEparallelflag", "true").contains("false"))
-			{
-				Log.info("IE execution is set to single thead");
-				cap.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, true);
-				cap.setCapability(InternetExplorerDriver.NATIVE_EVENTS, true);
-				cap.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, true);
-				cap.setCapability(InternetExplorerDriver.ENABLE_ELEMENT_CACHE_CLEANUP, true);
-			}
+			cap.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
+			cap.setCapability(InternetExplorerDriver.NATIVE_EVENTS,false);
+			cap.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, true);
+			cap.setCapability(InternetExplorerDriver.ENABLE_ELEMENT_CACHE_CLEANUP, true);
+			cap.setCapability("javascriptEnabled",true);
             cap.setCapability(CapabilityType.BROWSER_NAME, "internet explorer");
             if(ismobile()) {
 				logger.info("setting mobile driver capabilities");
