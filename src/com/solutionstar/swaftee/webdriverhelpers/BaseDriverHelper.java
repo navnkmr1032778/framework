@@ -34,6 +34,7 @@ import org.testng.ITestResult;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.constants.WebDriverConstants.BrowserNames;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.OSCheck;
@@ -257,6 +258,11 @@ public class BaseDriverHelper {
 	{  
 		WebDriver driver = null;
 		try{
+			if(System.getProperty("remote").toLowerCase().contains("jenkins") 
+					&& WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase()).equals(BrowserNames.INTERNET_EXPLORER))
+			{
+				driver = new RemoteWebDriver(cap);
+			}
 			switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
 			{
 			case CHROME:
