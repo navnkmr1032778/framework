@@ -220,8 +220,8 @@ public class SetBrowserCapabilities {
 			cap.setCapability(InternetExplorerDriver.IE_ENSURE_CLEAN_SESSION, true);
 			cap.setCapability(InternetExplorerDriver.REQUIRE_WINDOW_FOCUS, false);
 			cap.setCapability(InternetExplorerDriver.NATIVE_EVENTS,false);
-			cap.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, true);
-			cap.setCapability(InternetExplorerDriver.ENABLE_ELEMENT_CACHE_CLEANUP, true);
+			cap.setCapability(InternetExplorerDriver.ENABLE_PERSISTENT_HOVERING, false);
+			cap.setCapability(InternetExplorerDriver.ENABLE_ELEMENT_CACHE_CLEANUP, false);
 			cap.setCapability("javascriptEnabled",true);
             cap.setCapability(CapabilityType.BROWSER_NAME, "internet explorer");
             if(ismobile()) {
