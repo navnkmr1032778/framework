@@ -258,32 +258,23 @@ public class BaseDriverHelper {
 	{  
 		WebDriver driver = null;
 		try{
-			if(System.getProperty("remote").toLowerCase().contains("jenkins") 
-					&& WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase()).equals(BrowserNames.INTERNET_EXPLORER))
+			switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
 			{
-				driver = (RemoteWebDriver) new InternetExplorerDriver(cap);
+			case CHROME:
+				driver = new ChromeDriver(cap);
+				break;
+			case INTERNET_EXPLORER:
+				driver = new InternetExplorerDriver(cap);
+				break;
+			case FIREFOX:
+				driver = new FirefoxDriver(cap);
+				break;
+			case PHANTOMJS:
+				driver = new PhantomJSDriver(cap);
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid Argument for browser name : " + cap.getBrowserName());
 			}
-			else
-			{
-				switch (WebDriverConstants.BrowserNames.valueOf(cap.getBrowserName().replace(" ", "_").toUpperCase())) 
-				{
-				case CHROME:
-					driver = new ChromeDriver(cap);
-					break;
-				case INTERNET_EXPLORER:
-					driver = new InternetExplorerDriver(cap);
-					break;
-				case FIREFOX:
-					driver = new FirefoxDriver(cap);
-					break;
-				case PHANTOMJS:
-					driver = new PhantomJSDriver(cap);
-					break;
-				default:
-					throw new IllegalArgumentException("Invalid Argument for browser name : " + cap.getBrowserName());
-				}
-			}
-
 		}catch(Exception e){
 			e.printStackTrace();
 		}
