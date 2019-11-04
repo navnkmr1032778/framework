@@ -77,7 +77,8 @@ public class ImageCompareHelper extends RecursiveAction
 		try 
 		{
 
-			return compare.run(cmpOp);
+			 compare.run(cmpOp);
+			 return compare.getErrorText().toString();
 		}
 		catch (Exception e)
 		{
