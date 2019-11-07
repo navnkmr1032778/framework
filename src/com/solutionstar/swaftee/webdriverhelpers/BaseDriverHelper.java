@@ -34,6 +34,7 @@ import org.testng.ITestResult;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.config.WebDriverConfig;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.constants.WebDriverConstants.BrowserNames;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.OSCheck;
@@ -274,7 +275,6 @@ public class BaseDriverHelper {
 			default:
 				throw new IllegalArgumentException("Invalid Argument for browser name : " + cap.getBrowserName());
 			}
-
 		}catch(Exception e){
 			e.printStackTrace();
 		}
