@@ -8,6 +8,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Swaftee</name>
 	<description>Web Driver Framework based on selenium</description>
+	<properties>
+		<userdocker>false</userdocker>
+	</properties>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -322,8 +325,7 @@
 			<id>spring-milestones</id>
 			<url>http://repo.spring.io/libs-milestone/</url>
 		</repository>
-	</repositories>
-	
+	</repositories>	
 	<distributionManagement>
 		<repository>
 			<id>repo</id>
