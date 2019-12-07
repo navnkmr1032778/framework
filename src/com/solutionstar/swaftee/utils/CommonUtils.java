@@ -25,7 +25,7 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Months;
@@ -139,14 +139,14 @@ public class CommonUtils {
 				}
 				catch (Exception ex)
 				{
-					logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+					logger.info("Couldn't create Directory" + ExceptionUtils.getRootCauseStackTrace(ex));
 				}
 			}
 			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
 		}
 		catch (Exception ex)
 		{
-			logger.info("Couldn't take Screenshot" + ExceptionUtils.getFullStackTrace(ex));
+			logger.info("Couldn't take Screenshot" + ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 
@@ -165,7 +165,7 @@ public class CommonUtils {
 			}
 			catch (Exception ex)
 			{
-				logger.info("Couldn't create Directory" + ExceptionUtils.getFullStackTrace(ex));
+				logger.info("Couldn't create Directory" + ExceptionUtils.getRootCauseStackTrace(ex));
 			}
 		}
 
@@ -185,7 +185,7 @@ public class CommonUtils {
 				}
 				catch (Exception e)
 				{
-					logger.info(ExceptionUtils.getFullStackTrace(e));
+					logger.info(ExceptionUtils.getRootCauseStackTrace(e).toString());
 				}
 				screenShot(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + "_handle" + handleCount + "_"
 						+ curDate + "_" + System.currentTimeMillis() + ".png", webDriver);
@@ -194,7 +194,7 @@ public class CommonUtils {
 		}
 		catch (Exception ex)
 		{
-			logger.info("exception in taking Screenshot" + ExceptionUtils.getFullStackTrace(ex));
+			logger.info("exception in taking Screenshot" + ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 
@@ -283,7 +283,7 @@ public class CommonUtils {
 		}
 		catch(Exception ex)
 		{
-			logger.info(ExceptionUtils.getFullStackTrace(ex));
+			logger.info(ExceptionUtils.getRootCauseStackTrace(ex).toString());
 			return null;
 		}
 	}
@@ -301,7 +301,7 @@ public class CommonUtils {
 		}
 		catch(Exception ex)
 		{
-			logger.info(ExceptionUtils.getFullStackTrace(ex));
+			logger.info(ExceptionUtils.getRootCauseStackTrace(ex).toString());
 			return -1;
 		}
 	}
@@ -316,7 +316,7 @@ public class CommonUtils {
 		}
 		catch(Exception ex)
 		{
-			logger.info("exception in get day for date: "+ExceptionUtils.getFullStackTrace(ex));
+			logger.info("exception in get day for date: "+ExceptionUtils.getRootCauseStackTrace(ex));
 			return null;
 		}
 	}
@@ -335,7 +335,7 @@ public class CommonUtils {
 		}
 		catch(Exception ex)
 		{
-			logger.info("change time format exception: "+ExceptionUtils.getFullStackTrace(ex));
+			logger.info("change time format exception: "+ExceptionUtils.getRootCauseStackTrace(ex));
 			return null;
 		}
 	}
@@ -353,7 +353,7 @@ public class CommonUtils {
 		}
 		catch(Exception ex)
 		{
-			logger.info("exception in comparing two times: "+ExceptionUtils.getFullStackTrace(ex));
+			logger.info("exception in comparing two times: "+ExceptionUtils.getRootCauseStackTrace(ex));
 			return -1;
 		}
 	}
@@ -365,7 +365,7 @@ public class CommonUtils {
 			date = formatter.parse(dateString);
 
 		} catch (Exception e) {
-			logger.error(ExceptionUtils.getFullStackTrace(e));
+			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
 		}
 		return date;
 	}

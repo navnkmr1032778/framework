@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
-
 import net.lightbody.bmp.core.har.Har;
 import org.jenkinsci.testinprogress.messagesender.IMessageSenderFactory;
 import org.jenkinsci.testinprogress.messagesender.MessageSender;
@@ -43,8 +42,8 @@ import org.testng.TestListenerAdapter;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.DataProvider;
 import org.testng.internal.ConstructorOrMethod;
-
 import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvException;
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.constants.WebDriverConstants;
 import com.solutionstar.swaftee.jira.Jira;
@@ -52,7 +51,6 @@ import com.solutionstar.swaftee.jira.ZephyrUtils;
 import com.solutionstar.swaftee.utils.CSVParserUtils;
 import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
-
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -238,7 +236,14 @@ public class AppDriver extends TestListenerAdapter {
 	public Object[][] genericDataProvider(Method methodName) throws IOException {
 		logger.info("Method Name :" + methodName.getName());
 		Reader reader = new FileReader("./resources/testdata/"+ methodName.getName() + ".csv");
-		List<String[]> scenarioData = new CSVReader(reader).readAll();
+		List<String[]> scenarioData=null;
+		try {
+			scenarioData = new CSVReader(reader).readAll();
+			
+		} catch (CsvException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Object[][] data = new Object[scenarioData.size() - 1][1];
 		Iterator<String[]> it = scenarioData.iterator();
 		String[] header = it.next();
@@ -270,14 +275,17 @@ public class AppDriver extends TestListenerAdapter {
 		
 		String parentName = getRunId(context);
 		String runId = parentName;
-		
-		messageSender.testRunStarted(context.getAllTestMethods().length, runId);
-		
-		Map<String, ArrayList<String>> classMap = processTestContext(context);
-		
-		String testId = getTestId(parentName);
-		messageSender.testTree(testId, context.getCurrentXmlTest().getName(), true, classMap.keySet()
-				.size(), runId);
+		Map<String, ArrayList<String>> classMap = null;
+		try {
+			messageSender.testRunStarted(runId);//deprecated context.getAllTestMethods().length,
+			classMap = processTestContext(context);
+			String testId = getTestId(parentName);
+			messageSender.testTree(testId, context.getCurrentXmlTest().getName(), parentName , true);//deprected classMap.keySet().size()
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		sendTestTree(classMap,context);
 		startTime = System.currentTimeMillis();
 
@@ -287,8 +295,8 @@ public class AppDriver extends TestListenerAdapter {
 	public void onFinish(ITestContext context) {
 
 		long stopTime = System.currentTimeMillis();
-		messageSender.testRunEnded(stopTime - startTime, getRunId(context));
 		try {
+			messageSender.testRunEnded(stopTime - startTime );//deprecated getRunId(context)
 			messageSender.shutdown();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -305,7 +313,12 @@ public class AppDriver extends TestListenerAdapter {
 				
 		logger.info("Starting the test : "+result.getMethod().getMethodName()+ " - "+result.getTestClass().getName());
 	
-		messageSender.testStarted(testId, mthdKey, false, getRunId(result));
+		try {
+			messageSender.testStarted(testId, mthdKey, false);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//deprecated getRunId(result)
 
 	}
 	
@@ -336,10 +349,10 @@ public class AppDriver extends TestListenerAdapter {
 				String mthdKey = getMessageSenderNameForMethod(testMethod);
 
 				String trace = getTrace(testResult.getThrowable());
-				messageSender.testError(testId, mthdKey, trace, getRunId(testResult));
+				messageSender.testError(testId, mthdKey, trace);//deprecated , getRunId(testResult)
 			}
 	   } 
-	   catch (MyCoreExceptions e) 
+	   catch (MyCoreExceptions | IOException e) 
 	   {
 			e.printStackTrace();
 	   }
@@ -366,10 +379,10 @@ public class AppDriver extends TestListenerAdapter {
 					String testId = getIdForMethod(testResult.getTestContext(), testMethod);
 					String mthdKey = getMessageSenderNameForMethod(testMethod);
 
-					messageSender.testEnded(testId, mthdKey, false, getRunId(testResult));
+					messageSender.testEnded(testId, mthdKey, false);//deprecated , getRunId(testResult)
 				}
 		   } 
-		   catch (MyCoreExceptions e) 
+		   catch (MyCoreExceptions | IOException e) 
 		   {
 				e.printStackTrace();
 		   }
@@ -395,8 +408,8 @@ public class AppDriver extends TestListenerAdapter {
 					String testId = getIdForMethod(testResult.getTestContext(), testMethod);
 					String mthdKey = getMessageSenderNameForMethod(testMethod);
 
-					messageSender.testStarted(testId, mthdKey, true, getRunId(testResult));
-					messageSender.testEnded(testId, mthdKey, true, getRunId(testResult));
+					messageSender.testStarted(testId, mthdKey, true);//, getRunId(testResult)
+					messageSender.testEnded(testId, mthdKey, true);//deprecated , getRunId(testResult)
 				}
 		   } 
 		   catch (Exception e) 
@@ -604,18 +617,23 @@ public class AppDriver extends TestListenerAdapter {
 			
 			String classTestId = getTestId(clssTreedIdName);
 			ArrayList<String> methods = entry.getValue();
-			int classChilds = methods.size();
+			int classChilds = methods.size();			
+			try {
+				messageSender.testTree(classTestId, className, getTestId(runId), true);
 			
-			messageSender.testTree(classTestId, className, getTestId(runId), xmlTestName, true, classChilds, runId);
 
-			for (String method : methods) {
-				String methodKey = method + "(" + className + ")";
-				
-				String mthdTreedIdName = runId +":"+methodKey;
-				String mthdTestId = getTestId(mthdTreedIdName);
-				
-				messageSender.testTree(mthdTestId, methodKey, classTestId, className, false, 1, runId );
-			}
+				for (String method : methods) {
+					String methodKey = method + "(" + className + ")";
+					
+					String mthdTreedIdName = runId +":"+methodKey;
+					String mthdTestId = getTestId(mthdTreedIdName);
+					
+					messageSender.testTree(mthdTestId, methodKey, classTestId,false );// deprecated , className,  1, runId
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}//deprecated xmlTestName, classChilds, runId
 		}
 	}
 	

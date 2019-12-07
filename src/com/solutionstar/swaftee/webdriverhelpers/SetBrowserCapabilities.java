@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
-import org.eclipse.jetty.util.log.Log;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -83,11 +82,11 @@ public class SetBrowserCapabilities {
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
    			
-//   			if(workingDir == null)
-//   			{
-//   				logger.info("Working directory is Null");
-//   				return null;
-//   			}
+   			if(workingDir == null)
+   			{
+   				logger.info("Working directory is Null");
+   				return null;
+   			}
 //   			
 //   			if(!isGridRun())
 //   			{

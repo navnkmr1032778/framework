@@ -44,15 +44,16 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileBrowserType;
 import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
+import net.lightbody.bmp.BrowserMobProxy;
+import net.lightbody.bmp.BrowserMobProxyServer;
+import net.lightbody.bmp.client.ClientUtil;
 import net.lightbody.bmp.core.har.Har;
-import net.lightbody.bmp.proxy.ProxyServer;
-
 public class BaseDriverHelper {
 
 	CommonUtils commonUtils = new CommonUtils();
 	WebDriver driver = null;
 	WebDriver secondaryDriver = null;	
-	ProxyServer proxyServer = null;
+	BrowserMobProxy proxyServer = null;
 	CommonProperties props = CommonProperties.getInstance();
 
 	Logger logger = getLogger(this.getClass());
@@ -66,9 +67,9 @@ public class BaseDriverHelper {
 			if(proxyServer !=  null)
 				return;
 			//port number equals to zero starts the server in dynamic port
-			proxyServer = new ProxyServer(0); 
+			proxyServer = new BrowserMobProxyServer(); 
 			try {
-				proxyServer.start();
+				proxyServer.start(0);
 				/*	       	proxyServer.
 
 				 Start the server in specified host and port - TODO
@@ -351,7 +352,7 @@ public class BaseDriverHelper {
 		Proxy proxy = null;
 		try {
 			logger.info("-------------------------------proxy server - "+ proxyServer.getPort());
-			proxy = proxyServer.seleniumProxy();
+			proxy = ClientUtil.createSeleniumProxy(proxyServer);//proxyServer.seleniumProxy();
     		/*proxy.setSslProxy("trustAllSSLCertificates");
     	    proxy.setHttpProxy("localhost:"+proxyServer.getPort());
 	        set server properties.

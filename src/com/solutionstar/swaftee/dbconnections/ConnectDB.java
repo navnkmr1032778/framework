@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
 import com.solutionstar.swaftee.utils.CommonProperties;
@@ -88,7 +88,7 @@ public class ConnectDB extends DatabaseConnection
 			return con;	
 
 		}catch(Exception e){
-			throw new MyCoreExceptions("Exception while establishing db connection.."+ExceptionUtils.getFullStackTrace(e));
+			throw new MyCoreExceptions("Exception while establishing db connection.."+ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
@@ -261,7 +261,7 @@ public class ConnectDB extends DatabaseConnection
 		}
 		catch(Exception ex)
 		{
-			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getFullStackTrace(ex));
+			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 	
@@ -275,7 +275,7 @@ public class ConnectDB extends DatabaseConnection
 		}
 		catch(Exception ex)
 		{
-			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getFullStackTrace(ex));
+			throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 	
@@ -289,7 +289,7 @@ public class ConnectDB extends DatabaseConnection
         }
         catch(Exception ex)
         {
-            throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getFullStackTrace(ex));
+            throw new MyCoreExceptions("Exception while executing the query in db connection.. "+ExceptionUtils.getRootCauseStackTrace(ex));
         }
     }
 
