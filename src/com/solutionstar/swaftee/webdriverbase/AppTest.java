@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.testng.ITestContext;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 
@@ -23,7 +25,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @Listeners(AppDriver.class)
 public class AppTest extends AppDriver 
 {
-	 
+	@AfterClass(alwaysRun = true)
+	public void testAfterClass(ITestContext ctx)
+	{
+		stopDriver();
+	}
+	
 	CommonUtils utils = new CommonUtils();
 	 @BeforeSuite(alwaysRun=true)
 	  public void beforeSuite(ITestContext ctx) {
