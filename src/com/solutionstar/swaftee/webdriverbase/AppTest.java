@@ -25,11 +25,11 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @Listeners(AppDriver.class)
 public class AppTest extends AppDriver 
 {
-	@AfterClass(alwaysRun = true)
+/*	@AfterClass(alwaysRun = true)
 	public void testAfterClass(ITestContext ctx)
 	{
 		stopDriver();
-	}
+	}*/
 	
 	CommonUtils utils = new CommonUtils();
 	 @BeforeSuite(alwaysRun=true)
