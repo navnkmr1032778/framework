@@ -31,8 +31,11 @@ public class ConnectDB extends DatabaseConnection
  
     public ConnectDB(String dbConfigurationFile)
     {
+    	logger.info("0 Start of ConnectDB");
         CommonProperties props = CommonProperties.getInstance();
+        logger.info("0 CommonProperties");
         utils = new CommonUtils();
+        logger.info("0 Utils");
         try {
             props.load(dbConfigurationFile);
             dbServerName = props.get("db_server_name");
