@@ -12,13 +12,17 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
+import com.solutionstar.swaftee.tests.xv.wf.adminrelated.CreateIndividualAgent;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
 public class ConnectDB extends DatabaseConnection 
 {
+	protected static Logger logger = LoggerFactory.getLogger(ConnectDB.class);
     Connection con = null;
     String dbClassName,dbUrl ="";
     String dbServerName=null,hostName,port,database,userName,passwd,dbIntegrationSecurity;
@@ -69,6 +73,7 @@ public class ConnectDB extends DatabaseConnection
             break;
                 
         }
+        logger.info("dbUrl : "+dbUrl);
         return dbUrl;
     }
 	
@@ -81,10 +86,12 @@ public class ConnectDB extends DatabaseConnection
 				port=DEFAULT_PORTS.get(dbServerName);
 			}
 			dbUrl=constructConnectionString(hostName,port,database);
-
+			logger.info("1 hostName in establishConnection "+hostName);
+			logger.info("1 port in establishConnection "+port);
+			logger.info("1 database in establishConnection "+database);
+			logger.info("1 dbUrl in establishConnection "+dbUrl);
 			con = DriverManager.getConnection(dbUrl, 
 					generateProperty( userName , passwd));
-
 			return con;	
 
 		}catch(Exception e){
@@ -116,9 +123,15 @@ public class ConnectDB extends DatabaseConnection
 			
 			port=DEFAULT_PORTS.get(dbServerName);
 			dbUrl=constructConnectionString(hostName,port,database);
-			
 			con = DriverManager.getConnection(dbUrl, 
 					generateProperty(userName, passwd));
+			logger.info("2 dbClassName in establishConnection "+dbClassName);
+			logger.info("2 hostName in establishConnection "+hostName);
+			logger.info("2 port in establishConnection "+port);
+			logger.info("2 database in establishConnection "+database);
+			logger.info("2 dbUrl in establishConnection "+dbUrl);
+			logger.info("2 userName in establishConnection "+userName);
+			logger.info("2 passwd in establishConnection "+passwd);
 
 		}catch(Exception e){
 			throw new MyCoreExceptions("Exception while establishing db connection.."+e.getLocalizedMessage());
@@ -134,7 +147,13 @@ public class ConnectDB extends DatabaseConnection
 
 			con = DriverManager.getConnection(dbUrl, 
 					generateProperty("", ""));
-
+			logger.info("3 dbClassName in establishConnection "+dbClassName);
+			logger.info("3 hostName in establishConnection "+hostName);
+			logger.info("3 port in establishConnection "+port);
+			logger.info("3 database in establishConnection "+database);
+			logger.info("3 dbUrl in establishConnection "+dbUrl);
+			logger.info("3 userName in establishConnection "+userName);
+			logger.info("3 passwd in establishConnection "+passwd);
 		}catch(Exception e){
 			throw new MyCoreExceptions("Exception while establishing db connection.."+e.getLocalizedMessage());
 		}
@@ -151,6 +170,13 @@ public class ConnectDB extends DatabaseConnection
 			dbUrl=constructConnectionString(hostName,port,database);
 
 			con = DriverManager.getConnection(dbUrl,generateProperty("", ""));
+			logger.info("4 dbClassName in establishConnection "+dbClassName);
+			logger.info("4 hostName in establishConnection "+hostName);
+			logger.info("4 port in establishConnection "+port);
+			logger.info("4 database in establishConnection "+database);
+			logger.info("4 dbUrl in establishConnection "+dbUrl);
+			logger.info("4 userName in establishConnection "+userName);
+			logger.info("4 passwd in establishConnection "+passwd);
 
 		}catch(Exception e){
 			throw new MyCoreExceptions("Exception while establishing db connection.."+e.getLocalizedMessage());
