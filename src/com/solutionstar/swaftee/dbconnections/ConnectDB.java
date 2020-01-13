@@ -90,12 +90,18 @@ public class ConnectDB extends DatabaseConnection
 	public Connection establishConnection() throws MyCoreExceptions
 	{
 		try{
+			logger.info("A");
 			Class.forName(dbClassName);
+			logger.info("B");
 			if(port.length()==0)
 			{
+				logger.info("C");
 				port=DEFAULT_PORTS.get(dbServerName);
+				logger.info("D");
 			}
+			logger.info("E");
 			dbUrl=constructConnectionString(hostName,port,database);
+			logger.info("F");
 			logger.info("1 hostName in establishConnection "+hostName);
 			logger.info("1 port in establishConnection "+port);
 			logger.info("1 database in establishConnection "+database);
