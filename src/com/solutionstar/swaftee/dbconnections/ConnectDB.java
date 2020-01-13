@@ -43,6 +43,13 @@ public class ConnectDB extends DatabaseConnection
             userName = props.get("user_name");
             passwd = props.get("password");
             dbClassName=DB_CLASS_NAMES.get(dbServerName);
+			logger.info("0 dbClassName in establishConnection "+dbClassName);
+			logger.info("0 hostName in establishConnection "+hostName);
+			logger.info("0 port in establishConnection "+port);
+			logger.info("0 database in establishConnection "+database);
+			logger.info("0 dbUrl in establishConnection "+dbUrl);
+			logger.info("0 userName in establishConnection "+userName);
+			logger.info("0 passwd in establishConnection "+passwd);
         } catch (Exception e) {
             e.printStackTrace();
         }
