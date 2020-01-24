@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
+import com.solutionstar.swaftee.tests.xv.wf.adminrelated.CreateIndividualAgent;
 import com.solutionstar.swaftee.utils.CommonProperties;
 import com.solutionstar.swaftee.utils.CommonUtils;
 
@@ -86,7 +87,7 @@ public class ConnectDB extends DatabaseConnection
         return dbUrl;
     }
 	
-	public Connection establishConnection() //throws MyCoreExceptions
+	public Connection establishConnection() throws MyCoreExceptions
 	{
 		try{
 			logger.info("A");
@@ -110,9 +111,7 @@ public class ConnectDB extends DatabaseConnection
 			return con;	
 
 		}catch(Exception e){
-			//throw new MyCoreExceptions("Exception while establishing db connection.."+ExceptionUtils.getRootCauseStackTrace(e));
-			e.printStackTrace();
-			return null;
+			throw new MyCoreExceptions("Exception while establishing db connection.."+ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
