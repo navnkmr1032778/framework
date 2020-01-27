@@ -145,12 +145,12 @@
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>sqljdbc4</artifactId>
-			<version>4.0</version>
+			<version>4.0</version>			
 		</dependency>
 		<dependency>
 			<groupId>net.jsourcerer.webdriver</groupId>
 			<artifactId>JSErrorCollector</artifactId>
-			<version>0.5-atlassian-2</version>
+			<version>0.7-atlassian-1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -305,18 +305,25 @@
 	<repositories>
 		<repository>
 			<id>jenkins-releases</id>
-			<url>http://repo.jenkins-ci.org/releases/</url>
+			<url>https://repo.jenkins-ci.org/releases/</url>
 		</repository>
-		<!-- <repository> <id>sqljdbc</id> <url>http://10.29.18.160/grapher/WebContent/resources/OtherContent/</url> 
-			</repository> -->
-<!-- 		<repository>
-			<id>sqljdbc</id>
-			<url>https://xome-test.000webhostapp.com/webContent/</url>
-		</repository> -->
-		<repository>
-			<id>spring-milestones</id>
-			<url>http://repo.spring.io/libs-milestone/</url>
+		<repository> 
+			<id>JSErrorCollector</id> 
+			<url>https://repo.spring.io/libs-milestone/</url> 
 		</repository>
+		<repository> 
+			<id>sqljdbc4</id> 
+			<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url> 
+			<!-- http://maven.icm.edu.pl/artifactory/repo/ -->
+		</repository>		
+<!-- 		<repository> -->
+<!-- 			<id>sqljdbc</id> -->
+<!-- 			<url>https://xome-test.000webhostapp.com/webContent/</url> -->
+<!-- 		</repository> -->
+<!-- 		<repository> -->
+<!-- 			<id>spring-milestones</id> -->
+<!-- 			<url>http://repo.spring.io/libs-milestone/</url> -->
+<!-- 		</repository> -->
 	</repositories>
 	<!--<distributionManagement>		
 		 <repository>
