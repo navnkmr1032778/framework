@@ -59,7 +59,11 @@ public class ConnectDB extends DatabaseConnection
             if(dbIntegrationSecurity.equalsIgnoreCase("true"))
             {
             	dbUrl = dbUrl  + "integratedSecurity=true;";
-            }           
+            }  
+            else
+            {
+            	dbUrl = dbUrl + "User ID="+userName +";Password="+passwd+";";
+            }
             break;
         case "postgresql":
             dbUrl = "jdbc:"+dbServerName+"://" + hostName + ":" + port + "/" + database ;
@@ -81,7 +85,7 @@ public class ConnectDB extends DatabaseConnection
 				port=DEFAULT_PORTS.get(dbServerName);
 			}
 			dbUrl=constructConnectionString(hostName,port,database);
-
+			System.out.println("DbURL : "+dbUrl);
 			con = DriverManager.getConnection(dbUrl, 
 					generateProperty( userName , passwd));
 
