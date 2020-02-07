@@ -103,6 +103,7 @@ public class SetBrowserCapabilities {
             cap = new ChromeOptions();
             LoggingPreferences loggingprefs = new LoggingPreferences();
             loggingprefs.enable(LogType.BROWSER, Level.ALL);
+            loggingprefs.enable(LogType.DRIVER, Level.ALL);
             cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
 			cap.addArguments("--disable-extensions");
 			cap.addArguments("--session-override=true");
