@@ -106,6 +106,7 @@ public class SetBrowserCapabilities {
             cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
 			cap.addArguments("--disable-extensions");
 			cap.addArguments("--session-override=true");
+			cap.setAcceptInsecureCerts(true);
 			String windowSize = System.getProperty("windowSize","");
 			
 			if(windowSize.matches("^\\d+,\\d+$"))

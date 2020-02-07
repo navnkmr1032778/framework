@@ -85,7 +85,6 @@ public class ConnectDB extends DatabaseConnection
 				port=DEFAULT_PORTS.get(dbServerName);
 			}
 			dbUrl=constructConnectionString(hostName,port,database);
-			System.out.println("DbURL : "+dbUrl);
 			con = DriverManager.getConnection(dbUrl, 
 					generateProperty( userName , passwd));
 
