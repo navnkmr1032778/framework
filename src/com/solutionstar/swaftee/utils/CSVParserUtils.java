@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -374,8 +374,8 @@ public class CSVParserUtils {
 			Path path = Paths.get(fileName);
 
 			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
-				CSVReader reader = new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")), ',', '"',
-						escapeCharacter);
+				CSVReader reader = new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+				//new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")), ',', '"',escapeCharacter);
 				List<String[]> data = reader.readAll();
 				String[] header = data.remove(0);
 				for (String[] row : data) {
@@ -392,9 +392,9 @@ public class CSVParserUtils {
 				reader.close();
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("CSV file not found " + fileName + ExceptionUtils.getFullStackTrace(e));
+			logger.error("CSV file not found " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
 		} catch (Exception e) {
-			logger.error("Exception when reading " + fileName + " \n" + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Exception when reading " + fileName + " \n" + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 		return list;
 	}
@@ -405,7 +405,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error while writing to " + fileName + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Error while writing to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
@@ -418,7 +418,7 @@ public class CSVParserUtils {
 			csvWriter.writeAll(data);
 			csvWriter.close();
 		} catch (Exception e) {
-			logger.error("Error while appending to " + fileName + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Error while appending to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
@@ -427,7 +427,7 @@ public class CSVParserUtils {
 			Set<String> header = data.get(0).keySet();
 			writeListHashMapToCSV(fileName, data, header.toArray(new String[header.size()]));
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
@@ -456,7 +456,7 @@ public class CSVParserUtils {
 			}
 			writeToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
-			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Error in writeListHashMapToCSV() - " + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 
@@ -487,7 +487,7 @@ public class CSVParserUtils {
 			}
 			appendToCSVFile(fileName, dataToCSV);
 		} catch (Exception e) {
-			logger.error("Error in appendListHashMapToCSV() - " + ExceptionUtils.getFullStackTrace(e));
+			logger.error("Error in appendListHashMapToCSV() - " + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
 

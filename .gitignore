@@ -11,3 +11,4 @@ External Jars/
 .classpath
 .settings/*
 .project
+resources/docker/output.txt

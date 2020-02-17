@@ -1,12 +1,9 @@
 package com.solutionstar.swaftee.utils.dataarchive;
-
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CreationHelper;
@@ -14,7 +11,6 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.solutionstar.swaftee.utils.CommonUtils;
 
@@ -65,7 +61,7 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 				}
 				if (utils.isNumeric(data[j]))
 				{
-					row.createCell(j, 0).setCellValue(createHelper.createRichTextString(data[j]));
+					row.createCell(j).setCellValue(createHelper.createRichTextString(data[j]));//deprecated arg 0
 				}
 				else
 				{
@@ -99,13 +95,13 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 			{
 				switch (cell.getCellType()) 
 				{
-					case Cell.CELL_TYPE_NUMERIC:
+					case NUMERIC:
 						rowData.add("" + cell.getNumericCellValue());
 						break;
-					case Cell.CELL_TYPE_STRING:
+					case STRING:
 						rowData.add(cell.getStringCellValue());
 						break;
-					case Cell.CELL_TYPE_BLANK:
+					case BLANK:
 						rowData.add("");
 						break;
 				}
@@ -156,13 +152,13 @@ public class SpreadsheetDataArchiveBase extends DataArchiveBase
 		{
 			switch (cell.getCellType()) 
 			{
-				case Cell.CELL_TYPE_NUMERIC:
+				case NUMERIC:
 					cellValue = "" + formatter.formatCellValue(cell);
 					break;
-				case Cell.CELL_TYPE_STRING:
+				case STRING:
 					cellValue = cell.getStringCellValue();
 					break;
-				case Cell.CELL_TYPE_BLANK:
+				case BLANK:
 					cellValue = "";
 					break;
 			}

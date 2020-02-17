@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 //import java.util.NoSuchElementException;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -1023,7 +1023,7 @@ public class AppPage extends TestListenerAdapter {
 
 			scrolltoElement(element);
 		} catch (Exception ex) {
-			logger.info("exception in scroll to element: " + ExceptionUtils.getFullStackTrace(ex));
+			logger.info("exception in scroll to element: " + ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 
@@ -1209,7 +1209,7 @@ public class AppPage extends TestListenerAdapter {
 					.pollingEvery(500, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
-			logger.error(ExceptionUtils.getFullStackTrace(e));
+			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
 		}
 	}
 

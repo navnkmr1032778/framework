@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
-import org.eclipse.jetty.util.log.Log;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -83,11 +82,11 @@ public class SetBrowserCapabilities {
    		try{
    			String workingDir = utils.getCurrentWorkingDirectory();
    			
-//   			if(workingDir == null)
-//   			{
-//   				logger.info("Working directory is Null");
-//   				return null;
-//   			}
+   			if(workingDir == null)
+   			{
+   				logger.info("Working directory is Null");
+   				return null;
+   			}
 //   			
 //   			if(!isGridRun())
 //   			{
@@ -104,9 +103,11 @@ public class SetBrowserCapabilities {
             cap = new ChromeOptions();
             LoggingPreferences loggingprefs = new LoggingPreferences();
             loggingprefs.enable(LogType.BROWSER, Level.ALL);
+            loggingprefs.enable(LogType.DRIVER, Level.ALL);
             cap.setCapability(CapabilityType.LOGGING_PREFS, loggingprefs);
 			cap.addArguments("--disable-extensions");
 			cap.addArguments("--session-override=true");
+			cap.setAcceptInsecureCerts(true);
 			String windowSize = System.getProperty("windowSize","");
 			
 			if(windowSize.matches("^\\d+,\\d+$"))
