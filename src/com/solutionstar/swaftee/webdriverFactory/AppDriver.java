@@ -539,11 +539,11 @@ public class AppDriver extends TestListenerAdapter {
 		return flag;
 	}
 	
-	@AfterClass
-	public void afterMethod()
+	@AfterClass(alwaysRun = true)
+	public void afterClass()
 	{
 		logger.info("Stopping BaseDrivers");
-		baseDriverHelper.stopDriver();
+		stopDriver();
 		baseDriverHelper.stopServer();		
 	}
 	
