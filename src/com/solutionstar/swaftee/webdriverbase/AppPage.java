@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 //import java.util.NoSuchElementException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.logging.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openqa.selenium.Alert;
@@ -52,6 +52,7 @@ import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
 import org.apache.commons.io.IOUtils;
+import microsoft.exchange.webservices.data.TimeSpan;
 
 public class AppPage extends TestListenerAdapter {
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
@@ -109,7 +110,7 @@ public class AppPage extends TestListenerAdapter {
 	public void waitForURLToChange(String url) {
 		final String currentURL = url;
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+				.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 				.ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
@@ -126,8 +127,8 @@ public class AppPage extends TestListenerAdapter {
 	 */
 	public void waitForURLContainingText(String urlText, int timeout) {
 		final String expectedURL = urlText;
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeout))
-				.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS)
+				.pollingEvery(1, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				return getCurrentUrl().contains(expectedURL);
@@ -243,7 +244,7 @@ public class AppPage extends TestListenerAdapter {
 	public void waitForElementToBeEnabled(WebElement e) {
 		final WebElement web = e;
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+				.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 				.ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
@@ -255,7 +256,7 @@ public class AppPage extends TestListenerAdapter {
 
 	public void waitForElementToBeEnabled(By locator) {
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+				.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 				.ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
@@ -271,7 +272,7 @@ public class AppPage extends TestListenerAdapter {
 			final String innerText = text;
 			final WebElement element = e;
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 					.ignoring(NoSuchElementException.class);
 			wait.until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
@@ -288,7 +289,7 @@ public class AppPage extends TestListenerAdapter {
 			final String innerText = text;
 			final By loc = locator;
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 					.ignoring(NoSuchElementException.class);
 			wait.until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
@@ -428,8 +429,8 @@ public class AppPage extends TestListenerAdapter {
 	}
 
 	public WebElement fluentWaitByLocator(final By locator, int timeout) {
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(1))
-				.pollingEvery(Duration.ofSeconds(3)).ignoring(NoSuchElementException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS)
+				.pollingEvery(3, TimeUnit.SECONDS).ignoring(NoSuchElementException.class);
 		WebElement element = wait.until(new Function<WebDriver, WebElement>() {
 			public WebElement apply(WebDriver driver) {
 				return driver.findElement(locator);
@@ -439,8 +440,8 @@ public class AppPage extends TestListenerAdapter {
 	}
 
 	public void waitForPageLoad(int timeout) {
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeout))
-				.pollingEvery(Duration.ofSeconds(10)).ignoring(NoSuchElementException.class, WebDriverException.class);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(timeout, TimeUnit.SECONDS)
+				.pollingEvery(10, TimeUnit.SECONDS).ignoring(NoSuchElementException.class, WebDriverException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				String result = (String) getJavaScriptExecutor().executeScript("return document.readyState");
@@ -534,7 +535,7 @@ public class AppPage extends TestListenerAdapter {
 	public void waitForWindowToClose(String windowId) {
 		final String window = windowId;
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofMinutes(2)).pollingEvery(Duration.ofSeconds(1))
+				.withTimeout(WebDriverConstants.WAIT_TWO_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 				.ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
@@ -547,7 +548,7 @@ public class AppPage extends TestListenerAdapter {
 	public void waitForNewWindow(int winCount) {
 		final int count = winCount;
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-				.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(1))
+				.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(1, TimeUnit.SECONDS)
 				.ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
@@ -819,7 +820,7 @@ public class AppPage extends TestListenerAdapter {
 				}
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofMinutes(1)).pollingEvery(Duration.ofSeconds(2))
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS).pollingEvery(2, TimeUnit.SECONDS)
 					.ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
@@ -1203,8 +1204,8 @@ public class AppPage extends TestListenerAdapter {
 				}
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofMinutes(1))
-					.pollingEvery(Duration.ofSeconds(500)).ignoring(NoSuchElementException.class);
+					.withTimeout(WebDriverConstants.WAIT_ONE_MIN, TimeUnit.SECONDS)
+					.pollingEvery(500, TimeUnit.MILLISECONDS).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
