@@ -1204,7 +1204,7 @@ public class AppPage extends TestListenerAdapter {
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
 					.withTimeout(Duration.ofMinutes(1))
-					.pollingEvery(Duration.ofSeconds(500)).ignoring(NoSuchElementException.class);
+					.pollingEvery(Duration.ofSeconds(5)).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
