@@ -20,13 +20,13 @@ public class WebDriverConstants {
 	public static String SENDER_INTERNET_HEADER = "Return-Path";
 	public static String SOLUTIONSTAR_DOMAIN_NAME = "solutionstar";
 	public static String DEFAULT_BROWSER_NAME = "chrome";
-	public static int WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC = 60;
+	public static int WAIT_FOR_VISIBILITY_TIMEOUT_IN_SEC = 30;
 	public static int MILD_SLEEP = 500;
 	public static int WAIT_ONE_MIN = 60;
 	public static int WAIT_HALF_MIN = 30;
 	public static int WAIT_TWO_MIN = 120;
 	public static int WAIT_TEN_SECS_IN_MILLI = 10000;
-	public static int MAX_TIMEOUT_PAGE_LOAD = 120;
+	public static int MAX_TIMEOUT_PAGE_LOAD = 30;
 	public static int EMAIL_PULL_LIMIT = 120;
 	
 	final public static String PROXY_SERVER  = "proxyserver.enabled";
