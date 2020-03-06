@@ -142,7 +142,7 @@ public class CommonUtils {
 					logger.info("Couldn't create Directory" + ExceptionUtils.getRootCauseStackTrace(ex));
 				}
 			}
-			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName  + ".png"));
+			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
 		}
 		catch (Exception ex)
 		{
