@@ -414,8 +414,25 @@ public class CSVParserUtils {
 			File file = new File(fileName);
 			if (!file.getParentFile().exists())
 				file.getParentFile().mkdirs();
+			
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
 			csvWriter.writeAll(data);
+			
+			csvWriter.close();
+		} catch (Exception e) {
+			logger.error("Error while appending to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
+		}
+	}
+	public void appendToCSVFile(String fileName, String[] data) {
+		try {
+			File file = new File(fileName);
+			if (!file.getParentFile().exists())
+				file.getParentFile().mkdirs();
+			
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(file,true));
+			
+			
+			csvWriter.writeNext(data);
 			csvWriter.close();
 		} catch (Exception e) {
 			logger.error("Error while appending to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
