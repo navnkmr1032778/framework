@@ -311,7 +311,7 @@ public class AppDriver extends TestListenerAdapter {
 		String testId = getIdForMethod(result.getTestContext(), testMethod);
 		String mthdKey = getMessageSenderNameForMethod(testMethod);			
 				
-		logger.info("Starting the test : "+result.getMethod().getMethodName()+ " - "+result.getTestClass().getName());
+		//logger.info("Starting the test : "+result.getMethod().getMethodName()+ " - "+result.getTestClass().getName());
 	
 		try {
 			messageSender.testStarted(testId, mthdKey, false);
@@ -429,7 +429,7 @@ public class AppDriver extends TestListenerAdapter {
 			   long threadId = Thread.currentThread().getId();
 			   if(takeScreenShot) 
 			   {
-				   utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
+				   //utils.captureBrowserScreenShot(testResult.getName(), drivers.get(driverType));
 				   utils.captureFullBrowserScreenShot("FullSS_"+testResult.getName()+"_thread"+threadId, drivers.get(driverType));
 			   }
 				
