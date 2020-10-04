@@ -5,17 +5,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class WebDriverConstants {
-	
-	
+
 	public static String PATH_TO_BROWSER_EXECUTABLE = "/resources/drivers/";
 	public static String PATH_TO_BROWSER_SCREENSHOT = "resources/screenshot/";
-	public static String PATH_TO_BROWSER_SCREENSHOT_BASE="resources/screenshot/base";
-	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE="resources/screenshot/compare";
-	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT="resources/screenshot/compare_result";
+	public static String PATH_TO_BROWSER_SCREENSHOT_BASE = "resources/screenshot/base";
+	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE = "resources/screenshot/compare";
+	public static String PATH_TO_BROWSER_SCREENSHOT_COMPARE_RESULT = "resources/screenshot/compare_result";
 	public static String PATH_TO_TEST_DATA_FILE = "/resources/testdata/";
 	public static String WINDOWS_PATH_TO_TEST_DATA_DIR = "/resources/testdata/";
 	public static String GMAIL_IMAP_HOST = "imap.gmail.com";
-	public static String SOLUTIONSTAR_IMAP_HOST = "webmail.solutionstar.com";
+	public static String SOLUTIONSTAR_IMAP_HOST = "";
 	public static String IMAP_PROTOCOL = "imaps";
 	public static String SENDER_INTERNET_HEADER = "Return-Path";
 	public static String SOLUTIONSTAR_DOMAIN_NAME = "solutionstar";
@@ -28,38 +27,38 @@ public class WebDriverConstants {
 	public static int WAIT_TEN_SECS_IN_MILLI = 10000;
 	public static int MAX_TIMEOUT_PAGE_LOAD = 30;
 	public static int EMAIL_PULL_LIMIT = 120;
-	
-	final public static String PROXY_SERVER  = "proxyserver.enabled";
-	final public static String GRID_SERVER  = "grid.enabled";
+
+	final public static String PROXY_SERVER = "proxyserver.enabled";
+	final public static String GRID_SERVER = "grid.enabled";
 	public static final String DEFAULT_BROWSER_OS = "windows";
 	public static String IE_BROWSER = "ie";
 	public static String PROPERTIES_FILE_PATH = "./conf/seleniumconfiguration.properties";
-	public static final String IMAGE_MAGICK_URL="https://github.com/vini46/resouces/raw/master/ImageMagick.zip";
-	public static final String IMAGE_MAGICK_PARENT_FILE="3rdParty";
-	public static final String IMAGE_MAGICK_ZIP_PATH="3rdParty/ImageMagick.zip";
-	public static final String IMAGE_MAGICK_FOLDER_PATH="3rdParty/ImageMagick";
-	
-	public enum OperatingSystem{
+	public static final String IMAGE_MAGICK_URL = "https://github.com/vini46/resouces/raw/master/ImageMagick.zip";
+	public static final String IMAGE_MAGICK_PARENT_FILE = "3rdParty";
+	public static final String IMAGE_MAGICK_ZIP_PATH = "3rdParty/ImageMagick.zip";
+	public static final String IMAGE_MAGICK_FOLDER_PATH = "3rdParty/ImageMagick";
+
+	public enum OperatingSystem {
 		WINDOWS, MAC
 	}
-	
-	public enum DriverTypes{
+
+	public enum DriverTypes {
 		PRIMARY, SECONDARY
-    } 
-	
-	public enum BrowserNames{
+	}
+
+	public enum BrowserNames {
 		CHROME, FIREFOX, INTERNET_EXPLORER, PHANTOMJS
-    } 
-    
+	}
+
 	public static final Map<String, String> DRIVER_METHOD;
 	static {
-	  Map<String, String> tmp = new LinkedHashMap<String, String>();
-	  tmp.put("ie", "setIEDriver");
-	  tmp.put("internet explorer", "setIEDriver");
-	  tmp.put("firefox", "setFirefoxDriver");
-	  tmp.put("chrome", "setChromeDriver");
-	  tmp.put("phantomjs", "setPhomtomJsDriver");
-	  DRIVER_METHOD = Collections.unmodifiableMap(tmp);
+		Map<String, String> tmp = new LinkedHashMap<String, String>();
+		tmp.put("ie", "setIEDriver");
+		tmp.put("internet explorer", "setIEDriver");
+		tmp.put("firefox", "setFirefoxDriver");
+		tmp.put("chrome", "setChromeDriver");
+		tmp.put("phantomjs", "setPhomtomJsDriver");
+		DRIVER_METHOD = Collections.unmodifiableMap(tmp);
 	}
 
 //	public static final Map<String, String> WINDOWS_DRIVERS;

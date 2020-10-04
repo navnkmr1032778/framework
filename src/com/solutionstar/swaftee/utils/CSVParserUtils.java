@@ -1,6 +1,5 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -224,6 +223,7 @@ public class CSVParserUtils {
 		return cellData;
 	}
 
+	@SuppressWarnings("unused")
 	private void printHash(HashMap<?, ?> hashmap) {
 		for (Object key : hashmap.keySet()) {
 			logger.info("Key : " + key.toString() + "- Value : " + hashmap.get(key));
@@ -357,6 +357,7 @@ public class CSVParserUtils {
 		return getDataFromCSV(fileName, sendNullForBlanks, '\\');
 	}
 
+	@SuppressWarnings("resource")
 	public List<HashMap<String, String>> getDataFromCSV(String fileName, boolean sendNullForBlanks,
 			char escapeCharacter) {
 		if (!fileName.endsWith(".csv")) {
@@ -375,7 +376,8 @@ public class CSVParserUtils {
 
 			try (InputStream is = Files.newInputStream(path, StandardOpenOption.READ)) {
 				CSVReader reader = new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-				//new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")), ',', '"',escapeCharacter);
+				// new CSVReader(new InputStreamReader(is, Charset.forName("UTF-8")), ',',
+				// '"',escapeCharacter);
 				List<String[]> data = reader.readAll();
 				String[] header = data.remove(0);
 				for (String[] row : data) {
@@ -414,25 +416,24 @@ public class CSVParserUtils {
 			File file = new File(fileName);
 			if (!file.getParentFile().exists())
 				file.getParentFile().mkdirs();
-			
+
 			CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
 			csvWriter.writeAll(data);
-			
+
 			csvWriter.close();
 		} catch (Exception e) {
 			logger.error("Error while appending to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));
 		}
 	}
+
 	public void appendToCSVFile(String fileName, String[] data) {
 		try {
 			File file = new File(fileName);
 			if (!file.getParentFile().exists())
 				file.getParentFile().mkdirs();
-			
-			CSVWriter csvWriter = new CSVWriter(new FileWriter(file,true));
-			
-			
-			csvWriter.writeNext(data);
+
+			CSVWriter csvWriter = new CSVWriter(new FileWriter(file, true));
+			csvWriter.writeNext(data, false);
 			csvWriter.close();
 		} catch (Exception e) {
 			logger.error("Error while appending to " + fileName + ExceptionUtils.getRootCauseStackTrace(e));

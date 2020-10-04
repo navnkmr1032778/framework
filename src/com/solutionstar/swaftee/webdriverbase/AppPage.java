@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -50,8 +52,6 @@ import com.solutionstar.swaftee.utils.CommonUtils;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
 import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
 import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
-import org.apache.commons.io.IOUtils;
-import microsoft.exchange.webservices.data.TimeSpan;
 
 public class AppPage extends TestListenerAdapter {
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
@@ -127,7 +127,7 @@ public class AppPage extends TestListenerAdapter {
 	public void waitForURLContainingText(String urlText, int timeout) {
 		final String expectedURL = urlText;
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeout))
-				.pollingEvery(Duration.ofSeconds(1) ).ignoring(NoSuchElementException.class);
+				.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
 		wait.until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver driver) {
 				return getCurrentUrl().contains(expectedURL);
@@ -271,8 +271,8 @@ public class AppPage extends TestListenerAdapter {
 			final String innerText = text;
 			final WebElement element = e;
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN)).pollingEvery(Duration.ofSeconds(1))
-					.ignoring(NoSuchElementException.class);
+					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN))
+					.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
 			wait.until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
 					return element.getText().contains(innerText);
@@ -288,8 +288,8 @@ public class AppPage extends TestListenerAdapter {
 			final String innerText = text;
 			final By loc = locator;
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN)).pollingEvery(Duration.ofSeconds(1))
-					.ignoring(NoSuchElementException.class);
+					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN))
+					.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class);
 			wait.until(new ExpectedCondition<Boolean>() {
 				public Boolean apply(WebDriver driver) {
 					return driver.findElement(loc).getText().contains(innerText);
@@ -311,12 +311,30 @@ public class AppPage extends TestListenerAdapter {
 	}
 
 	public void clearAndType(WebElement element, String text) {
+		waitForElementToAppear(element);
 		element.clear();
 		element.sendKeys(text);
 	}
 
 	public void setTextUsingJS(WebElement element, String text) {
 		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, text);
+	}
+
+	public void changeAttributeUsingJS(WebElement element, String attribute, String value) {
+		getJavaScriptExecutor().executeScript("arguments[0].value=arguments[1]", element, attribute);
+	}
+
+	public void click(WebElement element) {
+		waitForElementToAppear(element);
+		element.click();
+		sleep(1000);
+	}
+
+	public void clickAndWaitForPageLoadComplete(WebElement element) {
+		waitForElementToAppear(element);
+		element.click();
+		sleep(1000);
+		waitForPageLoadComplete();
 	}
 
 	public void clickUsingJS(WebElement element) {
@@ -346,6 +364,7 @@ public class AppPage extends TestListenerAdapter {
 	}
 
 	public void selectDropdown(WebElement element, String by, String value) {
+		scrollElementToUserView(element);
 		Select select = new Select(element);
 		switch (ByTypes.valueOf(by.toUpperCase())) {
 		case INDEX:
@@ -358,6 +377,7 @@ public class AppPage extends TestListenerAdapter {
 			select.selectByVisibleText(value);
 			break;
 		}
+		sleep(1500);
 	}
 
 	public void selectDropDownContainingText(WebElement element, String value) {
@@ -478,7 +498,7 @@ public class AppPage extends TestListenerAdapter {
 	public void maximizeWindow() {
 		try {
 			driver.manage().window().maximize();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			logger.debug("Exception while maximizing the window...");
 			logger.debug(e.getMessage());
 		}
@@ -819,8 +839,8 @@ public class AppPage extends TestListenerAdapter {
 				}
 			};
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN)).pollingEvery(Duration.ofSeconds(2))
-					.ignoring(NoSuchElementException.class);
+					.withTimeout(Duration.ofSeconds(WebDriverConstants.WAIT_ONE_MIN))
+					.pollingEvery(Duration.ofSeconds(2)).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
@@ -1148,6 +1168,14 @@ public class AppPage extends TestListenerAdapter {
 		return text;
 	}
 
+	public String getTextForElementIfPresent(WebElement e) {
+		String text = null;
+		if (isElementPresent(e)) {
+			text = e.getText();
+		}
+		return text;
+	}
+
 	// same as getTextForElementIfPresent
 	// but works for a list of webelements
 	public List<String> getTextListForElements(By locator) {
@@ -1202,8 +1230,7 @@ public class AppPage extends TestListenerAdapter {
 					}
 				}
 			};
-			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
-					.withTimeout(Duration.ofMinutes(1))
+			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofMinutes(1))
 					.pollingEvery(Duration.ofSeconds(5)).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
@@ -1241,6 +1268,11 @@ public class AppPage extends TestListenerAdapter {
 
 	public void uploadFile(WebElement element, String fileName) {
 		element.sendKeys(fileName);
+	}
+
+	public void uploadFileAndWaitForPageLoad(WebElement element, String fileName) {
+		element.sendKeys(fileName);
+		waitForPageLoadComplete();
 	}
 
 	/**
@@ -1327,7 +1359,7 @@ public class AppPage extends TestListenerAdapter {
 			Actions builder = new Actions(this.driver);
 			Actions hoverOverRegistrar = builder.moveToElement(element);
 			hoverOverRegistrar.perform();
-			Thread.sleep(500);
+			Thread.sleep(1000);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1427,52 +1459,42 @@ public class AppPage extends TestListenerAdapter {
 			element.click();
 	}
 
-	public boolean isLinkValid(WebElement linkElement) 
-	{
+	public boolean isLinkValid(WebElement linkElement) {
 		boolean respCode = false;
 		URL url = null;
 		HttpURLConnection connection = null;
-		try 
-		{
+		try {
 			url = new URL(linkElement.getAttribute("href"));
 			connection = (HttpURLConnection) url.openConnection();
-			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) 
-			{
+			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) {
 				respCode = true;
 			}
 			return respCode;
-		} 
-		catch (Exception exp)
-		{
+		} catch (Exception exp) {
 			exp.printStackTrace();
 			return respCode;
 		}
 	}
-	public boolean verifyPageTitleViaHttpClient(WebElement linkElement,String pageTitle) 
-	{
+
+	public boolean verifyPageTitleViaHttpClient(WebElement linkElement, String pageTitle) {
 		boolean respCode = false;
 		URL url = null;
-		String actualPageTitle= null;
+		String actualPageTitle = null;
 		HttpURLConnection connection = null;
-		try 
-		{
+		try {
 			String urltest = linkElement.getAttribute("href");
 			url = new URL(urltest);
-			connection = (HttpURLConnection) url.openConnection();			
-			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) 
-			{
+			connection = (HttpURLConnection) url.openConnection();
+			if (connection.getResponseCode() >= 200 && connection.getResponseCode() < 400) {
 				InputStream inStream = connection.getInputStream();
 				Document doc = Jsoup.parse(IOUtils.toString(inStream, connection.getContentEncoding()));
 				actualPageTitle = doc.title();
-				if(actualPageTitle.equals(pageTitle))
-				{
+				if (actualPageTitle.equals(pageTitle)) {
 					respCode = true;
 				}
 			}
 			return respCode;
-		} 
-		catch (Exception exp)
-		{
+		} catch (Exception exp) {
 			exp.printStackTrace();
 			return respCode;
 		}

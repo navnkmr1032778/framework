@@ -1,11 +1,11 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-  
-<suite name="Swaftee Base" verbose="2" >
 
-  <test name="Swaftee Base Build" >
-    <classes>
-       <class name="com.solutionstar.swaftee.tests.LaunchDriverTest" />
-    </classes>
-  </test>
-  
+<suite name="Framework Base" verbose="2">
+
+	<test name="Framework Base Build">
+		<classes>
+			<class name="com.framework.swaftee.tests.LaunchDriverTest" />
+		</classes>
+	</test>
+
 </suite>

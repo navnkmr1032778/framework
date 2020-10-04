@@ -37,7 +37,6 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jcraft.jsch.Channel;
@@ -61,24 +60,21 @@ public class CommonUtils {
 
 	protected static Logger logger = LoggerFactory.getLogger(CommonUtils.class.getName());
 
-
-	public String getCurrentWorkingDirectory()
-	{
+	public String getCurrentWorkingDirectory() {
 		String workingDir = null;
-		try{
+		try {
 			workingDir = System.getProperty("user.dir");
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return workingDir;
 	}
 
-	public String getTestDataFullDirPath(String fileName)
-	{
+	public String getTestDataFullDirPath(String fileName) {
 		String path = WebDriverConstants.PATH_TO_TEST_DATA_FILE;
-		if(OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows)
+		if (OSCheck.getOperatingSystemType() == OSCheck.OSType.Windows)
 			path = WebDriverConstants.WINDOWS_PATH_TO_TEST_DATA_DIR;
-		return (getCurrentWorkingDirectory()+ path+ fileName);
+		return (getCurrentWorkingDirectory() + path + fileName);
 	}
 
 //	public File getBrowserExecutable(String path, String fileName)
@@ -123,243 +119,187 @@ public class CommonUtils {
 //		}
 //		return new File("temp file");
 //	}
-	
-	public void captureFullBrowserScreenShot(String imageName, WebDriver webDriver)
-	{
-		try
-		{
-			Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000)).takeScreenshot(webDriver);
+
+	public void captureFullBrowserScreenShot(String imageName, WebDriver webDriver) {
+		try {
+			Screenshot screenshot = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000))
+					.takeScreenshot(webDriver);
 			File dir = new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
-			if (!dir.exists())
-			{
-				try
-				{
+			if (!dir.exists()) {
+				try {
 					dir.mkdir();
 					logger.info("creating directory: " + dir);
-				}
-				catch (Exception ex)
-				{
+				} catch (Exception ex) {
 					logger.info("Couldn't create Directory" + ExceptionUtils.getRootCauseStackTrace(ex));
 				}
 			}
-			ImageIO.write(screenshot.getImage(),"PNG",new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
-		}
-		catch (Exception ex)
-		{
+			ImageIO.write(screenshot.getImage(), "PNG", new File(
+					WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + System.currentTimeMillis() + ".png"));
+		} catch (Exception ex) {
 			logger.info("Couldn't take Screenshot" + ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 
-	public void captureBrowserScreenShot(String imageName, WebDriver webDriver)
-	{
+	public void captureBrowserScreenShot(String imageName, WebDriver webDriver) {
 		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
 		Date date = new Date();
 		String curDate = dateFormat.format(date);
 		File dir = new File(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT);
-		if (!dir.exists())
-		{
-			try
-			{
+		if (!dir.exists()) {
+			try {
 				dir.mkdir();
 				logger.info("creating directory: " + dir);
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 				logger.info("Couldn't create Directory" + ExceptionUtils.getRootCauseStackTrace(ex));
 			}
 		}
 
-		try
-		{
+		try {
 			Set<String> handles = webDriver.getWindowHandles();
 			String currentHandle = webDriver.getWindowHandle();
 			int handleCount = 0;
-			for (String handle : handles)
-			{
+			for (String handle : handles) {
 				handleCount++;
 				webDriver.switchTo().window(handle);
 				webDriver.manage().window().maximize();
-				try
-				{
+				try {
 					Thread.sleep(500);
-				}
-				catch (Exception e)
-				{
+				} catch (Exception e) {
 					logger.info(ExceptionUtils.getRootCauseStackTrace(e).toString());
 				}
 				screenShot(WebDriverConstants.PATH_TO_BROWSER_SCREENSHOT + imageName + "_handle" + handleCount + "_"
 						+ curDate + "_" + System.currentTimeMillis() + ".png", webDriver);
 			}
 			webDriver.switchTo().window(currentHandle);
-		}
-		catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			logger.info("exception in taking Screenshot" + ExceptionUtils.getRootCauseStackTrace(ex));
 		}
 	}
 
-
-	public void screenShot(String fileName, WebDriver webDriver)
-	{
-		try
-		{
+	public void screenShot(String fileName, WebDriver webDriver) {
+		try {
 			File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
 			FileUtils.copyFile(scrFile, new File(fileName));
-		}
-		catch (IOException e)
-		{
+		} catch (IOException e) {
 			logger.info("Error While taking Screen Shot");
 			e.printStackTrace();
 		}
 	}
 
-
-	public String getCurrentTimeString()
-	{
-		try{
+	public String getCurrentTimeString() {
+		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 			sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 			Date date = new Date();
 			return sdf.format(date);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	public boolean isNumeric(String s)
-	{
+	public boolean isNumeric(String s) {
 		return s.matches("[-+]?\\d*\\.?\\d+");
 	}
 
-	public int getMonthNumberByName(String monthName)
-	{
-		try
-		{
+	public int getMonthNumberByName(String monthName) {
+		try {
 			Date date = new SimpleDateFormat("MMM").parse(monthName);
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
-			int monthNumber=cal.get(Calendar.MONTH);
-			return monthNumber+1;
-		}
-		catch (ParseException e)
-		{
+			int monthNumber = cal.get(Calendar.MONTH);
+			return monthNumber + 1;
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return -1;
 	}
 
-	public String changeDateFormat(String date,String format) throws ParseException
-	{
+	@SuppressWarnings("deprecation")
+	public String changeDateFormat(String date, String format) throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat(format);
-		String sDate=sdf.format(new Date(date));
+		String sDate = sdf.format(new Date(date));
 		return sDate;
 	}
 
-	public String compareDateWithToday(String d1) throws ParseException
-	{
-		try
-		{
+	public String compareDateWithToday(String d1) throws ParseException {
+		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:mm aa");
-			Date date1=sdf.parse(d1);
+			Date date1 = sdf.parse(d1);
 			Date date2 = new Date();
-			String sDate= sdf.format(date2);
-			date2= sdf.parse(sDate);
-			if(date1.compareTo(date2)>0)
-			{
-				logger.info(date1+" date is future "+date2);
+			String sDate = sdf.format(date2);
+			date2 = sdf.parse(sDate);
+			if (date1.compareTo(date2) > 0) {
+				logger.info(date1 + " date is future " + date2);
 				return "future";
-			}
-			else if(date1.compareTo(date2)<0)
-			{
-				logger.info(date1+" date is past "+date2);
+			} else if (date1.compareTo(date2) < 0) {
+				logger.info(date1 + " date is past " + date2);
 				return "past";
-			}
-			else
-			{
+			} else {
 				logger.info("present ongoing");
 				return "present";
 			}
-		}
-		catch(Exception ex)
-		{
+		} catch (Exception ex) {
 			logger.info(ExceptionUtils.getRootCauseStackTrace(ex).toString());
 			return null;
 		}
 	}
 
-	public int getMonthDiffBtwnDatesByMonthAndYear(String from,String to)
-	{
-		try
-		{
-		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-		DateTime date11=new DateTime(df.parse(from));
-		DateTime date12=new DateTime(df.parse(to));
-		return (Months.monthsBetween(
-			     date11.toLocalDate().withDayOfMonth(1),
-			     date12.toLocalDate().withDayOfMonth(1)).getMonths());
-		}
-		catch(Exception ex)
-		{
+	public int getMonthDiffBtwnDatesByMonthAndYear(String from, String to) {
+		try {
+			SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+			DateTime date11 = new DateTime(df.parse(from));
+			DateTime date12 = new DateTime(df.parse(to));
+			return (Months.monthsBetween(date11.toLocalDate().withDayOfMonth(1), date12.toLocalDate().withDayOfMonth(1))
+					.getMonths());
+		} catch (Exception ex) {
 			logger.info(ExceptionUtils.getRootCauseStackTrace(ex).toString());
 			return -1;
 		}
 	}
 
-	public String getDayForDate(String date)
-	{
-		try
-		{
+	@SuppressWarnings("deprecation")
+	public String getDayForDate(String date) {
+		try {
 			SimpleDateFormat formatter = new SimpleDateFormat("EEEE");
 			String day = formatter.format(new Date(date));
 			return day;
-		}
-		catch(Exception ex)
-		{
-			logger.info("exception in get day for date: "+ExceptionUtils.getRootCauseStackTrace(ex));
+		} catch (Exception ex) {
+			logger.info("exception in get day for date: " + ExceptionUtils.getRootCauseStackTrace(ex));
 			return null;
 		}
 	}
 
-	public String changeTimeFormat(String fromFormat,String toFormat,String time)
-	{
-		try
-		{
+	public String changeTimeFormat(String fromFormat, String toFormat, String time) {
+		try {
 			DateFormat formatter = new SimpleDateFormat(fromFormat);
 			Date date = formatter.parse(time);
 
 			SimpleDateFormat sdf = new SimpleDateFormat(toFormat);
 			String formatTime = sdf.format(date);
-			logger.info("after formatting: "+formatTime);
+			logger.info("after formatting: " + formatTime);
 			return formatTime;
-		}
-		catch(Exception ex)
-		{
-			logger.info("change time format exception: "+ExceptionUtils.getRootCauseStackTrace(ex));
+		} catch (Exception ex) {
+			logger.info("change time format exception: " + ExceptionUtils.getRootCauseStackTrace(ex));
 			return null;
 		}
 	}
 
-	public long compareTwoTimes(String startTime,String endTime)
-	{
-		try
-		{
+	public long compareTwoTimes(String startTime, String endTime) {
+		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm aa");
 			Date d1 = sdf.parse(startTime);
 			Date d2 = sdf.parse(endTime);
 			long elapsed = d2.getTime() - d1.getTime();
-			logger.info(""+elapsed);
+			logger.info("" + elapsed);
 			return elapsed;
-		}
-		catch(Exception ex)
-		{
-			logger.info("exception in comparing two times: "+ExceptionUtils.getRootCauseStackTrace(ex));
+		} catch (Exception ex) {
+			logger.info("exception in comparing two times: " + ExceptionUtils.getRootCauseStackTrace(ex));
 			return -1;
 		}
 	}
 
-	public Date getDateFromString(String dateString, SimpleDateFormat formatter)
-	{
+	public Date getDateFromString(String dateString, SimpleDateFormat formatter) {
 		Date date = null;
 		try {
 			date = formatter.parse(dateString);
@@ -370,101 +310,83 @@ public class CommonUtils {
 		return date;
 	}
 
-	public String getStringFromDate(Date d, SimpleDateFormat formatter)
-	{
+	public String getStringFromDate(Date d, SimpleDateFormat formatter) {
 		return formatter.format(d);
 	}
 
-		public String getDateToday()
-	{
+	public String getDateToday() {
 		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		return getDateToday(df);
 
 	}
 
-		public String getDateToday(SimpleDateFormat formatter)
-	{
+	public String getDateToday(SimpleDateFormat formatter) {
 		formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 		return formatter.format(new Date());
 	}
 
-
-	public String getDateTomorrow()
-	{
+	public String getDateTomorrow() {
 		return getFutureDate(1);
 	}
 
-	public String getDateYesterday()
-	{
+	public String getDateYesterday() {
 		return getPastDate(1);
 	}
 
-	public String getFutureDate(int daysToAdd, SimpleDateFormat sdf)
-	{
+	public String getFutureDate(int daysToAdd, SimpleDateFormat sdf) {
 		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime futureDate = now.plusDays(daysToAdd);
 		return sdf.format(futureDate.toDate());
 	}
 
-	public String getFutureDate(int daysToAdd)
-	{
+	public String getFutureDate(int daysToAdd) {
 		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime futureDate = now.plusDays(daysToAdd);
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(futureDate);
 	}
 
-	public String getPastDate(int daysToAdd)
-	{
+	public String getPastDate(int daysToAdd) {
 		DateTime now = new DateTime(DateTimeZone.UTC);
 		DateTime pastDate = now.minusDays(daysToAdd);
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 		return formatter.print(pastDate);
 	}
 
-	public String getPastHour(int timeToSubtract)
-	{
+	public String getPastHour(int timeToSubtract) {
 		DateTime now = new DateTime();
 		DateTime pastTime = now.minusHours(timeToSubtract);
-		DateTimeFormatter formatter=DateTimeFormat.forPattern("mm");
-		String presentMin=formatter.print(pastTime);
-		pastTime=pastTime.minusMinutes(Integer.parseInt(presentMin));
-		formatter=DateTimeFormat.forPattern("h:mm aa");
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("mm");
+		String presentMin = formatter.print(pastTime);
+		pastTime = pastTime.minusMinutes(Integer.parseInt(presentMin));
+		formatter = DateTimeFormat.forPattern("h:mm aa");
 		return formatter.print(pastTime);
 	}
 
-	public String addMinToTime(String time,int minToAdd)
-	{
+	public String addMinToTime(String time, int minToAdd) {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("h:mm aa");
-		DateTime now=formatter.parseDateTime(time);
+		DateTime now = formatter.parseDateTime(time);
 		DateTime pastDate = now.plusMinutes(minToAdd);
 		formatter = DateTimeFormat.forPattern("h:mm aa");
 		return formatter.print(pastDate);
 	}
+
 	/**
 	 * Copies file from SFTP
 	 *
-	 * Provided a username, password, source location, destination, hostname, list of files and
-	 * port copies them using sftp
+	 * Provided a username, password, source location, destination, hostname, list
+	 * of files and port copies them using sftp
 	 *
-	 * @param hostname
-	 *            hostname of sftp server
-	 * @param port
-	 *            port number of sftp server
-	 * @param username
-	 *            username to login to the server
-	 * @param password
-	 *            password to login
-	 * @param sourceLocation
-	 *            source location in the remote server
-	 * @param files
-	 *            List of files to be coiped from remote server
-	 * @param destination
-	 *            the location in the local machine
+	 * @param hostname       hostname of sftp server
+	 * @param port           port number of sftp server
+	 * @param username       username to login to the server
+	 * @param password       password to login
+	 * @param sourceLocation source location in the remote server
+	 * @param files          List of files to be coiped from remote server
+	 * @param destination    the location in the local machine
 	 */
-	public void copyViaSFTP(String hostname, int port, String username,
-			String password, String sourceLocation, String destination,
-			List<String> files) {
+	public void copyViaSFTP(String hostname, int port, String username, String password, String sourceLocation,
+			String destination, List<String> files) {
 
 		try {
 
@@ -483,25 +405,25 @@ public class CommonUtils {
 
 	}
 
-	public void copyToSFTPLocation(String hostname, int port, String username,
-			String password, String sourceLocation, String destination,
-			List<String> files) throws SftpException  {
+	public void copyToSFTPLocation(String hostname, int port, String username, String password, String sourceLocation,
+			String destination, List<String> files) throws SftpException {
 
-			channelSftp = getChannelSftp(hostname, port, username, password);
-			for (String file : files) {
-				String fileName = file.substring(file.lastIndexOf("/") + 1);
-				String source = sourceLocation + file;
-				String desc = destination + fileName;
-				channelSftp.put(source, desc, null);
-			}
-			if (channelSftp != null)
-				channelSftp.disconnect();
-			if (session != null)
-				session.disconnect();
+		channelSftp = getChannelSftp(hostname, port, username, password);
+		for (String file : files) {
+			String fileName = file.substring(file.lastIndexOf("/") + 1);
+			String source = sourceLocation + file;
+			String desc = destination + fileName;
+			channelSftp.put(source, desc, null);
+		}
+		if (channelSftp != null)
+			channelSftp.disconnect();
+		if (session != null)
+			session.disconnect();
 	}
 
-	public List<String> listFilesInSFTPLocation(String hostname, int port,
-			String username, String password, String sourceLocation) {
+	@SuppressWarnings("unchecked")
+	public List<String> listFilesInSFTPLocation(String hostname, int port, String username, String password,
+			String sourceLocation) {
 
 		List<String> list = new ArrayList<String>();
 		try {
@@ -524,8 +446,7 @@ public class CommonUtils {
 		return new File(fileName).exists();
 	}
 
-	public ChannelSftp getChannelSftp(String hostname, int port, String username,
-			String password){
+	public ChannelSftp getChannelSftp(String hostname, int port, String username, String password) {
 		try {
 			JSch jsch = new JSch();
 			session = jsch.getSession(username, hostname, port);
@@ -584,8 +505,7 @@ public class CommonUtils {
 			br.close();
 			obj = constructObjfromJson(json.toString(), classObj);
 		} catch (Exception ex) {
-			logger.error("Exception occured when retriving object from file. Message: "
-					+ ex.getMessage());
+			logger.error("Exception occured when retriving object from file. Message: " + ex.getMessage());
 		}
 		return obj;
 	}
@@ -594,11 +514,10 @@ public class CommonUtils {
 
 		Date d = getDateFromString(date, new SimpleDateFormat(sourceFormat));
 
-		return getStringFromDate(d,new SimpleDateFormat(destinationFormat));
+		return getStringFromDate(d, new SimpleDateFormat(destinationFormat));
 	}
 
-	public String convertStringArraytoJSONArray(String[] values)
-	{
+	public String convertStringArraytoJSONArray(String[] values) {
 		if (values.length > 0) {
 			StringBuilder nameBuilder = new StringBuilder();
 
@@ -616,26 +535,27 @@ public class CommonUtils {
 		}
 	}
 
-	public Map<String,Object> convertJSONToMap(String jsonString)
-	{
-		Map<String, Object> retMap = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {}.getType());
+	public Map<String, Object> convertJSONToMap(String jsonString) {
+		Map<String, Object> retMap = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {
+		}.getType());
 		return retMap;
 	}
 
+	@SuppressWarnings({ "unchecked", "unused" })
 	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
-			String password, String sourceLocation, Date startTime,String fileExtension) {
+			String password, String sourceLocation, Date startTime, String fileExtension) {
 		List<String> list = new ArrayList<String>();
 		try {
 			channelSftp = getChannelSftp(hostname, port, username, password);
 			channelSftp.cd(sourceLocation);
-			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*."+fileExtension);
-			logger.info("Start time is "+startTime.toString());
+			Vector<ChannelSftp.LsEntry> v = channelSftp.ls("*." + fileExtension);
+			logger.info("Start time is " + startTime.toString());
 			for (ChannelSftp.LsEntry o : v) {
 				String ti = o.getAttrs().getMtimeString();
 				int t = o.getAttrs().getMTime();
 				Date createdDate = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH).parse(ti);
 
-				if(startTime.before(createdDate))
+				if (startTime.before(createdDate))
 					list.add(o.getFilename());
 			}
 			if (channelSftp != null)
@@ -650,11 +570,10 @@ public class CommonUtils {
 
 	public Collection<? extends String> listFilesInSFTPLocation(String hostname, int port, String username,
 			String password, String sourceLocation, Date startTime) {
-		return listFilesInSFTPLocation(hostname, port,username,
-				password,sourceLocation, startTime,"csv");
+		return listFilesInSFTPLocation(hostname, port, username, password, sourceLocation, startTime, "csv");
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("deprecation")
 	public List<String> textFileToList(String filePath) {
 		List<String> lines = null;
 		try {
@@ -665,18 +584,18 @@ public class CommonUtils {
 		return lines;
 	}
 
-	public List<Map<String,Object>> convertJSONArrayToMap(String jsonString)
-    {
-        List<Map<String, Object>> retMap = new Gson().fromJson(jsonString, new TypeToken<List<HashMap<String, Object>>>() {}.getType());
-        return retMap;
-    }
+	public List<Map<String, Object>> convertJSONArrayToMap(String jsonString) {
+		List<Map<String, Object>> retMap = new Gson().fromJson(jsonString,
+				new TypeToken<List<HashMap<String, Object>>>() {
+				}.getType());
+		return retMap;
+	}
 
-	public String getSwafteeAbsolutePath() throws UnsupportedEncodingException
-	{
+	public String getSwafteeAbsolutePath() throws UnsupportedEncodingException {
 		String path = ImageCompareHelper.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 		String decodedPath = URLDecoder.decode(path, "UTF-8");
-		decodedPath=decodedPath.substring(1, decodedPath.length());
-		decodedPath=decodedPath.replace("target/classes/", "").trim();
+		decodedPath = decodedPath.substring(1, decodedPath.length());
+		decodedPath = decodedPath.replace("target/classes/", "").trim();
 		return decodedPath;
 	}
 }
