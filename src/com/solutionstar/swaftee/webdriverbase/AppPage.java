@@ -1104,6 +1104,8 @@ public class AppPage extends TestListenerAdapter {
 				Alert alert = this.driver.switchTo().alert();
 				alert.accept();
 				dismissed = true;
+				sleep(3000);
+				this.driver.switchTo().defaultContent();
 			}
 		} else {
 			// Arbitrary wait for alert to appear
