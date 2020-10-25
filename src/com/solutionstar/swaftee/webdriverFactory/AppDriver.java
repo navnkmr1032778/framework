@@ -93,13 +93,16 @@ public class AppDriver extends TestListenerAdapter {
 			}
 		}
 		String workingDir = utils.getCurrentWorkingDirectory();
+		logger.info("CURRENT WORKING DIRECTORY::" + workingDir);
 		System.setProperty("wdm.targetPath", workingDir + "/resources/drivers/");
 		if (System.getProperty("cleardriver", "false").equalsIgnoreCase("true")) {
 			WebDriverManager.getInstance(browserType).clearDriverCache();
 			WebDriverManager.getInstance(browserType).clearResolutionCache();
+			logger.info("DRIVER CACHE CLEARED");
 		}
 		if (browserType.equals(DriverManagerType.IEXPLORER))
 			WebDriverManager.getInstance(browserType).arch32();
+		logger.info("DRIVER CACHE CLEARED");
 		WebDriverManager.getInstance(browserType).setup();
 
 	}
