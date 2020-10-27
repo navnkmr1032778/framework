@@ -1,7 +1,6 @@
 package com.solutionstar.swaftee.webdriverbase;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.testng.ITestContext;
 import org.testng.annotations.AfterSuite;
@@ -30,17 +29,14 @@ public class AppTest extends AppDriver {
 					System.out.println("file deleted successfully");
 				}
 				startDocker s = new startDocker();
-				s.startFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
+				// s.startFile();
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		setDriverExecutable();
+		// setDriverExecutable();
 		logger.info("XML FileName : " + ctx.getCurrentXmlTest().getSuite().getFileName());
 		logger.info("Executing the Suite : " + ctx.getSuite().getName());
 	}
