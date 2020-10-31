@@ -332,6 +332,7 @@ public class AppPage extends TestListenerAdapter {
 
 	public void clickAndWaitForPageLoadComplete(WebElement element) {
 		waitForElementToAppear(element);
+		scrolltoElement(element);
 		element.click();
 		sleep(1000);
 		waitForPageLoadComplete();
