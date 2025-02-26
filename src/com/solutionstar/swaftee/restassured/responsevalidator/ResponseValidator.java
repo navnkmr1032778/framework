@@ -1,11 +1,9 @@
 package com.solutionstar.swaftee.restassured.responsevalidator;
 
-import java.util.List;
+import java.util.*;
 
-import com.solutionstar.swaftee.restassured.apicalls.APICalls;
-import com.solutionstar.swaftee.restassured.utils.Utils;
-
-
+import com.solutionstar.swaftee.restassured.apicalls.*;
+import com.solutionstar.swaftee.restassured.utils.*;
 
 public class ResponseValidator {
 	APICalls httpRequestSender = new APICalls();

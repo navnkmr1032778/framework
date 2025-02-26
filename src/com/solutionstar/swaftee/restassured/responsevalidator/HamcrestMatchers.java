@@ -1,34 +1,18 @@
 package com.solutionstar.swaftee.restassured.responsevalidator;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.closeTo;
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.equalToIgnoringCase;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasValue;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
-import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Every.everyItem;
-import static com.jayway.jsonpath.matchers.JsonPathMatchers.*;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.*;
+import java.util.*;
 
-import com.jayway.restassured.response.Response;
-import com.solutionstar.swaftee.restassured.utils.Utils;
+import org.hamcrest.*;
+
+import com.solutionstar.swaftee.restassured.utils.*;
+
+import io.restassured.response.*;
 
 public class HamcrestMatchers {
 	Utils utils = new Utils();
@@ -160,20 +144,20 @@ public class HamcrestMatchers {
 	}
 
 	public void emptyOrNullStringUtil(String actual) {
-		assertThat(actual, isEmptyOrNullString());
+		assertThat(actual, emptyString());
 	}
 
 	public void emptyOrNullStringUtil(List<String> actual) {
 		for (String item : actual)
-			assertThat(item, isEmptyOrNullString());
+			assertThat(item, emptyString());
 	}
 
 	public void containsJsonPathWithValue(String exceptionMsg, Response res, String jsonPath, Object value) {
-		assertThat(exceptionMsg, utils.getJsonString(res), hasJsonPath(jsonPath, equalTo(value)));
+		assertThat(exceptionMsg, utils.getJsonString(res), Matchers.is(value));
 	}
 
 	public void containsJsonPath(String exceptionMsg, Response res, String jsonPath) {
-		assertThat(exceptionMsg, utils.getJsonString(res), hasJsonPath(jsonPath));
+		assertThat(exceptionMsg, utils.getJsonString(res), Matchers.is(jsonPath));
 	}
 
 }

@@ -1,8 +1,8 @@
 package com.solutionstar.swaftee.restassured.utils;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import com.jayway.restassured.response.Response;
+import io.restassured.response.*;
 
 public class StatusChecker {
 	/*

@@ -1,16 +1,11 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.*;
 
+import org.slf4j.*;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
 
 /**
  * This class is a wrapper to copy files from sftp location. We can create a

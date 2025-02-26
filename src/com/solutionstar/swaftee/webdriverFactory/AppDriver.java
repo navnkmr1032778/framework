@@ -1,61 +1,32 @@
 package com.solutionstar.swaftee.webdriverFactory;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import java.io.*;
+import java.lang.annotation.*;
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.Map.*;
+import java.util.concurrent.atomic.*;
 
-import org.jenkinsci.testinprogress.messagesender.IMessageSenderFactory;
-import org.jenkinsci.testinprogress.messagesender.MessageSender;
-import org.jenkinsci.testinprogress.messagesender.SocketMessageSenderFactory;
-import org.openqa.selenium.NoSuchFrameException;
-import org.openqa.selenium.NoSuchWindowException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.ITestContext;
-import org.testng.ITestNGMethod;
-import org.testng.ITestResult;
-import org.testng.Reporter;
-import org.testng.SkipException;
-import org.testng.TestListenerAdapter;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.DataProvider;
-import org.testng.internal.ConstructorOrMethod;
+import org.jenkinsci.testinprogress.messagesender.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.logging.*;
+import org.openqa.selenium.remote.*;
+import org.slf4j.*;
+import org.testng.*;
+import org.testng.annotations.*;
+import org.testng.internal.*;
 
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvException;
-import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.jira.Jira;
-import com.solutionstar.swaftee.jira.ZephyrUtils;
-import com.solutionstar.swaftee.utils.CSVParserUtils;
-import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+import com.opencsv.*;
+import com.opencsv.exceptions.*;
+import com.solutionstar.swaftee.CustomExceptions.*;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.jira.*;
+import com.solutionstar.swaftee.utils.*;
+import com.solutionstar.swaftee.webdriverhelpers.*;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.DriverManagerType;
-import net.lightbody.bmp.core.har.Har;
+import io.github.bonigarcia.wdm.*;
+import io.github.bonigarcia.wdm.config.*;
+import net.lightbody.bmp.core.har.*;
 
 public class AppDriver extends TestListenerAdapter {
 

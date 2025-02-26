@@ -1,59 +1,36 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.io.File;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.*;
+import java.awt.datatransfer.*;
+import java.io.*;
+import java.net.*;
+import java.time.*;
+import java.util.*;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
+import org.apache.commons.io.*;
+import org.apache.commons.lang3.exception.*;
+import org.jsoup.*;
+import org.jsoup.nodes.*;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Dimension;
-import org.openqa.selenium.ElementNotVisibleException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Point;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.TestListenerAdapter;
+import org.openqa.selenium.interactions.*;
+import org.openqa.selenium.support.*;
+import org.openqa.selenium.support.ui.*;
+import org.slf4j.*;
+import org.testng.*;
 
-import com.google.common.base.Function;
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshot;
-import com.solutionstar.swaftee.utils.ImageComparison.TakeScreenshotUtils;
-import com.solutionstar.swaftee.webdriverhelpers.BaseDriverHelper;
+import com.google.common.base.*;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.utils.*;
+import com.solutionstar.swaftee.utils.ImageComparison.*;
+import com.solutionstar.swaftee.webdriverhelpers.*;
 
-public class AppPage extends TestListenerAdapter {
+public class AppPage {
 	protected static Logger logger = LoggerFactory.getLogger(AppPage.class.getName());
 	protected WebDriver driver;
 
@@ -70,6 +47,8 @@ public class AppPage extends TestListenerAdapter {
 	}
 
 	public AppPage(WebDriver driver) {
+		HashMap<Integer, String> hMap;
+		hMap.ke
 		this.driver = driver;
 		waitForPageLoadComplete();
 		PageFactory.initElements(driver, this);
@@ -1237,7 +1216,7 @@ public class AppPage extends TestListenerAdapter {
 					.pollingEvery(Duration.ofSeconds(5)).ignoring(NoSuchElementException.class);
 			wait.until(isLoadingFalse);
 		} catch (Exception e) {
-			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
+			logger.error("", ExceptionUtils.getRootCauseStackTrace(e).toString());
 		}
 	}
 

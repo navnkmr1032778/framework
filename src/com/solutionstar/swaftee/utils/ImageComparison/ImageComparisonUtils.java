@@ -1,21 +1,13 @@
 package com.solutionstar.swaftee.utils.ImageComparison;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
+import java.io.*;
+import java.net.*;
+import java.util.*;
+import java.util.Map.*;
+import java.util.regex.*;
 
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.utils.FileDownloader;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.utils.*;
 
 public class ImageComparisonUtils implements ImageComparison {
 	public Map<String, Map<String, Map<String, List<String>>>> compareFilesMap;

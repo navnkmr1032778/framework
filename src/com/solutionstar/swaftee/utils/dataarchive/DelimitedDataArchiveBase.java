@@ -1,15 +1,11 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
+import java.io.*;
+import java.util.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
+import org.apache.log4j.*;
 
-import org.apache.log4j.Logger;
-
-import com.solutionstar.swaftee.utils.CSVParserUtils;
+import com.solutionstar.swaftee.utils.*;
 
 /**
  * Data archive base class for archiving to any kind of delimited files.
@@ -19,30 +15,31 @@ import com.solutionstar.swaftee.utils.CSVParserUtils;
 public class DelimitedDataArchiveBase extends DataArchiveBase {
 
 	/**
-	 *  logging object
+	 * logging object
 	 */
 	private static Logger logger = Logger.getLogger(DelimitedDataArchiveBase.class);
-	
+
 	private CSVParserUtils csvUtils = new CSVParserUtils();
 
 	/**
 	 * Save the data to a file.
 	 * 
-	 * @param filename The filename to save the data to
-	 * @param append To append to existing file or create a new file
+	 * @param filename  The filename to save the data to
+	 * @param append    To append to existing file or create a new file
 	 * @param delimiter the delimiter (text separator) to use
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void saveData(String filename, boolean append, String delimiter) throws Exception {
 
 		PrintWriter writer = new PrintWriter(new FileWriter(new File(filename), append));
-		
-		for(int i = 0; i < list.size(); i++) {
 
-			String[] data = list.get(i); 
+		for (int i = 0; i < list.size(); i++) {
 
-			for(int j = 0; j < data.length; j++) writer.print(data[j] + delimiter);
+			String[] data = list.get(i);
+
+			for (int j = 0; j < data.length; j++)
+				writer.print(data[j] + delimiter);
 
 			writer.print(System.lineSeparator());
 
@@ -56,13 +53,13 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	}
 
 	/**
-	 * Save the data to a file. Creates a new file, overwriting any 
-	 * pre-existing file
+	 * Save the data to a file. Creates a new file, overwriting any pre-existing
+	 * file
 	 * 
 	 * @param filename
 	 * @param delimiter the delimiter (text separator) to use
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void saveDataCreateNewFile(String filename, String delimiter) throws Exception {
 
@@ -78,7 +75,7 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 	 * @param filename
 	 * @param delimiter the delimiter (text separator) to use
 	 * 
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public void saveDataAppendToFile(String filename, String delimiter) throws Exception {
 
@@ -87,11 +84,9 @@ public class DelimitedDataArchiveBase extends DataArchiveBase {
 		saveData(filename, true, delimiter);
 
 	}
-	
-	public List<HashMap<String, String>> retrieveData(String fileName,boolean...val) {
+
+	public List<HashMap<String, String>> retrieveData(String fileName, boolean... val) {
 		return csvUtils.getDataFromCSV(fileName);
 	}
 
 }
-
-

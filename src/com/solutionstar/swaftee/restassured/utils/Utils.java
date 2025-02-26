@@ -1,24 +1,17 @@
 package com.solutionstar.swaftee.restassured.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
-import org.json.JSONObject;
+import org.json.*;
 
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.Cookie;
-import com.jayway.restassured.response.Header;
-import com.jayway.restassured.response.Headers;
-import com.jayway.restassured.response.Response;
-import com.solutionstar.swaftee.restassured.apiconstants.APIConstants;
-import com.solutionstar.swaftee.restassured.schemavalidator.SchemaValidatorUtils;
+import com.solutionstar.swaftee.restassured.apiconstants.*;
+import com.solutionstar.swaftee.restassured.schemavalidator.*;
+
+import io.restassured.http.*;
+import io.restassured.http.Cookie;
+import io.restassured.path.json.*;
+import io.restassured.response.*;
 
 public class Utils {
 	public Cookie getDetailedCookieUtil(Response response, String cookieName) {
@@ -69,8 +62,8 @@ public class Utils {
 	}
 
 	/*
-	 * Get list of values from JSON path "items.listingKey" - It returns a list
-	 * of values
+	 * Get list of values from JSON path "items.listingKey" - It returns a list of
+	 * values
 	 */
 
 	public List<String> getListFromJsonPath(Response res, String arrayPath) {
@@ -78,18 +71,17 @@ public class Utils {
 		List<String> list = jp.get(arrayPath);
 		return list;
 	}
-	
-	public List<HashMap<String,String>> getHashMapFromJsonPath(Response res,String arrayPath)
-	{
+
+	public List<HashMap<String, String>> getHashMapFromJsonPath(Response res, String arrayPath) {
 		JsonPath jp = getJsonPath(res);
-		List<HashMap<String,String>> hm = jp.get(arrayPath);
+		List<HashMap<String, String>> hm = jp.get(arrayPath);
 		return hm;
 	}
 
 	// Get response as jsonString
 	public String getJsonString(Response res) {
-			String jsonString = res.getBody().asString().replaceAll("\\[|\\]", "");
-			return jsonString;
+		String jsonString = res.getBody().asString().replaceAll("\\[|\\]", "");
+		return jsonString;
 	}
 
 	// Print response in JSON format
@@ -109,18 +101,18 @@ public class Utils {
 	}
 
 	public Headers getHeaders() {
-		
+
 		List<Header> listOfHeaders = new ArrayList<>();
-		
-      	String clientToken = System.getProperty("clienttoken", "false");
+
+		String clientToken = System.getProperty("clienttoken", "false");
 		if (clientToken != null && !clientToken.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("clienttoken", clientToken));
-      
+
 		String apiKey = System.getProperty("ApiKey");
 		String apiKeyProperty = System.getProperty("apiKeyProperty");
 		if (apiKey != null && apiKeyProperty != null && !apiKey.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header(apiKeyProperty, apiKey));
-		
+
 		String accept = System.getProperty("Accept", "false");
 		if (accept != null && !accept.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Accept", accept));
@@ -140,7 +132,7 @@ public class Utils {
 		String accessControlRequestHeaders = System.getProperty("Access-Control-Request-Headers", "false");
 		if (accessControlRequestHeaders != null && !accessControlRequestHeaders.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Access-Control-Request-Headers", accessControlRequestHeaders));
-		
+
 		String accessControlRequestMethod = System.getProperty("Access-Control-Request-Method", "false");
 		if (accessControlRequestMethod != null && !accessControlRequestMethod.equalsIgnoreCase("false"))
 			listOfHeaders.add(new Header("Access-Control-Request-Method", accessControlRequestMethod));

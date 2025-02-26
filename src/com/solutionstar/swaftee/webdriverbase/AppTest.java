@@ -1,18 +1,14 @@
 package com.solutionstar.swaftee.webdriverbase;
 
-import java.io.File;
+import java.io.*;
 
-import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Listeners;
+import org.testng.*;
+import org.testng.annotations.*;
 
-import com.solutionstar.swaftee.docker.startDocker;
-import com.solutionstar.swaftee.docker.stopDocker;
-import com.solutionstar.swaftee.jira.Zephyr;
-import com.solutionstar.swaftee.jira.ZephyrUtils;
-import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.webdriverFactory.AppDriver;
+import com.solutionstar.swaftee.docker.*;
+import com.solutionstar.swaftee.jira.*;
+import com.solutionstar.swaftee.utils.*;
+import com.solutionstar.swaftee.webdriverFactory.*;
 
 @Listeners(AppDriver.class)
 public class AppTest extends AppDriver {
@@ -28,6 +24,7 @@ public class AppTest extends AppDriver {
 				if (fi.delete()) {
 					System.out.println("file deleted successfully");
 				}
+				@SuppressWarnings("unused")
 				startDocker s = new startDocker();
 				// s.startFile();
 			} catch (Exception e) {

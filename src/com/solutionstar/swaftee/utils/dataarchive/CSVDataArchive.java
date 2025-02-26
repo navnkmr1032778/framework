@@ -1,10 +1,8 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
 /**
  * Data archive interface for archiving data in CSV (comma separated value)

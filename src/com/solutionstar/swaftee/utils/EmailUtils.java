@@ -1,37 +1,17 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.HashMap;
-import java.util.Properties;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
+import javax.mail.*;
 import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
-import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.solutionstar.swaftee.constants.*;
 
-import microsoft.exchange.webservices.data.BasePropertySet;
-import microsoft.exchange.webservices.data.ExchangeCredentials;
-import microsoft.exchange.webservices.data.ExchangeService;
-import microsoft.exchange.webservices.data.ExchangeVersion;
-import microsoft.exchange.webservices.data.FindItemsResults;
-import microsoft.exchange.webservices.data.InternetMessageHeader;
-import microsoft.exchange.webservices.data.InternetMessageHeaderCollection;
-import microsoft.exchange.webservices.data.Item;
-import microsoft.exchange.webservices.data.ItemSchema;
-import microsoft.exchange.webservices.data.ItemView;
-import microsoft.exchange.webservices.data.PropertySet;
-import microsoft.exchange.webservices.data.ServiceLocalException;
-import microsoft.exchange.webservices.data.WebCredentials;
-import microsoft.exchange.webservices.data.WellKnownFolderName;
+import microsoft.exchange.webservices.data.*;
 
 public class EmailUtils {
 	protected static Logger logger = LoggerFactory.getLogger(EmailUtils.class.getName());

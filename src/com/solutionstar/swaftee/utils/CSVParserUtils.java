@@ -1,30 +1,16 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.nio.charset.*;
+import java.nio.file.*;
+import java.util.*;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang3.exception.*;
+import org.slf4j.*;
 
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
-import com.solutionstar.swaftee.constants.WebDriverConstants;
+import com.opencsv.*;
+import com.solutionstar.swaftee.CustomExceptions.*;
+import com.solutionstar.swaftee.constants.*;
 
 public class CSVParserUtils {
 

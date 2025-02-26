@@ -1,49 +1,33 @@
 package com.solutionstar.swaftee.webdriverhelpers;
 
-import java.io.File;
-import java.lang.reflect.Method;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.io.*;
+import java.lang.reflect.*;
+import java.net.*;
+import java.util.*;
+import java.util.Map.*;
 
-import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.*;
 import org.openqa.selenium.Proxy;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.logging.LogEntries;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.ITestResult;
+import org.openqa.selenium.chrome.*;
+import org.openqa.selenium.firefox.*;
+import org.openqa.selenium.ie.*;
+import org.openqa.selenium.logging.*;
+import org.openqa.selenium.phantomjs.*;
+import org.openqa.selenium.remote.*;
+import org.slf4j.*;
+import org.testng.*;
 
-import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
-import com.solutionstar.swaftee.config.WebDriverConfig;
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.utils.CommonProperties;
-import com.solutionstar.swaftee.utils.CommonUtils;
-import com.solutionstar.swaftee.utils.OSCheck;
-import com.solutionstar.swaftee.webdriverFactory.AppDriver;
+import com.solutionstar.swaftee.CustomExceptions.*;
+import com.solutionstar.swaftee.config.*;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.utils.*;
+import com.solutionstar.swaftee.webdriverFactory.*;
 
-import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.ios.IOSDriver;
-import net.jsourcerer.webdriver.jserrorcollector.JavaScriptError;
-import net.lightbody.bmp.BrowserMobProxy;
-import net.lightbody.bmp.BrowserMobProxyServer;
-import net.lightbody.bmp.client.ClientUtil;
-import net.lightbody.bmp.core.har.Har;
+import io.appium.java_client.android.*;
+import io.appium.java_client.ios.*;
+import net.lightbody.bmp.*;
+import net.lightbody.bmp.client.*;
+import net.lightbody.bmp.core.har.*;
 
 public class BaseDriverHelper {
 
@@ -471,15 +455,15 @@ public class BaseDriverHelper {
 			ExtractChromeJSLogs(driver);
 			break;
 		case FIREFOX:
-			ExtractFFJSLogs(driver);
+//			ExtractFFJSLogs(driver);
 			break;
 		}
 	}
 
-	private void ExtractFFJSLogs(WebDriver driver) {
-		final List<JavaScriptError> jsErrors = JavaScriptError.readErrors(driver);
-		logger.info(jsErrors.toString());
-	}
+//	private void ExtractFFJSLogs(WebDriver driver) {
+//		final List<JavaScriptError> jsErrors = JavaScriptError.readErrors(driver);
+//		logger.info(jsErrors.toString());
+//	}
 
 	public Har getHar() {
 		try {

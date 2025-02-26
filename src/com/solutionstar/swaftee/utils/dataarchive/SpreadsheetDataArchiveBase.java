@@ -1,20 +1,12 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
-import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.DataFormatter;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.log4j.*;
+import org.apache.poi.ss.usermodel.*;
 
-import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.utils.*;
 
 /**
  * Data archive base class for archiving to XLS or XLSX (Excel) files.

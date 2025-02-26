@@ -1,9 +1,8 @@
 package com.solutionstar.swaftee.utils.dataarchive;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
 /**
  * Data archive base class. All data archive classes should extend this class.

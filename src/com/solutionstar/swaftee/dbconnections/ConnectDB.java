@@ -1,21 +1,12 @@
 package com.solutionstar.swaftee.dbconnections;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
+import java.sql.*;
+import java.util.*;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.*;
 
-import com.solutionstar.swaftee.CustomExceptions.MyCoreExceptions;
-import com.solutionstar.swaftee.utils.CommonProperties;
-import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.CustomExceptions.*;
+import com.solutionstar.swaftee.utils.*;
 
 public class ConnectDB extends DatabaseConnection {
 	Connection con = null;

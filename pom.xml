@@ -26,8 +26,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
 				<configuration>
-					<source>1.8</source>   <!-- use java 8 -->
-					<target>1.8</target>
+					<source>17</source>   <!-- use java 8 -->
+					<target>17</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -42,30 +42,26 @@
 	</build>
 	<dependencies>
 		<dependency>
-  			<groupId>javax.xml.bind</groupId>
- 			<artifactId>jaxb-api</artifactId>
-  			<version>2.3.0</version>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
-  			<groupId>com.sun.xml.bind</groupId>
-  			<artifactId>jaxb-core</artifactId>
-  			<version>2.3.0</version>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-core</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
-  			<groupId>com.sun.xml.bind</groupId>
-  			<artifactId>jaxb-impl</artifactId>
-  			<version>2.3.0</version>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 		</dependency>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path</artifactId>
-			<version>2.4.0</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -93,19 +89,22 @@
 			<artifactId>opencsv</artifactId>
 			<version>5.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.10</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.4.12</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
@@ -162,11 +161,7 @@
 			<artifactId>sqljdbc4</artifactId>
 			<version>4.0</version>
 		</dependency>
-		<dependency>
-			<groupId>net.jsourcerer.webdriver</groupId>
-			<artifactId>JSErrorCollector</artifactId>
-			<version>0.7-atlassian-1</version>
-		</dependency>
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -244,11 +239,19 @@
 		</dependency>
 
 		<!-- Rest Assured Dependencies -->
-
+		<!-- https://mvnrepository.com/artifact/io.rest-assured/rest-assured -->
 		<dependency>
-			<groupId>com.jayway.restassured</groupId>
+			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>2.9.0</version>
+			<version>5.5.0</version>
+		</dependency>
+
+		<!--
+		https://mvnrepository.com/artifact/io.rest-assured/json-schema-validator -->
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>json-schema-validator</artifactId>
+			<version>5.5.0</version>
 		</dependency>
 
 		<dependency>
@@ -269,28 +272,28 @@
 			<version>1.8</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.fge/json-schema-core -->
+		<!--
+		https://mvnrepository.com/artifact/com.github.java-json-tools/json-schema-core -->
 		<dependency>
-			<groupId>com.github.fge</groupId>
+			<groupId>com.github.java-json-tools</groupId>
 			<artifactId>json-schema-core</artifactId>
-			<version>1.2.5</version>
-
+			<version>1.2.14</version>
 		</dependency>
 
+
+		<!--
+		https://mvnrepository.com/artifact/com.github.java-json-tools/json-schema-validator -->
 		<dependency>
-			<groupId>com.github.fge</groupId>
+			<groupId>com.github.java-json-tools</groupId>
 			<artifactId>json-schema-validator</artifactId>
-			<version>2.2.6</version>
+			<version>2.2.14</version>
 		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20190722</version>
 		</dependency>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path-assert</artifactId>
-			<version>2.4.0</version>
-		</dependency>
+
 		<dependency>
 			<groupId>net.lightbody.bmp</groupId>
 			<artifactId>browsermob-core</artifactId>
@@ -316,13 +319,6 @@
 			<artifactId>webdrivermanager</artifactId>
 			<version>4.2.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-			<version>3.10</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
@@ -359,10 +355,11 @@
 			<artifactId>jackson-databind</artifactId>
 			<version>2.9.3</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
-			<groupId>apache-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.1</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.17.0</version>
 		</dependency>
 	</dependencies>
 	<repositories>
@@ -371,12 +368,9 @@
 			<url>https://repo.jenkins-ci.org/releases/</url>
 		</repository>
 		<repository>
-			<id>JSErrorCollector</id>
-			<url>https://repo.spring.io/libs-milestone/</url>
-		</repository>
-		<repository>
 			<id>sqljdbc4</id>
-			<url>https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
+			<url>
+				https://artifacts.alfresco.com/nexus/content/repositories/public/</url>
 			<!-- http://maven.icm.edu.pl/artifactory/repo/ -->
 		</repository>
 		<!-- <repository> -->

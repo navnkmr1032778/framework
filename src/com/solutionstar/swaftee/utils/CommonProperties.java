@@ -1,9 +1,9 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.FileInputStream;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
-import org.apache.log4j.Logger;
+import org.apache.log4j.*;
 
 @SuppressWarnings("serial")
 public class CommonProperties extends Properties {

@@ -1,24 +1,15 @@
 package com.solutionstar.swaftee.utils.ImageComparison;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.RecursiveAction;
+import java.io.*;
+import java.util.*;
+import java.util.concurrent.*;
 
-import org.im4java.core.CompareCmd;
-import org.im4java.core.CompositeCmd;
-import org.im4java.core.IMOperation;
-import org.im4java.process.ProcessStarter;
-import org.im4java.process.StandardStream;
-import org.testng.asserts.SoftAssert;
+import org.im4java.core.*;
+import org.im4java.process.*;
+import org.testng.asserts.*;
 
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.utils.CommonUtils;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.utils.*;
 
 @SuppressWarnings("serial")
 public class ImageCompareHelper extends RecursiveAction {

@@ -1,8 +1,6 @@
 package com.solutionstar.swaftee.constants;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class WebDriverConstants {
 

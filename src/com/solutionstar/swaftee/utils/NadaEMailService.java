@@ -1,16 +1,14 @@
 package com.solutionstar.swaftee.utils;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.*;
 
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.core.type.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.*;
 
 public class NadaEMailService {
-
 	public static final String NADA_EMAIL_DOMAIN = "@clrmail.com";
 	private static final String INBOX_MESSAGE_KEY_NAME = "msgs";
 	private static final String EMAIL_ID_ROUTE_PARAM = "email-id";
@@ -22,6 +20,7 @@ public class NadaEMailService {
 
 	private String emailId;
 
+	@SuppressWarnings("deprecation")
 	private void generateEmailId() {
 		this.emailId = RandomStringUtils.randomAlphanumeric(EMAIL_CHARS_LENGTH).toLowerCase().concat(NADA_EMAIL_DOMAIN);
 	}

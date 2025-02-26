@@ -1,55 +1,28 @@
 package com.solutionstar.swaftee.utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.Vector;
+import java.io.*;
+import java.net.*;
+import java.text.*;
+import java.util.*;
 
-import javax.imageio.ImageIO;
+import javax.imageio.*;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Months;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
+import org.apache.commons.io.*;
+import org.apache.commons.lang3.exception.*;
+import org.joda.time.*;
+import org.joda.time.format.*;
+import org.openqa.selenium.*;
+import org.slf4j.*;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
-import com.solutionstar.swaftee.constants.WebDriverConstants;
-import com.solutionstar.swaftee.utils.ImageComparison.ImageCompareHelper;
+import com.google.gson.*;
+import com.google.gson.reflect.*;
+import com.jcraft.jsch.*;
+import com.solutionstar.swaftee.constants.*;
+import com.solutionstar.swaftee.utils.ImageComparison.*;
 
-import ru.yandex.qatools.ashot.AShot;
-import ru.yandex.qatools.ashot.Screenshot;
-import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
+import ru.yandex.qatools.ashot.*;
+import ru.yandex.qatools.ashot.shooting.*;
 
 public class CommonUtils {
 
@@ -305,7 +278,7 @@ public class CommonUtils {
 			date = formatter.parse(dateString);
 
 		} catch (Exception e) {
-			logger.error(ExceptionUtils.getRootCauseStackTrace(e).toString());
+			logger.error("", ExceptionUtils.getRootCauseStackTrace(e).toString());
 		}
 		return date;
 	}
